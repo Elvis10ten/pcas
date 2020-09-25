@@ -1,8 +1,8 @@
 package com.fluentbuild.pcas.ledger.models
 
 import com.fluentbuild.pcas.host.HostInfo
-import com.fluentbuild.pcas.ledger.filterByHost
-import com.fluentbuild.pcas.ledger.filterByNotHost
+import com.fluentbuild.pcas.ledger.filterHost
+import com.fluentbuild.pcas.ledger.filterNotHost
 import com.fluentbuild.pcas.utils.filterSet
 import com.fluentbuild.pcas.utils.mapSet
 import com.fluentbuild.pcas.utils.unsafeLazy
@@ -22,16 +22,16 @@ data class Ledger(
 ) {
 
     @Transient
-    val ownerBonds by unsafeLazy { bonds.filterByHost(owner) }
+    val ownerBonds by unsafeLazy { bonds.filterHost(owner) }
 
     @Transient
-    val othersBonds by unsafeLazy { bonds.filterByNotHost(owner) }
+    val othersBonds by unsafeLazy { bonds.filterNotHost(owner) }
 
     @Transient
-    val ownerProps by unsafeLazy { props.filterByHost(owner) }
+    val ownerProps by unsafeLazy { props.filterHost(owner) }
 
     @Transient
-    val othersProps by unsafeLazy { props.filterByNotHost(owner) }
+    val othersProps by unsafeLazy { props.filterNotHost(owner) }
 
     fun hasBond(prop: Entry<PropertyEntity>) = bonds.filterSet { it == prop }.isNotEmpty()
 
@@ -39,11 +39,12 @@ data class Ledger(
         val evictionNoticeThreshold = ENTRY_EVICTION_NOTICE_THRESHOLD_MILLIS
         val evictionFromBonds = bonds.filterSet { currentTimestamp - it.timestamp > evictionNoticeThreshold }
         val evictionFromProps = props.filterSet { currentTimestamp - it.timestamp > evictionNoticeThreshold }
-        return (evictionFromBonds + evictionFromProps).mapSet { it.host }
+        return (evictionFromBonds + evictionFromProps)
+            .filterSet { it.host != owner }
+            .mapSet { it.host }
     }
 
     companion object {
-        const val ENTRY_TTL_MILLIS = 32 * 1000
-        const val ENTRY_EVICTION_NOTICE_THRESHOLD_MILLIS = ENTRY_TTL_MILLIS / 2
+        const val ENTRY_EVICTION_NOTICE_THRESHOLD_MILLIS = 30
     }
 }

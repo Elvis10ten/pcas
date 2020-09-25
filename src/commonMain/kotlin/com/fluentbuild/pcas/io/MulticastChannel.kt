@@ -4,7 +4,7 @@ interface MulticastChannel {
 
     fun init(receiver: ParcelReceiver)
 
-    fun broadcast(parcel: Parcel)
+    fun broadcast(payload: ByteArray)
 
     fun close()
 }

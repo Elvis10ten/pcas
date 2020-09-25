@@ -113,4 +113,6 @@ class LedgerTest {
     fun `getEvictionNotices SHOULD return hosts with eviction notices`() {
         assertContentEquals(setOf(other1StaleBondStub.host), ledger.getEvictionNotices(currentTimestampStub))
     }
+
+    // TODO: Verify that getEvictionNotices never returns owner
 }

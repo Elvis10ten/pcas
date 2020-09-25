@@ -8,12 +8,14 @@ data class Packet(
     @ProtoId(1)
     val type: Type,
     @ProtoId(2)
-    val ledger: Ledger
+    val ledger: Ledger,
+    @ProtoId(3)
+    val broadcastTimestamp: Long
 ) {
 
     enum class Type {
         INTRO,
         UPDATE,
-        EVICT_NOTICE
+        EVICTION_NOTICE
     }
 }

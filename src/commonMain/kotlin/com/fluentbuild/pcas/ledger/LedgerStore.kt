@@ -5,25 +5,33 @@ import com.fluentbuild.pcas.ledger.models.*
 import com.fluentbuild.pcas.utils.TimeProvider
 import com.fluentbuild.pcas.utils.logger
 import com.fluentbuild.pcas.utils.mapSet
-import com.fluentbuild.pcas.utils.observable
 
 class LedgerStore(
-    self: HostInfo,
-    onChanged: (Ledger) -> Unit,
     private val timeProvider: TimeProvider
 ) {
 
     private val log by logger()
-    private var ledger by observable(Ledger(self), onChanged)
+    private var onChanged: (Ledger) -> Unit = {}
+    private lateinit var ledger: Ledger
+
+    fun setup(owner: HostInfo, onChanged: (Ledger) -> Unit) {
+        ledger = Ledger(owner)
+        this.onChanged = onChanged
+    }
+
+    fun clear() {
+        this.onChanged = {}
+        ledger = Ledger(ledger.owner)
+    }
 
     fun get() = ledger
 
     fun upsertBonds(host: HostInfo, bonds: Set<BondEntity>) {
-        upsert(host, bonds, ledger.props.filterByHost(host).mapSet { it.entity })
+        upsert(host, bonds, ledger.props.filterHost(host).mapToEntities())
     }
 
     fun upsertProps(host: HostInfo, props: Set<PropertyEntity>) {
-        upsert(host, ledger.bonds.filterByHost(host).mapSet { it.entity }, props)
+        upsert(host, ledger.bonds.filterHost(host).mapToEntities(), props)
     }
 
     fun upsert(host: HostInfo, bonds: Set<BondEntity>, props: Set<PropertyEntity>) {
@@ -37,31 +45,41 @@ class LedgerStore(
     }
 
     fun updateSelf(newSelf: HostInfo) {
-        /*ledger = ledger.copy(
-            bondEntries = ledger.bondEntries + bondEntries,
-            propEntries = ledger.propEntries + propEntries
-        )*/
+        val timestamp = timeProvider.currentTimeMillis()
+        val selfBonds = ledger.ownerBonds.map { Entry(it.entity, newSelf, timestamp) }
+        val selfProps = ledger.ownerProps.map { Entry(it.entity, newSelf, timestamp) }
+
+        update(ledger.copy(
+            owner = newSelf,
+            bonds = (ledger.bonds - ledger.ownerBonds) + selfBonds,
+            props = (ledger.props - ledger.ownerProps) + selfProps
+        ))
     }
 
     private fun upsertInternal(bondEntries: Set<Entry<BondEntity>>, propEntries: Set<Entry<PropertyEntity>>) {
-        ledger = ledger.copy(
+        update(ledger.copy(
             bonds = ledger.bonds + bondEntries,
             props = ledger.props + propEntries
-        )
+        ))
     }
 
     fun evict(host: HostInfo) {
-        val bondsToEvict = ledger.bonds.filterByHost(host)
-        val propsToEvict = ledger.props.filterByHost(host)
+        val bondsToEvict = ledger.bonds.filterHost(host)
+        val propsToEvict = ledger.props.filterHost(host)
         log.info { "Evicting ($host) bonds: $bondsToEvict, props: $propsToEvict" }
 
-        ledger = ledger.copy(
+        update(ledger.copy(
             bonds = ledger.bonds - bondsToEvict,
             props = ledger.props - propsToEvict,
-        )
+        ))
     }
 
-    fun clear() {
-        ledger = Ledger(ledger.owner)
+    private fun update(newLedger: Ledger) {
+        val oldLedger = ledger
+        ledger = newLedger
+
+        if(oldLedger != newLedger) {
+            onChanged(newLedger)
+        }
     }
 }

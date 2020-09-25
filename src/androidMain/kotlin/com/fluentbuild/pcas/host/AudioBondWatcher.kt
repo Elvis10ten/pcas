@@ -6,6 +6,9 @@ import com.fluentbuild.pcas.host.PeripheralBondsWatcher
 
 class AudioBondWatcher: PeripheralBondsWatcher {
 
+    override val currentValue: Set<PeripheralBond>
+        get() = TODO("Not yet implemented")
+
     override fun watch(consumer: (Set<PeripheralBond>) -> Unit): Cancellable {
         TODO("Not yet implemented")
     }

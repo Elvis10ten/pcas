@@ -1,6 +1,8 @@
 package com.fluentbuild.pcas.async
 
-fun interface Watcher<ValueT> {
+interface Watcher<ValueT> {
+
+    val currentValue: ValueT
 
     fun watch(consumer: (ValueT) -> Unit): Cancellable
 }
