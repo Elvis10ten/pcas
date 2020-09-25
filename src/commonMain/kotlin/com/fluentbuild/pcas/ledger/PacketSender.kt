@@ -2,6 +2,7 @@ package com.fluentbuild.pcas.ledger
 
 import com.fluentbuild.pcas.io.MulticastChannel
 import com.fluentbuild.pcas.ledger.models.Ledger
+import com.fluentbuild.pcas.ledger.models.Packet
 import com.fluentbuild.pcas.utils.logger
 import kotlinx.serialization.protobuf.ProtoBuf
 
@@ -27,10 +28,11 @@ class PacketSender(
 
     private fun broadcast(packet: Packet) {
         log.debug { "Broadcasting packet: $packet" }
-        multicastChannel.broadcast(protoBuf.dump(packetSerializer, packet))
+        //multicastChannel.broadcast(protoBuf.dump(packetSerializer, packet))
     }
 
     private fun createPacket(type: Packet.Type): Packet {
-        return Packet(type, ledgerStore.get())
+        TODO()
+        //return Packet(type, ledgerStore.get())
     }
 }

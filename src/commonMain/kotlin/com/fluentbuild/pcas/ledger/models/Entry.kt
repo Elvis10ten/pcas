@@ -11,7 +11,7 @@ data class Entry<EntityT: Entity>(
     @ProtoId(2)
     val host: HostInfo,
     @ProtoId(3)
-    val entryTimestamp: Long
+    internal val timestamp: Long
 ) {
 
     override fun equals(other: Any?): Boolean {

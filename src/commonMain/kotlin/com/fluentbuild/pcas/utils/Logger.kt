@@ -18,5 +18,3 @@ expect class Logger(
 
     fun error(throwable: Throwable, message: () -> String)
 }
-
-internal fun Any.logger() = lazy { Logger(this::class.simpleName!!) }

@@ -1,6 +1,5 @@
-package com.fluentbuild.pcas.ledger
+package com.fluentbuild.pcas.ledger.models
 
-import com.fluentbuild.pcas.ledger.models.Ledger
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.protobuf.ProtoId
 

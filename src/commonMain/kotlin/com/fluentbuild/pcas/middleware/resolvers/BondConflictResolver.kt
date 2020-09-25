@@ -16,7 +16,8 @@ import com.fluentbuild.pcas.utils.mapSet
 internal class BondConflictResolver: Resolver<BondEntity> {
 
     override fun resolve(ledger: Ledger, conflicts: Set<Conflict<BondEntity>>): Set<Resolution> {
-        return conflicts.mapSet { conflict ->
+        TODO()
+        /*return conflicts.mapSet { conflict ->
             val maxTimestamp = conflict.others.maxOfOrNull { it.entity.timestamp }
             val selfEntity = conflict.self.entity
 
@@ -27,6 +28,6 @@ internal class BondConflictResolver: Resolver<BondEntity> {
                 maxTimestamp == selfEntity.timestamp -> Resolution.Ambiguous(selfEntity)
                 else -> throw IllegalStateException("Impossible!")
             }
-        }
+        }*/
     }
 }

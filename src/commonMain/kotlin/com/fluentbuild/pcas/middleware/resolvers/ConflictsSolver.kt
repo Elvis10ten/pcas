@@ -17,10 +17,10 @@ class ConflictsSolver {
     }
 
     private val Ledger.bondsConflicts
-        get() = selfBondEntries.mapSet { it.getBondConflicts(othersBondEntries) }
+        get() = ownerBonds.mapSet { it.getBondConflicts(othersBonds) }
 
     private val Ledger.propsConflicts
-        get() = selfPropEntries.mapSet { it.getPropConflicts(othersPropEntries) }
+        get() = ownerProps.mapSet { it.getPropConflicts(othersProps) }
 
     private fun Entry<BondEntity>.getBondConflicts(others: Set<Entry<BondEntity>>) = Conflict(
         self = this,

@@ -1,6 +1,8 @@
 package com.fluentbuild.pcas.ledger.models
 
 import com.fluentbuild.pcas.host.HostInfo
+import com.fluentbuild.pcas.ledger.filterByHost
+import com.fluentbuild.pcas.ledger.filterByNotHost
 import com.fluentbuild.pcas.utils.filterSet
 import com.fluentbuild.pcas.utils.mapSet
 import com.fluentbuild.pcas.utils.unsafeLazy
@@ -12,37 +14,36 @@ import kotlinx.serialization.protobuf.ProtoId
 @Serializable
 data class Ledger(
     @ProtoId(1)
-    val self: HostInfo,
+    val owner: HostInfo,
     @ProtoId(2)
-    val bondEntries: Set<Entry<BondEntity>> = emptySet(),
+    val bonds: Set<Entry<BondEntity>> = emptySet(),
     @ProtoId(3)
-    val propEntries: Set<Entry<PropertyEntity>> = emptySet()
+    val props: Set<Entry<PropertyEntity>> = emptySet()
 ) {
 
     @Transient
-    val selfBondEntries by unsafeLazy { bondEntries.filterByHost(self) }
+    val ownerBonds by unsafeLazy { bonds.filterByHost(owner) }
 
     @Transient
-    val othersBondEntries by unsafeLazy { bondEntries.filterByNotHost(self) }
+    val othersBonds by unsafeLazy { bonds.filterByNotHost(owner) }
 
     @Transient
-    val selfPropEntries by unsafeLazy { propEntries.filterByHost(self) }
+    val ownerProps by unsafeLazy { props.filterByHost(owner) }
 
     @Transient
-    val othersPropEntries by unsafeLazy { propEntries.filterByNotHost(self) }
+    val othersProps by unsafeLazy { props.filterByNotHost(owner) }
 
-    fun hasConnection(propEntry: Entry<PropertyEntity>) =
-        bondEntries.filterByHost(propEntry.host).isNotEmpty()
+    fun hasBond(prop: Entry<PropertyEntity>) = bonds.filterSet { it == prop }.isNotEmpty()
 
     fun getEvictionNotices(currentTimestamp: Long): Set<HostInfo> {
-        val evictionFromBonds =  bondEntries.filterSet { currentTimestamp - it.entryTimestamp > ENTRY_TTL_MILLIS }
-            .mapSet { it.host }
-        val evictionFromProps =  propEntries.filterSet { currentTimestamp - it.entryTimestamp > ENTRY_TTL_MILLIS }
-            .mapSet { it.host }
-        return evictionFromBonds + evictionFromProps
+        val evictionNoticeThreshold = ENTRY_EVICTION_NOTICE_THRESHOLD_MILLIS
+        val evictionFromBonds = bonds.filterSet { currentTimestamp - it.timestamp > evictionNoticeThreshold }
+        val evictionFromProps = props.filterSet { currentTimestamp - it.timestamp > evictionNoticeThreshold }
+        return (evictionFromBonds + evictionFromProps).mapSet { it.host }
     }
 
     companion object {
-        const val ENTRY_TTL_MILLIS = 20 * 1000
+        const val ENTRY_TTL_MILLIS = 32 * 1000
+        const val ENTRY_EVICTION_NOTICE_THRESHOLD_MILLIS = ENTRY_TTL_MILLIS / 2
     }
 }

@@ -19,7 +19,6 @@ class BondsEntityMapper(
 
     private fun createBondEntity(peripheralBond: PeripheralBond) = BondEntity(
         audioServiceId,
-        peripheralBond.bondId,
-        timeProvider.currentTimeMillis()
+        peripheralBond.bondId
     )
 }

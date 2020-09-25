@@ -53,6 +53,6 @@ class LedgerProtocol(
 
     private fun onSelfHostInfoUpdate(host: HostInfo) {
         this.self = host
-        ledgerStore.upsert(newHostInfo, connections, characteristics, true)
+        // todo ledgerStore.upsert(newHostInfo, connections, characteristics, true)
     }
 }

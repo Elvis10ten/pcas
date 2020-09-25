@@ -15,7 +15,11 @@ data class HostInfo(
     @ProtoId(4)
     val port: Int,
     @ProtoId(5)
-    val isInteractive: Boolean
+    val isInteractive: Boolean,
+    @ProtoId(6)
+    val sampleRateHz: Int,
+    @ProtoId(7)
+    val minBufferSizeBytes: Int
 ) {
 
     override fun equals(other: Any?): Boolean {

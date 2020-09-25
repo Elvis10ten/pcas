@@ -19,11 +19,11 @@ class LedgerStore(
     fun get() = ledger
 
     fun upsertBonds(host: HostInfo, bonds: Set<BondEntity>) {
-        upsert(host, bonds, ledger.propEntries.filterByHost(host).mapSet { it.entity })
+        upsert(host, bonds, ledger.props.filterByHost(host).mapSet { it.entity })
     }
 
     fun upsertProps(host: HostInfo, props: Set<PropertyEntity>) {
-        upsert(host, ledger.bondEntries.filterByHost(host).mapSet { it.entity }, props)
+        upsert(host, ledger.bonds.filterByHost(host).mapSet { it.entity }, props)
     }
 
     fun upsert(host: HostInfo, bonds: Set<BondEntity>, props: Set<PropertyEntity>) {
@@ -37,31 +37,31 @@ class LedgerStore(
     }
 
     fun updateSelf(newSelf: HostInfo) {
-        ledger = ledger.copy(
+        /*ledger = ledger.copy(
             bondEntries = ledger.bondEntries + bondEntries,
             propEntries = ledger.propEntries + propEntries
-        )
+        )*/
     }
 
     private fun upsertInternal(bondEntries: Set<Entry<BondEntity>>, propEntries: Set<Entry<PropertyEntity>>) {
         ledger = ledger.copy(
-            bondEntries = ledger.bondEntries + bondEntries,
-            propEntries = ledger.propEntries + propEntries
+            bonds = ledger.bonds + bondEntries,
+            props = ledger.props + propEntries
         )
     }
 
     fun evict(host: HostInfo) {
-        val bondsToEvict = ledger.bondEntries.filterByHost(host)
-        val propsToEvict = ledger.propEntries.filterByHost(host)
+        val bondsToEvict = ledger.bonds.filterByHost(host)
+        val propsToEvict = ledger.props.filterByHost(host)
         log.info { "Evicting ($host) bonds: $bondsToEvict, props: $propsToEvict" }
 
         ledger = ledger.copy(
-            bondEntries = ledger.bondEntries - bondsToEvict,
-            propEntries = ledger.propEntries - propsToEvict,
+            bonds = ledger.bonds - bondsToEvict,
+            props = ledger.props - propsToEvict,
         )
     }
 
     fun clear() {
-        ledger = Ledger(ledger.self)
+        ledger = Ledger(ledger.owner)
     }
 }

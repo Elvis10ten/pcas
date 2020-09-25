@@ -6,6 +6,8 @@ import com.fluentbuild.pcas.ledger.models.ServiceId
 import com.fluentbuild.pcas.peripheral.audio.AudioProfile
 import com.fluentbuild.pcas.utils.Mapper
 import com.fluentbuild.pcas.utils.TimeProvider
+import kotlin.math.log10
+import kotlin.math.pow
 
 class PropertyEntityMapper(
     private val audioServiceId: ServiceId,
@@ -31,7 +33,12 @@ class PropertyEntityMapper(
         serviceId = audioServiceId,
         bondId = profile.bondId,
         hasUsage = apexUsage != null,
-        priority = apexUsage?.priority ?: PropertyEntity.NO_PRIORITY,
-        timestamp = timeProvider.currentTimeMillis()
+        rank = 1.0 // todo
     )
+
+    /*val rank = (5.0.pow(priority)) * booleanToInt(isConnected) * booleanToInt(isInteractive) * log10(timestamp.toDouble())
+
+    private fun booleanToInt(boolean: Boolean): Int {
+        return if(boolean) 2 else 1
+    }*/
 }

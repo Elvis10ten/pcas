@@ -1,21 +1,19 @@
 package com.fluentbuild.pcas.ledger.models
 
-interface Entity {
+abstract class Entity {
 
-    val serviceId: ServiceId
+    abstract val serviceId: ServiceId
 
-    val bondId: BondId
+    abstract val bondId: BondId
 
-    val timestamp: Long
-}
+    final override fun equals(other: Any?): Boolean {
+        if(other !is Entity) return false
+        return serviceId == other.serviceId && bondId == other.bondId
+    }
 
-fun Entity.isEqual(other: Any?): Boolean {
-    if(other !is Entity) return false
-    return serviceId == other.serviceId && bondId == other.bondId
-}
-
-fun Entity.getHashcode(): Int {
-    var result = serviceId
-    result = 31 * result + bondId
-    return result
+    final override fun hashCode(): Int {
+        var result = serviceId
+        result = 31 * result + bondId
+        return result
+    }
 }

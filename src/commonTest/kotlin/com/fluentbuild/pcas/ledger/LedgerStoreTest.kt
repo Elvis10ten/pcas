@@ -14,7 +14,7 @@ import kotlin.test.assertEquals
 
 class LedgerStoreTest {
 
-    private lateinit var ledgerStore: LedgerStore
+    /*private lateinit var ledgerStore: LedgerStore
     private lateinit var onChangedCallback: Function1<Ledger, Unit>
     private val host1 = HostInfo("u1", "n1", 1, 1)
     private val host2 = HostInfo("u2", "n2", 2, 2)
@@ -75,5 +75,5 @@ class LedgerStoreTest {
         BondEntity(num, num)
 
     private fun createCharacteristics(num: Int) =
-        PropertyEntity(num, num, num, false)
+        PropertyEntity(num, num, num, false)*/
 }

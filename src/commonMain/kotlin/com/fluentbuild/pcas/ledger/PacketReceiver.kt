@@ -1,8 +1,8 @@
 package com.fluentbuild.pcas.ledger
 
-import com.fluentbuild.pcas.host.HostInfo
 import com.fluentbuild.pcas.io.Parcel
 import com.fluentbuild.pcas.io.ParcelReceiver
+import com.fluentbuild.pcas.ledger.models.Packet
 import com.fluentbuild.pcas.utils.logger
 import kotlinx.serialization.protobuf.ProtoBuf
 
@@ -15,7 +15,7 @@ class PacketReceiver(
     private val packetSerializer = Packet.serializer()
 
     override fun onReceived(parcel: Parcel) {
-        val packet = protoBuf.load(packetSerializer, payload)
+        /*val packet = protoBuf.load(packetSerializer, payload)
         log.info { "Packet received: $packet" }
 
         with(packet.ledger) {
@@ -32,6 +32,6 @@ class PacketReceiver(
                     packetSender.sendUpdate()
                 }
             }
-        }
+        }*/
     }
 }
