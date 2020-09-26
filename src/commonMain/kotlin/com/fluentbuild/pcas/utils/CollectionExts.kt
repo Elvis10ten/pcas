@@ -28,3 +28,17 @@ internal inline fun <T, R> Set<T>.mapSet(transform: (T) -> R): Set<R> {
 
     return results
 }
+
+/**
+ * Returns a set containing the results of applying the given [transform] function
+ * to each element in the original set (without nulls).
+ */
+internal inline fun <T, R> Set<T>.mapSetNotNull(transform: (T) -> R?): Set<R> {
+    val results = mutableSetOf<R>()
+
+    for (element in this) {
+        transform(element)?.let { results.add(it) }
+    }
+
+    return results
+}

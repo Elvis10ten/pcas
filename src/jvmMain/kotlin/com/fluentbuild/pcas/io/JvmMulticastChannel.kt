@@ -2,7 +2,7 @@ package com.fluentbuild.pcas.io
 
 class JvmMulticastChannel: MulticastChannel {
 
-    override fun init(receiver: ParcelReceiver) {
+    override fun init(receiver: PayloadReceiver) {
         System.nanoTime()
         TODO("Not yet implemented")
     }

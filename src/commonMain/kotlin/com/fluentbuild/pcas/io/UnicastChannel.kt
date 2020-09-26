@@ -4,9 +4,9 @@ import com.fluentbuild.pcas.host.HostInfo
 
 interface UnicastChannel {
 
-    fun init(receiver: ParcelReceiver)
+    fun init(receiver: PayloadReceiver)
 
-    fun send(recipient: HostInfo, parcel: Parcel)
+    fun send(recipient: HostInfo, payload: ByteArray)
 
     fun close()
 }

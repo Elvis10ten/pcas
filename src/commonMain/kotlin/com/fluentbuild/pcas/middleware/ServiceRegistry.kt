@@ -5,14 +5,12 @@ import com.fluentbuild.pcas.ledger.models.PropertyEntity
 import com.fluentbuild.pcas.ledger.models.BondEntity
 import com.fluentbuild.pcas.ledger.models.Ledger
 import com.fluentbuild.pcas.ledger.models.ServiceId
-import com.fluentbuild.pcas.middleware.resolvers.ConflictsSolver
-import com.fluentbuild.pcas.middleware.resolvers.Resolution
 import com.fluentbuild.pcas.utils.logger
 
 class ServiceRegistry(
     private val ledgerProtocol: LedgerProtocol,
-    private val conflictsSolver: ConflictsSolver,
-    private val serviceHandlers: Map<ServiceId, ResolutionHandler>
+    private val interceptors: List<UpdateInterceptor>,
+    private val serviceHandlers: Map<ServiceId, CommandHandler>
 ) {
 
     private val log by logger()
@@ -28,23 +26,25 @@ class ServiceRegistry(
         ledgerProtocol.close()
     }
 
-    fun updateConnections(bonds: Set<BondEntity>) {
-        log.debug(::updateConnections, bonds)
+    fun updateBonds(bonds: Set<BondEntity>) {
+        log.debug(::updateBonds, bonds)
         ledgerProtocol.updateBonds(bonds)
     }
 
-    fun updateCharacteristics(characteristics: Set<PropertyEntity>) {
-        log.debug(::updateCharacteristics, characteristics)
-        ledgerProtocol.updateProps(characteristics)
+    fun updateProps(props: Set<PropertyEntity>) {
+        log.debug(::updateProps, props)
+        ledgerProtocol.updateProps(props)
     }
 
     private fun onLedgerUpdated(ledger: Ledger) {
         log.debug(::onLedgerUpdated, ledger)
-        conflictsSolver.resolve(ledger).forEach(::handle)
+        interceptors.forEach { interceptor ->
+            interceptor.intercept(ledger).forEach(::handle)
+        }
     }
 
-    private fun handle(resolution: Resolution) {
-        log.debug(::handle, resolution)
-        serviceHandlers.getValue(resolution.serviceId).handle(resolution)
+    private fun handle(command: Command) {
+        log.debug(::handle, command)
+        serviceHandlers.getValue(command.serviceId).handle(command)
     }
 }

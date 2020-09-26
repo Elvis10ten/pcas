@@ -18,11 +18,11 @@ class AudioStateUpdater(
     fun start(): Cancellable {
         return Cancellables().apply {
             this += propertyWatcher.watch { usage ->
-                serviceRegistry.updateCharacteristics(propertyEntityMapper.map(usage))
+                serviceRegistry.updateProps(propertyEntityMapper.map(usage))
             }
 
             this += bondsWatcher.watch { connections ->
-                serviceRegistry.updateConnections(bondsEntityMapper.map(connections))
+                serviceRegistry.updateBonds(bondsEntityMapper.map(connections))
             }
         }
     }

@@ -1,6 +1,6 @@
 package com.fluentbuild.pcas.io
 
-fun interface ParcelReceiver {
+fun interface PayloadReceiver {
 
     fun onReceived(payload: ByteArray)
 }

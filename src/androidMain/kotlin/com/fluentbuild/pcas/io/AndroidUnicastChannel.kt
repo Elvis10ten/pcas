@@ -4,7 +4,7 @@ import com.fluentbuild.pcas.host.HostInfo
 
 class AndroidUnicastChannel: UnicastChannel {
 
-    override fun init(receiver: ParcelReceiver) {
+    override fun init(receiver: PayloadReceiver) {
         TODO("Not yet implemented")
     }
 

@@ -13,3 +13,7 @@ internal fun <EntityT: Entity> Set<Entry<EntityT>>.filterHost(predicate: HostInf
     filterSet { it.host == predicate }
 
 internal fun <EntityT: Entity> Set<Entry<EntityT>>.mapToEntities() = mapSet { it.entity }
+
+internal fun <EntityT: Entity> Set<Entry<EntityT>>.singleEntry(predicate: Entry<*>) = single { predicate == it }
+
+internal fun <EntityT: Entity> Set<Entry<EntityT>>.singleEntity(predicate: Entity) = single { predicate == it.entity }

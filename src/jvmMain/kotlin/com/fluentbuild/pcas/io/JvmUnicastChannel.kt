@@ -4,7 +4,7 @@ import com.fluentbuild.pcas.host.HostInfo
 
 class JvmUnicastChannel: UnicastChannel {
 
-    override fun init(receiver: ParcelReceiver) {
+    override fun init(receiver: PayloadReceiver) {
         TODO("Not yet implemented")
     }
 

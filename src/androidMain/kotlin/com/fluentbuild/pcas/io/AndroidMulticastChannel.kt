@@ -2,7 +2,7 @@ package com.fluentbuild.pcas.io
 
 class AndroidMulticastChannel: MulticastChannel {
 
-    override fun init(receiver: ParcelReceiver) {
+    override fun init(receiver: PayloadReceiver) {
         TODO("Not yet implemented")
     }
 
