@@ -39,7 +39,11 @@ class ServiceRegistry(
     private fun onLedgerUpdated(ledger: Ledger) {
         log.debug(::onLedgerUpdated, ledger)
         interceptors.forEach { interceptor ->
-            interceptor.intercept(ledger).forEach(::handle)
+            try {
+                interceptor.intercept(ledger).forEach(::handle)
+            } catch (e: RuntimeException) {
+                log.error(e) { "Interceptor error" }
+            }
         }
     }
 

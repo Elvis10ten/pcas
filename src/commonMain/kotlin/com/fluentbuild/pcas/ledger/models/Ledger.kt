@@ -22,16 +22,16 @@ data class Ledger(
 ) {
 
     @Transient
-    val ownerBonds by unsafeLazy { bonds.filterHost(owner) }
+    val ownerBonds by unsafeLazy() { bonds.filterHost(owner) }
 
     @Transient
-    val othersBonds by unsafeLazy { bonds.filterNotHost(owner) }
+    val othersBonds by unsafeLazy() { bonds.filterNotHost(owner) }
 
     @Transient
-    val ownerProps by unsafeLazy { props.filterHost(owner) }
+    val ownerProps by unsafeLazy() { props.filterHost(owner) }
 
     @Transient
-    val othersProps by unsafeLazy { props.filterNotHost(owner) }
+    val othersProps by unsafeLazy() { props.filterNotHost(owner) }
 
     fun hasBond(prop: Entry<PropertyEntity>) = bonds.filterSet { it == prop }.isNotEmpty()
 

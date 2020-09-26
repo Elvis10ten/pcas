@@ -4,7 +4,14 @@ import com.fluentbuild.pcas.peripheral.Peripheral
 
 interface PeripheralConnector {
 
-    fun connect(peripheral: Peripheral)
+    fun perform(action: Action)
 
-    fun disconnect(peripheral: Peripheral)
+    fun release()
+
+    sealed class Action(val peripheral: Peripheral) {
+
+        class Connect(peripheral: Peripheral): Action(peripheral)
+
+        class Disconnect(peripheral: Peripheral): Action(peripheral)
+    }
 }

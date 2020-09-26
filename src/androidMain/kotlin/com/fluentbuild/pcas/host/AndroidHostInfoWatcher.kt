@@ -8,6 +8,7 @@ class AndroidHostInfoWatcher: HostInfoWatcher {
         get() = TODO("Not yet implemented")
 
     override fun watch(consumer: (HostInfo) -> Unit): Cancellable {
+        HostInfo()
         TODO("Not yet implemented")
     }
 }

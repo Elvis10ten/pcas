@@ -17,3 +17,5 @@ internal fun <EntityT: Entity> Set<Entry<EntityT>>.mapToEntities() = mapSet { it
 internal fun <EntityT: Entity> Set<Entry<EntityT>>.singleEntry(predicate: Entry<*>) = single { predicate == it }
 
 internal fun <EntityT: Entity> Set<Entry<EntityT>>.singleEntity(predicate: Entity) = single { predicate == it.entity }
+
+internal fun <EntityT: Entity> Set<Entry<EntityT>>.findEntity(predicate: Entity) = find { predicate == it.entity }

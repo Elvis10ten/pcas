@@ -83,7 +83,7 @@ kotlin {
 android {
     compileSdkVersion(29)
     defaultConfig {
-        minSdkVersion(24)
+        minSdkVersion(26)
         targetSdkVersion(29)
         versionCode = 1
         versionName = "1.0"

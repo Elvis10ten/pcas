@@ -8,6 +8,8 @@ enum class AudioProfile(val bondId: BondId) {
 
     companion object {
 
-        fun from(bondId: BondId) = values().single { it.bondId == bondId }
+        private val values = values()
+
+        fun from(bondId: BondId) = values.single { it.bondId == bondId }
     }
 }

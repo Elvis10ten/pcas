@@ -1,43 +1,42 @@
 package com.fluentbuild.pcas.services.audio
 
 import com.fluentbuild.pcas.host.HostInfo
+import com.fluentbuild.pcas.host.PeripheralConnector
+import com.fluentbuild.pcas.host.PeripheralConnector.Action
 import com.fluentbuild.pcas.middleware.CommandHandler
 import com.fluentbuild.pcas.middleware.Command
+import com.fluentbuild.pcas.peripheral.Peripheral
 import com.fluentbuild.pcas.peripheral.audio.AudioProfile
 
 class AudioCommandHandler(
-    /*private val peripheral: () -> AudioPeripheral,
-    private val a2dpConnector: PeripheralConnector<AudioPeripheral>,
-    private val hspConnector: PeripheralConnector<AudioPeripheral>,*/
+    private val audioPeripheral: Peripheral,
+    private val a2dpConnector: PeripheralConnector,
+    private val hspConnector: PeripheralConnector,
     private val audioRouter: AudioRouter
 ): CommandHandler {
 
     override fun handle(command: Command) {
-        /*val audioProfile = AudioProfile.from(resolution.boundId)
-        when(resolution) {
-            is Resolution.Connect -> {
+        val audioProfile = AudioProfile.from(command.bondId)
+        when(command.action) {
+            Command.Action.CONNECT -> {
                 stopRouting()
                 connect(audioProfile)
             }
-            is Resolution.Disconnect -> {
+            Command.Action.DISCONNECT -> {
                 stopRouting()
                 disconnect(audioProfile)
             }
-            is Resolution.ShareSink -> {
-                stopRouting()
-                connect(audioProfile)
+            Command.Action.ROUTE -> {
+                startRouting(command.other!!)
             }
-            is Resolution.RouteSource -> {
-                disconnect(audioProfile)
-                startRouting(resolution.remoteSink)
-            }
-            is Resolution.Ambiguous -> {}
-            is Resolution.Nothing -> {}
-        }*/
+            Command.Action.AMBIGUOUS -> {}
+        }
     }
 
     override fun release() {
         stopRouting()
+        a2dpConnector.release()
+        hspConnector.release()
     }
 
     private fun startRouting(remoteSink: HostInfo) {
@@ -49,16 +48,16 @@ class AudioCommandHandler(
     }
 
     private fun connect(audioProfile: AudioProfile) {
-        /*when(audioProfile) {
-            AudioProfile.A2DP -> a2dpConnector.connect(peripheral())
-            AudioProfile.HSP -> hspConnector.connect(peripheral())
-        }*/
+        when(audioProfile) {
+            AudioProfile.A2DP -> a2dpConnector.perform(Action.Connect(audioPeripheral))
+            AudioProfile.HSP -> hspConnector.perform(Action.Connect(audioPeripheral))
+        }
     }
 
     private fun disconnect(audioProfile: AudioProfile) {
-        /*when(audioProfile) {
-            AudioProfile.A2DP -> a2dpConnector.disconnect(peripheral())
-            AudioProfile.HSP -> hspConnector.disconnect(peripheral())
-        }*/
+        when(audioProfile) {
+            AudioProfile.A2DP -> a2dpConnector.perform(Action.Disconnect(audioPeripheral))
+            AudioProfile.HSP -> hspConnector.perform(Action.Disconnect(audioPeripheral))
+        }
     }
 }

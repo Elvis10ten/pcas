@@ -17,20 +17,21 @@ data class AudioProperty(
         val priority: Int,
         val direction: Direction
     ) {
+        UNKNOWN(1, Direction.UNIDIRECTIONAL),
         // Unknown media playback. It could be music, movie soundtracks, etc.
-        MEDIA_UNKNOWN(1, Direction.UNIDIRECTIONAL),
+        MEDIA_UNKNOWN(2, Direction.UNIDIRECTIONAL),
         // Music playback, eg: Music streaming, local audio playback, etc.
-        MUSIC(2, Direction.UNIDIRECTIONAL),
+        MUSIC(3, Direction.UNIDIRECTIONAL),
         // Speech playback, eg: Podcasts, Audiobooks, etc
-        SPEECH(2, Direction.UNIDIRECTIONAL),
+        SPEECH(3, Direction.UNIDIRECTIONAL),
         // Soundtrack, typically accompanying a movie or TV program.
-        MOVIE(3, Direction.UNIDIRECTIONAL),
+        MOVIE(4, Direction.UNIDIRECTIONAL),
         // Game audio playback
-        GAME(3, Direction.UNIDIRECTIONAL),
+        GAME(4, Direction.UNIDIRECTIONAL),
         // Such as VoIP.
-        VOICE_COMMUNICATION(4, Direction.BIDIRECTIONAL),
+        VOICE_COMMUNICATION(5, Direction.BIDIRECTIONAL),
         // Telephony
-        CALL(5, Direction.BIDIRECTIONAL)
+        TELEPHONY_CALL(6, Direction.BIDIRECTIONAL)
     }
 
     enum class Direction {
