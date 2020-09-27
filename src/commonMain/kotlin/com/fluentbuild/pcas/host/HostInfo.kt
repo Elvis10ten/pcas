@@ -1,6 +1,7 @@
 package com.fluentbuild.pcas.host
 
 import com.fluentbuild.pcas.io.Address
+import com.fluentbuild.pcas.io.Port
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.protobuf.ProtoId
 
@@ -13,7 +14,7 @@ data class HostInfo(
     @ProtoId(3)
     val ip: Address.Ipv4,
     @ProtoId(4)
-    val port: Int,
+    val port: Port,
     @ProtoId(5)
     val isInteractive: Boolean,
     @ProtoId(6)

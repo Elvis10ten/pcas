@@ -20,7 +20,7 @@ class HandlerActionScheduler(
             }
         }
 
-        handler.postDelayed(runnable, interval.toLong())
+        handler.post(runnable, interval.toLong())
 
         return Cancellable {
             activeRunnables.remove(runnable)
