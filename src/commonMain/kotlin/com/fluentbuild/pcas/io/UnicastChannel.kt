@@ -8,5 +8,7 @@ interface UnicastChannel {
 
     fun send(recipient: HostInfo, payload: ByteArray)
 
+    fun getPort(): Port
+
     fun close()
 }

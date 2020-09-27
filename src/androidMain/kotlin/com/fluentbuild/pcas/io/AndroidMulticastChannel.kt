@@ -7,7 +7,7 @@ import com.fluentbuild.pcas.async.ThreadExecutor
 
 class AndroidMulticastChannel(
     private val context: Context,
-    cipher: Cipher,
+    cipher: PayloadCipher,
     executor: ThreadExecutor
 ): JvmMulticastChannel(cipher, executor) {
 

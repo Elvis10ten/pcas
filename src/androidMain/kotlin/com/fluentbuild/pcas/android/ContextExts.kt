@@ -1,6 +1,5 @@
 package com.fluentbuild.pcas.android
 
-import android.Manifest
 import android.app.NotificationManager
 import android.bluetooth.BluetoothManager
 import android.content.Context

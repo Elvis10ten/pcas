@@ -8,12 +8,12 @@ import java.net.DatagramSocket
 import java.net.InetSocketAddress
 
 open class JvmUnicastChannel(
-    private val cipher: Cipher,
+    private val cipher: PayloadCipher,
     private val executor: ThreadExecutor
 ): UnicastChannel {
 
     private val log by logger()
-    private val receiveBuffer = ByteArray(MAX_PACKET_SIZE)
+    private val receiveBuffer = ByteArray(MAX_PACKET_SIZE_BYTES)
 
     @Volatile
     private var socket: DatagramSocket? = null

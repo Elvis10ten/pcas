@@ -6,12 +6,12 @@ import java.lang.Exception
 import java.net.MulticastSocket
 
 open class JvmMulticastChannel(
-    private val cipher: Cipher,
+    private val cipher: PayloadCipher,
     private val executor: ThreadExecutor
 ): MulticastChannel {
 
     private val log by logger()
-    private val receiveBuffer = ByteArray(MAX_PACKET_SIZE)
+    private val receiveBuffer = ByteArray(MAX_PACKET_SIZE_BYTES)
 
     @Volatile
     private var socket: MulticastSocket? = null
