@@ -17,7 +17,7 @@ class EntryTest {
     private val hostStub1 = HostInfo(
         uuid = "uuid1",
         name = "name",
-        ip = Address.Ipv6("address"),
+        ip = Address.Ipv4("address"),
         port = 0,
         isInteractive = false,
         sampleRateHz = 0,
@@ -26,7 +26,7 @@ class EntryTest {
     private val hostStub2 = HostInfo(
         uuid = "uuid2",
         name = "name",
-        ip = Address.Ipv6("address"),
+        ip = Address.Ipv4("address"),
         port = 0,
         isInteractive = false,
         sampleRateHz = 0,

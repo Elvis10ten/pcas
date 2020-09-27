@@ -1,4 +1,4 @@
-package com.fluentbuild.pcas.host.audio
+package com.fluentbuild.pcas.services.audio
 
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothProfile

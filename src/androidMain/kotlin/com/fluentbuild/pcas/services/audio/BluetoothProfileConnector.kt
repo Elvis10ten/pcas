@@ -1,11 +1,10 @@
-package com.fluentbuild.pcas.host.audio
+package com.fluentbuild.pcas.services.audio
 
 import android.bluetooth.BluetoothAdapter
 import com.fluentbuild.pcas.async.Cancellable
 import com.fluentbuild.pcas.async.SentinelCancellable
 import com.fluentbuild.pcas.host.PeripheralConnector
 import com.fluentbuild.pcas.host.PeripheralConnector.Action
-import com.fluentbuild.pcas.host.toBluetoothDevice
 import com.fluentbuild.pcas.utils.logger
 
 abstract class BluetoothProfileConnector(

@@ -14,7 +14,7 @@ class LedgerTest {
     private val ownerStub = HostInfo(
         uuid = "owner1",
         name = "name",
-        ip = Address.Ipv6("address"),
+        ip = Address.Ipv4("address"),
         port = 0,
         isInteractive = false,
         sampleRateHz = 0,
@@ -23,7 +23,7 @@ class LedgerTest {
     private val otherStub1 = HostInfo(
         uuid = "other1",
         name = "name",
-        ip = Address.Ipv6("address"),
+        ip = Address.Ipv4("address"),
         port = 0,
         isInteractive = false,
         sampleRateHz = 0,
@@ -32,7 +32,7 @@ class LedgerTest {
     private val otherStub2 = HostInfo(
         uuid = "other2",
         name = "name",
-        ip = Address.Ipv6("address"),
+        ip = Address.Ipv4("address"),
         port = 0,
         isInteractive = false,
         sampleRateHz = 0,

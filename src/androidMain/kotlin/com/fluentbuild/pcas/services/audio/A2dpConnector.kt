@@ -1,9 +1,9 @@
-package com.fluentbuild.pcas.host.audio
+package com.fluentbuild.pcas.services.audio
 
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothProfile
 
-class HspConnector(
+class A2dpConnector(
     profileHolder: BluetoothProfileHolder,
     bluetoothAdapter: BluetoothAdapter,
-): BluetoothProfileConnector(profileHolder, bluetoothAdapter, BluetoothProfile.HEADSET)
+): BluetoothProfileConnector(profileHolder, bluetoothAdapter, BluetoothProfile.A2DP)

@@ -1,4 +1,4 @@
-package com.fluentbuild.pcas.host
+package com.fluentbuild.pcas.services.audio
 
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
@@ -9,7 +9,7 @@ import com.fluentbuild.pcas.peripheral.PeripheralBond
 import com.fluentbuild.pcas.peripheral.audio.AudioProfile
 
 fun BluetoothAdapter.toBluetoothDevice(peripheral: Peripheral): BluetoothDevice =
-    getRemoteDevice(peripheral.address.colonHexNotation)
+    getRemoteDevice(peripheral.address.macHexFormat)
 
 fun BluetoothDevice.toPeripheral() = Peripheral(name, Address.Mac(address))
 

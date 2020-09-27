@@ -1,7 +1,6 @@
-package com.fluentbuild.pcas.host.audio
+package com.fluentbuild.pcas.services.audio
 
 import android.bluetooth.BluetoothA2dp
-import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothHeadset
 import android.bluetooth.BluetoothProfile
 import android.content.BroadcastReceiver
@@ -12,9 +11,6 @@ import com.fluentbuild.pcas.async.Cancellable
 import com.fluentbuild.pcas.async.Cancellables
 import com.fluentbuild.pcas.peripheral.PeripheralBond
 import com.fluentbuild.pcas.host.PeripheralBondsWatcher
-import com.fluentbuild.pcas.host.profileIdToAudioProfile
-import com.fluentbuild.pcas.host.toPeripheral
-import com.fluentbuild.pcas.host.toPeripheralState
 import com.fluentbuild.pcas.utils.logger
 
 class AudioBondsWatcher(

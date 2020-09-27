@@ -14,7 +14,7 @@ class LedgerExtsTest {
     private val hostStub1 = HostInfo(
         uuid = "uuid1",
         name = "name",
-        ip = Address.Ipv6("address"),
+        ip = Address.Ipv4("address"),
         port = 0,
         isInteractive = false,
         sampleRateHz = 0,
@@ -23,7 +23,7 @@ class LedgerExtsTest {
     private val hostStub2 = HostInfo(
         uuid = "uuid2",
         name = "name",
-        ip = Address.Ipv6("address"),
+        ip = Address.Ipv4("address"),
         port = 0,
         isInteractive = false,
         sampleRateHz = 0,
@@ -32,7 +32,7 @@ class LedgerExtsTest {
     private val hostStub3 = HostInfo(
         uuid = "uuid3",
         name = "name",
-        ip = Address.Ipv6("address"),
+        ip = Address.Ipv4("address"),
         port = 0,
         isInteractive = false,
         sampleRateHz = 0,
@@ -41,7 +41,7 @@ class LedgerExtsTest {
     private val hostStub4 = HostInfo(
         uuid = "uuid4",
         name = "name",
-        ip = Address.Ipv6("address"),
+        ip = Address.Ipv4("address"),
         port = 0,
         isInteractive = false,
         sampleRateHz = 0,

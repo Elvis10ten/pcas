@@ -21,7 +21,6 @@ class LedgerProtocol(
     private val log by logger()
     private val cancellables = Cancellables()
 
-
     fun init(onLedgerChanged: (Ledger) -> Unit) {
         log.info { "Initializing LedgerProtocol" }
         ledgerStore.setup(hostInfoWatcher.currentValue, onLedgerChanged)
