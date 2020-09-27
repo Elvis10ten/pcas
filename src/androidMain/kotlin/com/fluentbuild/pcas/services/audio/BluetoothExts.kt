@@ -3,6 +3,7 @@ package com.fluentbuild.pcas.services.audio
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothProfile
+import android.os.RemoteException
 import com.fluentbuild.pcas.io.Address
 import com.fluentbuild.pcas.peripheral.Peripheral
 import com.fluentbuild.pcas.peripheral.PeripheralBond
@@ -13,20 +14,41 @@ fun BluetoothAdapter.toBluetoothDevice(peripheral: Peripheral): BluetoothDevice 
 
 fun BluetoothDevice.toPeripheral() = Peripheral(name, Address.Mac(address))
 
-internal fun profileIdToAudioProfile(profileId: Int): AudioProfile {
-    return when(profileId) {
+internal fun Int.bluetoothProfileIdToAudioProfile(): AudioProfile {
+    return when(this) {
         BluetoothProfile.A2DP -> AudioProfile.A2DP
         BluetoothProfile.HEADSET -> AudioProfile.HSP
-        else -> error("faf")
+        else -> error("Invalid bluetooth profile id: $this")
     }
 }
 
-internal fun Int.toPeripheralState(): PeripheralBond.State {
+internal fun Int.bluetoothProfileStateToPeripheralState(): PeripheralBond.State {
     return when(this) {
         BluetoothProfile.STATE_CONNECTED -> PeripheralBond.State.CONNECTED
         BluetoothProfile.STATE_CONNECTING -> PeripheralBond.State.CONNECTING
         BluetoothProfile.STATE_DISCONNECTED -> PeripheralBond.State.DISCONNECTED
         BluetoothProfile.STATE_DISCONNECTING -> PeripheralBond.State.DISCONNECTING
-        else -> error("faf")
+        else -> error("Invalid bluetooth profile state: $this")
+    }
+}
+
+@Throws(RemoteException::class)
+internal fun BluetoothProfile.connect(device: BluetoothDevice): Boolean {
+    return javaClass.getDeclaredMethod("connect", BluetoothDevice::class.java).run {
+        invoke(this, device) as Boolean
+    }
+}
+
+@Throws(RemoteException::class)
+internal fun BluetoothProfile.disconnect(device: BluetoothDevice): Boolean {
+    return javaClass.getDeclaredMethod("disconnect", BluetoothDevice::class.java).run {
+        invoke(this, device) as Boolean
+    }
+}
+
+@Throws(RemoteException::class)
+internal fun BluetoothProfile.setActiveDevice(device: BluetoothDevice?): Boolean {
+    return javaClass.getDeclaredMethod("setActiveDevice", BluetoothDevice::class.java).run {
+        invoke(this, device) as Boolean
     }
 }

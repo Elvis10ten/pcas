@@ -4,7 +4,7 @@ import android.content.Context
 import com.fluentbuild.pcas.async.Cancellable
 import com.fluentbuild.pcas.services.audio.AudioConfig
 import com.fluentbuild.pcas.android.ActiveNetworkCallback
-import com.fluentbuild.pcas.android.InteractivityReceiver
+import com.fluentbuild.pcas.android.InteractivityCallback
 import com.fluentbuild.pcas.android.powerManager
 import com.fluentbuild.pcas.io.UnicastChannel
 import com.fluentbuild.pcas.utils.logger
@@ -22,23 +22,23 @@ class AndroidHostInfoWatcher(
     override fun watch(consumer: (HostInfo) -> Unit): Cancellable {
         log.debug { "Watching HostInfo" }
         val notifyConsumer = {
-            getCurrentHostInfo().run {
-                log.debug { "Current HostInfo: $this" }
-                consumer(this)
+            getCurrentHostInfo().let {
+                log.debug { "Current HostInfo: $it" }
+                consumer(it)
             }
         }
 
         val activeNetworkCallback = ActiveNetworkCallback(context, notifyConsumer)
-        val interactivityReceiver = InteractivityReceiver(context, notifyConsumer)
+        val interactivityCallback = InteractivityCallback(context, notifyConsumer)
 
         notifyConsumer()
         activeNetworkCallback.register()
-        interactivityReceiver.register()
+        interactivityCallback.register()
 
         return Cancellable {
             log.debug { "Stopping HostInfo watch" }
             activeNetworkCallback.unregister()
-            interactivityReceiver.unregister()
+            interactivityCallback.unregister()
         }
     }
 

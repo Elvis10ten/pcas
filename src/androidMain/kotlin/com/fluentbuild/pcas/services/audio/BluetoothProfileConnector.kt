@@ -1,6 +1,7 @@
 package com.fluentbuild.pcas.services.audio
 
-import android.bluetooth.BluetoothAdapter
+import android.content.Context
+import com.fluentbuild.pcas.android.bluetoothAdapter
 import com.fluentbuild.pcas.async.Cancellable
 import com.fluentbuild.pcas.async.SentinelCancellable
 import com.fluentbuild.pcas.host.PeripheralConnector
@@ -8,8 +9,8 @@ import com.fluentbuild.pcas.host.PeripheralConnector.Action
 import com.fluentbuild.pcas.utils.logger
 
 abstract class BluetoothProfileConnector(
+    private val context: Context,
     private val profileHolder: BluetoothProfileHolder,
-    private val bluetoothAdapter: BluetoothAdapter,
     private val profileId: Int
 ): PeripheralConnector {
 
@@ -21,7 +22,7 @@ abstract class BluetoothProfileConnector(
         cancellable.cancel()
 
         cancellable = profileHolder.useProfile(profileId) { profile ->
-            val bluetoothDevice = bluetoothAdapter.toBluetoothDevice(action.peripheral)
+            val bluetoothDevice = context.bluetoothAdapter.toBluetoothDevice(action.peripheral)
             log.debug { "Performing action: $action" }
 
             val actionInitiated = when(action) {
@@ -34,6 +35,8 @@ abstract class BluetoothProfileConnector(
 
     override fun release() {
         log.debug(::release)
-        profileHolder.dropProfile(profileId)
+        cancellable.cancel()
+        cancellable = SentinelCancellable
+        profileHolder.clearCache(profileId)
     }
 }

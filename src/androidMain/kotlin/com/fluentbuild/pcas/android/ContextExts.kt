@@ -1,6 +1,7 @@
 package com.fluentbuild.pcas.android
 
 import android.app.NotificationManager
+import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothManager
 import android.content.Context
 import android.content.pm.PackageManager
@@ -28,6 +29,9 @@ val Context.telephonyManager
 
 val Context.bluetoothManager
     get() = getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
+
+val Context.bluetoothAdapter: BluetoothAdapter
+    get() = bluetoothManager.adapter
 
 val Context.notificationManager
     get() = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager

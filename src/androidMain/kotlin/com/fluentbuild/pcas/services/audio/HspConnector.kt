@@ -1,9 +1,9 @@
 package com.fluentbuild.pcas.services.audio
 
-import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothProfile
+import android.content.Context
 
 class HspConnector(
-    profileHolder: BluetoothProfileHolder,
-    bluetoothAdapter: BluetoothAdapter,
-): BluetoothProfileConnector(profileHolder, bluetoothAdapter, BluetoothProfile.HEADSET)
+    context: Context,
+    profileHolder: BluetoothProfileHolder
+): BluetoothProfileConnector(context, profileHolder, BluetoothProfile.HEADSET)

@@ -72,8 +72,8 @@ class AudioBondsWatcher(
         return profile.getDevicesMatchingConnectionStates(connectionStates).map {
             PeripheralBond(
                 peripheral = it.toPeripheral(),
-                bondId = profileIdToAudioProfile(profileId).bondId,
-                state = profile.getConnectionState(it).toPeripheralState()
+                bondId = profileId.bluetoothProfileIdToAudioProfile().bondId,
+                state = profile.getConnectionState(it).bluetoothProfileStateToPeripheralState()
             )
         }.toSet()
     }

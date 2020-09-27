@@ -3,14 +3,12 @@ package com.fluentbuild.pcas.services.audio
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothProfile
 import android.content.Context
+import com.fluentbuild.pcas.android.bluetoothAdapter
 import com.fluentbuild.pcas.async.Cancellable
 import com.fluentbuild.pcas.async.SentinelCancellable
 import com.fluentbuild.pcas.utils.logger
 
-class BluetoothProfileHolder(
-    private val context: Context,
-    private val bluetoothAdapter: BluetoothAdapter
-) {
+class BluetoothProfileHolder(private val context: Context) {
 
     private val log by logger()
     private val cachedProfiles = mutableMapOf<ProfileId, BluetoothProfile>()
@@ -33,20 +31,20 @@ class BluetoothProfileHolder(
         val serviceListener = object : BluetoothProfile.ServiceListener {
 
             override fun onServiceConnected(profileId: Int, proxy: BluetoothProfile) {
-                log.debug { "Profile connected: $profileId" }
+                log.debug { "Profile service connected: $profileId" }
                 cachedProfiles[profileId] = proxy
                 invokePendingConsumers(profileId, proxy)
             }
 
             override fun onServiceDisconnected(profileId: Int) {
-                log.error { "Profile disconnected: $profileId" }
+                log.error { "Profile service disconnected: $profileId" }
                 cachedProfiles.remove(profileId)
             }
         }
 
         log.debug { "Loading profile: $profileId" }
-        if(!bluetoothAdapter.getProfileProxy(context, serviceListener, profileId)) {
-            error("BluetoothAdapter.getProfileProxy should never return false")
+        if(!context.bluetoothAdapter.getProfileProxy(context, serviceListener, profileId)) {
+            error("BluetoothAdapter.getProfileProxy returned false")
         }
     }
 
@@ -58,11 +56,11 @@ class BluetoothProfileHolder(
         }
     }
 
-    fun dropProfile(profileId: ProfileId) {
+    fun clearCache(profileId: ProfileId) {
         cachedProfiles[profileId]?.let {
             log.debug { "Dropping cached profile: $profileId" }
             cachedProfiles.remove(profileId)
-            bluetoothAdapter.closeProfileProxy(profileId, it)
+            context.bluetoothAdapter.closeProfileProxy(profileId, it)
         }
     }
 }
