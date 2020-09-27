@@ -2,9 +2,11 @@ package com.fluentbuild.pcas.async
 
 interface ThreadExecutor {
 
-    fun onMain(action: () -> Unit): Cancellable
+    fun onMain(action: () -> Unit)
 
-    fun onBackground(action: () -> Unit): Cancellable
+    fun onMainRepeating(interval: Int, action: () -> Unit)
+
+    fun onBackground(action: () -> Unit)
 
     fun cancel()
 }

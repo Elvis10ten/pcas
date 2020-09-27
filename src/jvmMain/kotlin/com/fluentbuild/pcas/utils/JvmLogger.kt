@@ -3,7 +3,6 @@ package com.fluentbuild.pcas.utils
 import timber.log.*
 import kotlin.reflect.KFunction
 
-@Suppress("unused")
 open class JvmLogger(className: String) {
 
     private val tree = Timber.tagged(className)

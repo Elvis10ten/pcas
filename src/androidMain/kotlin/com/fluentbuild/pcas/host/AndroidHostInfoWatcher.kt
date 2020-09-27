@@ -13,7 +13,7 @@ class AndroidHostInfoWatcher(
     private val context: Context,
     private val hostUuid: String,
     private val hostName: String,
-    private val addressProvider: NetworkAddressProvider,
+    private val addressProvider: HostAddressProvider,
     private val unicastChannel: UnicastChannel
 ): HostInfoWatcher {
 

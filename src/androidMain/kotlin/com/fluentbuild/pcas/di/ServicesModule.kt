@@ -7,7 +7,7 @@ class ServicesModule(
     private val audioServiceModule: AudioServiceModule
 ) {
 
-    internal val serviceHandlers: Map<ServiceId, CommandHandler> by lazy {
+    val serviceHandlers: Map<ServiceId, CommandHandler> by lazy {
         mapOf(
             audioServiceModule.serviceId to audioServiceModule.commandHandler
         )

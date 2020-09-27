@@ -5,7 +5,8 @@ import com.fluentbuild.pcas.ledger.*
 class LedgerModule(
     private val ioModule: IoModule,
     private val hostModule: HostModule,
-    private val utilsModule: UtilsModule
+    private val utilsModule: UtilsModule,
+    private val asyncModule: AsyncModule
 ) {
 
     private val ledgerStore: LedgerStore by lazy { LedgerStore(utilsModule.timeProvider) }
@@ -31,12 +32,12 @@ class LedgerModule(
         LedgerWatchdog(
             ledgerStore = ledgerStore,
             packetBroadcaster = packetBroadcaster,
-            scheduler = utilsModule.actionScheduler,
-            timerProvider = utilsModule.timeProvider
+            timerProvider = utilsModule.timeProvider,
+            executor = asyncModule.provideThreadExecutor()
         )
     }
 
-    internal val ledgerProtocol: LedgerProtocol by lazy {
+    val ledgerProtocol: LedgerProtocol by lazy {
         LedgerProtocol(
             multicastChannel = ioModule.multicastChannel,
             hostInfoWatcher = hostModule.selfHostInfoWatcher,

@@ -14,7 +14,7 @@ class MiddlewareModule(
         listOf(ConflictsInterceptor(), RoutingInterceptor())
     }
 
-    internal val serviceRegistry: ServiceRegistry by lazy {
+    val serviceRegistry: ServiceRegistry by lazy {
         ServiceRegistry(
             ledgerProtocol = ledgerModule.ledgerProtocol,
             interceptors = interceptors,

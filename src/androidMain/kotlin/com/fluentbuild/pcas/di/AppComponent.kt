@@ -3,27 +3,39 @@ package com.fluentbuild.pcas.di
 import android.content.Context
 import android.os.Handler
 import com.fluentbuild.pcas.peripheral.Peripheral
+import javax.crypto.SecretKey
 
 class AppComponent(
     appContext: Context,
-    mainThreadHandler: Handler,
-    audioPeripheral: Peripheral
+    audioPeripheral: Peripheral,
+    hostUuid: String,
+    hostName: String,
+    payloadKey: SecretKey
 ) {
 
-    val androidModule = AndroidModule(appContext)
+    private val mainThreadHandler = Handler(appContext.mainLooper)
 
-    val utilsModule = UtilsModule(mainThreadHandler)
+    private val asyncModule = AsyncModule(mainThreadHandler)
 
-    val ioModule = IoModule()
+    private val utilsModule = UtilsModule()
 
-    val hostModule = HostModule()
+    private val ioModule = IoModule(appContext, payloadKey, asyncModule)
 
-    val ledgerModule = LedgerModule(ioModule, hostModule, utilsModule)
+    private val hostModule = HostModule(appContext, hostUuid, hostName, ioModule)
 
-    val audioServiceModule = AudioServiceModule(audioPeripheral, androidModule, utilsModule)
+    private val ledgerModule = LedgerModule(ioModule, hostModule, utilsModule, asyncModule)
 
-    val servicesModule = ServicesModule(audioServiceModule)
+    private val audioServiceModule = AudioServiceModule(appContext, audioPeripheral, utilsModule)
 
-    val middlewareModule = MiddlewareModule(servicesModule, ledgerModule)
+    private val servicesModule = ServicesModule(audioServiceModule)
 
+    private val middlewareModule = MiddlewareModule(servicesModule, ledgerModule)
+
+    fun init() {
+        audioServiceModule.init(middlewareModule.serviceRegistry)
+    }
+
+    fun release() {
+        asyncModule.threadPool.shutdownNow()
+    }
 }

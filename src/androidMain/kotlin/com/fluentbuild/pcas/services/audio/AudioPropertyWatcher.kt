@@ -7,15 +7,15 @@ import android.media.AudioPlaybackConfiguration
 import android.telephony.TelephonyManager
 import com.fluentbuild.pcas.android.AudioPlaybackCallback
 import com.fluentbuild.pcas.android.CallStateCallback
+import com.fluentbuild.pcas.android.audioManager
+import com.fluentbuild.pcas.android.telephonyManager
 import com.fluentbuild.pcas.async.Cancellable
 import com.fluentbuild.pcas.async.Watcher
 import com.fluentbuild.pcas.host.audio.AudioProperty
 import com.fluentbuild.pcas.utils.logger
 
 class AudioPropertyWatcher(
-    private val context: Context,
-    private val telephonyManager: TelephonyManager,
-    private val audioManager: AudioManager
+    private val context: Context
 ): Watcher<AudioProperty> {
 
     private val log by logger()
@@ -23,7 +23,7 @@ class AudioPropertyWatcher(
     override fun watch(consumer: (AudioProperty) -> Unit): Cancellable {
         log.debug { "Watching AudioProperty" }
         val notifyConsumer = {
-            audioManager.activePlaybackConfigurations.toAudioProperty().let {
+            context.audioManager.activePlaybackConfigurations.toAudioProperty().let {
                 log.debug { "Current AudioProperty: $it" }
                 consumer(it)
             }
@@ -45,7 +45,7 @@ class AudioPropertyWatcher(
     private fun List<AudioPlaybackConfiguration>.toAudioProperty(): AudioProperty {
         var usages = mapNotNull { it.toAudioPropertyUsage() }
 
-        if(telephonyManager.callState != TelephonyManager.CALL_STATE_IDLE) {
+        if(context.telephonyManager.callState != TelephonyManager.CALL_STATE_IDLE) {
             usages = usages + AudioProperty.Usage.TELEPHONY_CALL
         }
 

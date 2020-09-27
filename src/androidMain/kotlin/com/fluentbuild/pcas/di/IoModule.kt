@@ -1,13 +1,24 @@
 package com.fluentbuild.pcas.di
 
-import com.fluentbuild.pcas.io.AndroidMulticastChannel
-import com.fluentbuild.pcas.io.AndroidUnicastChannel
-import com.fluentbuild.pcas.io.MulticastChannel
-import com.fluentbuild.pcas.io.UnicastChannel
+import android.content.Context
+import com.fluentbuild.pcas.io.*
+import javax.crypto.SecretKey
 
-class IoModule {
+class IoModule(
+    private val appContext: Context,
+    private val payloadKey: SecretKey,
+    private val asyncModule: AsyncModule
+) {
 
-    internal val multicastChannel: MulticastChannel by lazy { AndroidMulticastChannel() }
+    private val cipher: PayloadCipher by lazy {
+        JvmPayloadCipher(payloadKey)
+    }
 
-    internal val unicastChannel: UnicastChannel by lazy { AndroidUnicastChannel() }
+    internal val multicastChannel: MulticastChannel by lazy {
+        AndroidMulticastChannel(appContext, cipher, asyncModule.provideThreadExecutor())
+    }
+
+    internal val unicastChannel: UnicastChannel by lazy {
+        JvmUnicastChannel(cipher, asyncModule.provideThreadExecutor())
+    }
 }

@@ -1,20 +1,21 @@
 package com.fluentbuild.pcas.host
 
-import android.net.wifi.WifiManager
+import android.content.Context
+import com.fluentbuild.pcas.android.wifiManager
 import com.fluentbuild.pcas.io.Address
 import java.net.Inet4Address
 import java.net.InetAddress
 import java.net.NetworkInterface
 import java.net.SocketException
 
-class NetworkAddressProvider(private val wifiManager: WifiManager): HostAddressProvider {
+class NetworkAddressProvider(private val context: Context): HostAddressProvider {
 
     override fun getHostAddress() = Address.Ipv4(getInetAddress().hostAddress)
 
     private fun getInetAddress() = getWifiAddress() ?: getPrimaryInterfaceAddress()
 
     private fun getWifiAddress(): InetAddress? {
-        return wifiManager.connectionInfo.ipAddress
+        return context.wifiManager.connectionInfo.ipAddress
             .takeIf { it != 0 }
             ?.let {
                 byteArrayOf(
