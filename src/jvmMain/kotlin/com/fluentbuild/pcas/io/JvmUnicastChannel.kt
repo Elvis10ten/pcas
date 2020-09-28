@@ -1,6 +1,6 @@
 package com.fluentbuild.pcas.io
 
-import com.fluentbuild.pcas.async.ThreadExecutor
+import com.fluentbuild.pcas.async.ThreadRunner
 import com.fluentbuild.pcas.host.HostInfo
 import com.fluentbuild.pcas.utils.logger
 import java.lang.Exception
@@ -9,7 +9,7 @@ import java.net.InetSocketAddress
 
 open class JvmUnicastChannel(
     private val cipher: PayloadCipher,
-    private val executor: ThreadExecutor
+    private val runner: ThreadRunner
 ): UnicastChannel {
 
     private val log by logger()
@@ -25,11 +25,11 @@ open class JvmUnicastChannel(
             bind(InetSocketAddress(0))
         }
 
-        executor.onBackground {
+        runner.runOnBackground {
             while(socket != null) {
                 try {
                     val decryptedPayload = socket!!.awaitPayload(receiveBuffer, cipher)
-                    executor.onMain { receiver.onReceived(decryptedPayload) }
+                    runner.runOnMain { receiver.onReceived(decryptedPayload) }
                 } catch (e: Exception) {
                     log.error(e) { "Error receiving payload" }
                 }
@@ -39,16 +39,19 @@ open class JvmUnicastChannel(
 
     override fun send(recipient: HostInfo, payload: ByteArray) {
         log.debug { "Sending payload to: $recipient" }
-        executor.onBackground {
+        runner.runOnBackground {
             val encryptedPayload = cipher.encrypt(payload)
-            val packet = createDatagramPacket(encryptedPayload, recipient.ip, recipient.port)
+            val packet = createDatagramPacket(encryptedPayload, recipient.address, recipient.port)
             socket!!.send(packet)
         }
     }
 
+    override fun getPort(): Port {
+        return socket!!.localPort
+    }
     override fun close() {
         log.debug { "Closing UnicastChannel" }
-        executor.cancel()
+        runner.cancelAll()
         socket?.close()
         socket = null
     }

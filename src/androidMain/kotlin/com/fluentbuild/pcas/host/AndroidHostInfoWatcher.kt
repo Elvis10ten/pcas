@@ -6,6 +6,7 @@ import com.fluentbuild.pcas.services.audio.AudioConfig
 import com.fluentbuild.pcas.android.ActiveNetworkCallback
 import com.fluentbuild.pcas.android.InteractivityCallback
 import com.fluentbuild.pcas.android.powerManager
+import com.fluentbuild.pcas.async.Watcher
 import com.fluentbuild.pcas.io.UnicastChannel
 import com.fluentbuild.pcas.utils.logger
 
@@ -42,11 +43,14 @@ class AndroidHostInfoWatcher(
         }
     }
 
+    override val currentValue: HostInfo
+        get() = getCurrentHostInfo()
+
     private fun getCurrentHostInfo(): HostInfo {
         return HostInfo(
             uuid = hostUuid,
             name = hostName,
-            ip = addressProvider.getHostAddress(),
+            address = addressProvider.getAddress(),
             port = unicastChannel.getPort(),
             isInteractive = context.powerManager.isInteractive,
             minBufferSizeBytes = AudioConfig.minBufferSizeBytes

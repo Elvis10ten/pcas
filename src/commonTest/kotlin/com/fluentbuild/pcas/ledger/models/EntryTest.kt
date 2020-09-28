@@ -17,19 +17,17 @@ class EntryTest {
     private val hostStub1 = HostInfo(
         uuid = "uuid1",
         name = "name",
-        ip = Address.Ipv4("address"),
+        address = Address.Ipv4("address"),
         port = 0,
         isInteractive = false,
-        sampleRateHz = 0,
         minBufferSizeBytes = 0
     )
     private val hostStub2 = HostInfo(
         uuid = "uuid2",
         name = "name",
-        ip = Address.Ipv4("address"),
+        address = Address.Ipv4("address"),
         port = 0,
         isInteractive = false,
-        sampleRateHz = 0,
         minBufferSizeBytes = 0
     )
 

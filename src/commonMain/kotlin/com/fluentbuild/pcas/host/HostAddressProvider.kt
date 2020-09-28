@@ -2,7 +2,7 @@ package com.fluentbuild.pcas.host
 
 import com.fluentbuild.pcas.io.Address
 
-interface HostAddressProvider {
+fun interface HostAddressProvider {
 
-    fun getHostAddress(): Address.Ipv4
+    fun getAddress(): Address.Ipv4
 }

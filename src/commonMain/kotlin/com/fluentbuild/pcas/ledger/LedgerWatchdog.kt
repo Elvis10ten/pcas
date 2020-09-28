@@ -1,7 +1,6 @@
 package com.fluentbuild.pcas.ledger
 
-import com.fluentbuild.pcas.async.Cancellables
-import com.fluentbuild.pcas.async.ThreadExecutor
+import com.fluentbuild.pcas.async.ThreadRunner
 import com.fluentbuild.pcas.host.HostInfo
 import com.fluentbuild.pcas.ledger.models.Ledger.Companion.ENTRY_EVICTION_NOTICE_THRESHOLD_MILLIS
 import com.fluentbuild.pcas.utils.TimeProvider
@@ -10,7 +9,7 @@ import com.fluentbuild.pcas.utils.logger
 class LedgerWatchdog(
     private val ledgerStore: LedgerStore,
     private val packetBroadcaster: PacketBroadcaster,
-    private val executor: ThreadExecutor,
+    private val runner: ThreadRunner,
     private val timerProvider: TimeProvider
 ) {
 
@@ -19,7 +18,7 @@ class LedgerWatchdog(
 
     fun start() {
         val interval = ENTRY_EVICTION_NOTICE_THRESHOLD_MILLIS / 2
-        executor.onMainRepeating(interval) {
+        runner.runOnMainRepeating(interval) {
             val latestEvictionNotices = ledgerStore.get().getEvictionNotices(timerProvider.currentTimeMillis())
             log.debug { "Latest eviction notices: $latestEvictionNotices" }
 
@@ -37,6 +36,6 @@ class LedgerWatchdog(
     }
 
     fun stop() {
-        executor.cancel()
+        runner.cancelAll()
     }
 }

@@ -4,8 +4,7 @@ import android.content.Context
 import com.fluentbuild.pcas.android.bluetoothAdapter
 import com.fluentbuild.pcas.async.Cancellable
 import com.fluentbuild.pcas.async.SentinelCancellable
-import com.fluentbuild.pcas.host.PeripheralConnector
-import com.fluentbuild.pcas.host.PeripheralConnector.Action
+import com.fluentbuild.pcas.services.audio.PeripheralConnector.Action
 import com.fluentbuild.pcas.utils.logger
 
 abstract class BluetoothProfileConnector(

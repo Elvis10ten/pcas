@@ -10,7 +10,6 @@ import android.content.IntentFilter
 import com.fluentbuild.pcas.async.Cancellable
 import com.fluentbuild.pcas.async.Cancellables
 import com.fluentbuild.pcas.peripheral.PeripheralBond
-import com.fluentbuild.pcas.host.PeripheralBondsWatcher
 import com.fluentbuild.pcas.utils.logger
 
 class AudioBondsWatcher(

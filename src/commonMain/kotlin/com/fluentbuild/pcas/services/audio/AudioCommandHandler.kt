@@ -1,8 +1,7 @@
 package com.fluentbuild.pcas.services.audio
 
 import com.fluentbuild.pcas.host.HostInfo
-import com.fluentbuild.pcas.host.PeripheralConnector
-import com.fluentbuild.pcas.host.PeripheralConnector.Action
+import com.fluentbuild.pcas.services.audio.PeripheralConnector.Action
 import com.fluentbuild.pcas.middleware.CommandHandler
 import com.fluentbuild.pcas.middleware.Command
 import com.fluentbuild.pcas.peripheral.Peripheral

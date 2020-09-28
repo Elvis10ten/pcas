@@ -12,7 +12,7 @@ data class HostInfo(
     @ProtoId(2)
     val name: String,
     @ProtoId(3)
-    val ip: Address.Ipv4,
+    val address: Address.Ipv4,
     @ProtoId(4)
     val port: Port,
     @ProtoId(5)
@@ -21,10 +21,7 @@ data class HostInfo(
     val minBufferSizeBytes: Int
 ) {
 
-    override fun equals(other: Any?): Boolean {
-        if(other !is HostInfo) return false
-        return uuid == other.uuid
-    }
+    override fun equals(other: Any?) = uuid == (other as? HostInfo)?.uuid
 
     override fun hashCode() = uuid.hashCode()
 }

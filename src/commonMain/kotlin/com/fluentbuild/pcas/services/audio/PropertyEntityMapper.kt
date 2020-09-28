@@ -1,13 +1,10 @@
 package com.fluentbuild.pcas.services.audio
 
-import com.fluentbuild.pcas.host.audio.AudioProperty
 import com.fluentbuild.pcas.ledger.models.PropertyEntity
 import com.fluentbuild.pcas.ledger.models.ServiceId
 import com.fluentbuild.pcas.peripheral.audio.AudioProfile
 import com.fluentbuild.pcas.utils.Mapper
 import com.fluentbuild.pcas.utils.TimeProvider
-import kotlin.math.log10
-import kotlin.math.pow
 
 class PropertyEntityMapper(
     private val audioServiceId: ServiceId,

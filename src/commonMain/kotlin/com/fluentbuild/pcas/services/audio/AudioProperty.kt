@@ -1,4 +1,4 @@
-package com.fluentbuild.pcas.host.audio
+package com.fluentbuild.pcas.services.audio
 
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.protobuf.ProtoId

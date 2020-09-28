@@ -14,28 +14,25 @@ class LedgerTest {
     private val ownerStub = HostInfo(
         uuid = "owner1",
         name = "name",
-        ip = Address.Ipv4("address"),
+        address = Address.Ipv4("address"),
         port = 0,
         isInteractive = false,
-        sampleRateHz = 0,
         minBufferSizeBytes = 0
     )
     private val otherStub1 = HostInfo(
         uuid = "other1",
         name = "name",
-        ip = Address.Ipv4("address"),
+        address = Address.Ipv4("address"),
         port = 0,
         isInteractive = false,
-        sampleRateHz = 0,
         minBufferSizeBytes = 0
     )
     private val otherStub2 = HostInfo(
         uuid = "other2",
         name = "name",
-        ip = Address.Ipv4("address"),
+        address = Address.Ipv4("address"),
         port = 0,
         isInteractive = false,
-        sampleRateHz = 0,
         minBufferSizeBytes = 0
     )
 

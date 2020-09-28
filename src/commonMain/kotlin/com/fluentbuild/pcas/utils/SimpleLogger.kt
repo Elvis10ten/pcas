@@ -2,9 +2,7 @@ package com.fluentbuild.pcas.utils
 
 import kotlin.reflect.KFunction
 
-class SimpleLogger(
-    private val className: String
-) {
+class SimpleLogger(private val className: String) {
 
     fun debug(message: () -> String) {
         println("D/$className: ${message()}")

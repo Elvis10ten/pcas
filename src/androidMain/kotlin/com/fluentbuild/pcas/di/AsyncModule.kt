@@ -1,7 +1,7 @@
 package com.fluentbuild.pcas.di
 
 import android.os.Handler
-import com.fluentbuild.pcas.async.AndroidThreadExecutor
+import com.fluentbuild.pcas.async.AndroidThreadRunner
 import java.util.concurrent.LinkedBlockingQueue
 import java.util.concurrent.ThreadPoolExecutor
 import java.util.concurrent.TimeUnit
@@ -20,7 +20,7 @@ class AsyncModule(
         )
     }
 
-    fun provideThreadExecutor() = AndroidThreadExecutor(mainThreadHandler, threadPool)
+    fun provideThreadExecutor() = AndroidThreadRunner(mainThreadHandler, threadPool)
 
     companion object {
 

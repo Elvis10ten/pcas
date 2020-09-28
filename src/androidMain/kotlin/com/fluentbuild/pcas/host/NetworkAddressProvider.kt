@@ -10,7 +10,7 @@ import java.net.SocketException
 
 class NetworkAddressProvider(private val context: Context): HostAddressProvider {
 
-    override fun getHostAddress() = Address.Ipv4(getInetAddress().hostAddress)
+    override fun getAddress() = Address.Ipv4(getInetAddress().hostAddress)
 
     private fun getInetAddress() = getWifiAddress() ?: getPrimaryInterfaceAddress()
 

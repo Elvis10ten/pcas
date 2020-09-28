@@ -12,7 +12,7 @@ sealed class Address {
     data class Mac(@ProtoId(1) val macHexFormat: String): Address()
 
     /**
-     * An IPv4 address, eg: 192.168.241.202
+     * An IPv4 address, eg: "192.168.241.202"
      */
     @Serializable
     data class Ipv4(@ProtoId(1) val ipDottedFormat: String): Address()

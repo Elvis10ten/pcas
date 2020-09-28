@@ -1,4 +1,4 @@
-package com.fluentbuild.pcas.host
+package com.fluentbuild.pcas.services.audio
 
 import com.fluentbuild.pcas.async.Watcher
 import com.fluentbuild.pcas.peripheral.PeripheralBond

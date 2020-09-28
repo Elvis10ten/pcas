@@ -4,14 +4,14 @@ import android.os.Handler
 import androidx.annotation.MainThread
 import java.util.concurrent.ThreadPoolExecutor
 
-class AndroidThreadExecutor(
+class AndroidThreadRunner(
     private val mainThreadHandler: Handler,
     threadPool: ThreadPoolExecutor
-): JvmThreadExecutor(threadPool) {
+): JvmThreadRunner(threadPool) {
 
     private val runnables = mutableSetOf<Runnable>()
 
-    override fun onMain(action: () -> Unit) {
+    override fun runOnMain(action: () -> Unit) {
         val runnable = object: Runnable {
 
             override fun run() {
@@ -24,7 +24,7 @@ class AndroidThreadExecutor(
         mainThreadHandler.post(runnable)
     }
 
-    override fun onMainRepeating(interval: Int, action: () -> Unit) {
+    override fun runOnMainRepeating(interval: Int, action: () -> Unit) {
         val runnable = object: Runnable {
 
             override fun run() {
@@ -40,8 +40,8 @@ class AndroidThreadExecutor(
     }
 
     @MainThread
-    override fun cancel() {
-        super.cancel()
+    override fun cancelAll() {
+        super.cancelAll()
         runnables.forEach { mainThreadHandler.removeCallbacks(it) }
         runnables.clear()
     }

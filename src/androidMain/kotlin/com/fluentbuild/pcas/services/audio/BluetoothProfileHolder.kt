@@ -49,6 +49,7 @@ class BluetoothProfileHolder(private val context: Context) {
     }
 
     private fun invokePendingConsumers(profileId: ProfileId, profile: BluetoothProfile) {
+        pendingConsumers.callAndRemove()
         val iterator = pendingConsumers.getValue(profileId).listIterator()
         for (consumer in iterator) {
             consumer(profile)

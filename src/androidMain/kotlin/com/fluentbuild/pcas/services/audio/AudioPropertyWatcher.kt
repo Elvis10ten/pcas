@@ -2,7 +2,6 @@ package com.fluentbuild.pcas.services.audio
 
 import android.content.Context
 import android.media.AudioAttributes
-import android.media.AudioManager
 import android.media.AudioPlaybackConfiguration
 import android.telephony.TelephonyManager
 import com.fluentbuild.pcas.android.AudioPlaybackCallback
@@ -11,7 +10,6 @@ import com.fluentbuild.pcas.android.audioManager
 import com.fluentbuild.pcas.android.telephonyManager
 import com.fluentbuild.pcas.async.Cancellable
 import com.fluentbuild.pcas.async.Watcher
-import com.fluentbuild.pcas.host.audio.AudioProperty
 import com.fluentbuild.pcas.utils.logger
 
 class AudioPropertyWatcher(

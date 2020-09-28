@@ -2,9 +2,8 @@ package com.fluentbuild.pcas.di
 
 import android.content.Context
 import com.fluentbuild.pcas.async.Watcher
-import com.fluentbuild.pcas.host.PeripheralBondsWatcher
-import com.fluentbuild.pcas.host.PeripheralConnector
-import com.fluentbuild.pcas.host.audio.*
+import com.fluentbuild.pcas.services.audio.PeripheralBondsWatcher
+import com.fluentbuild.pcas.services.audio.PeripheralConnector
 import com.fluentbuild.pcas.ledger.models.BondEntity
 import com.fluentbuild.pcas.ledger.models.PropertyEntity
 import com.fluentbuild.pcas.middleware.ServiceRegistry
