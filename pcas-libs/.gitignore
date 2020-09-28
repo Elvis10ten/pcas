@@ -1,0 +1,16 @@
+*.iml
+.gradle
+/local.properties
+/.idea/caches
+/.idea/libraries
+/.idea/modules.xml
+/.idea/workspace.xml
+/.idea/navEditor.xml
+/.idea/assetWizardSettings.xml
+.DS_Store
+/build
+/pcas-libs/build
+/pcas-clients/pcas-android-client/build
+/captures
+.externalNativeBuild
+.cxx
