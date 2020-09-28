@@ -14,8 +14,8 @@ class PacketReceiver(
     private val log by logger()
     private val packetSerializer = Packet.serializer()
 
-    override fun onReceived(payload: ByteArray) {
-        val packet = protoBuf.load(packetSerializer, payload)
+    override fun onReceived(data: ByteArray) {
+        val packet = protoBuf.decodeFromByteArray(packetSerializer, data)
         log.info { "Packet received: $packet" }
 
         with(packet.ledger) {

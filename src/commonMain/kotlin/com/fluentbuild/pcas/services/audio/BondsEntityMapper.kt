@@ -11,12 +11,11 @@ class BondsEntityMapper(
     private val audioServiceId: ServiceId
 ): Mapper<Set<PeripheralBond>, Set<BondEntity>> {
 
-    override fun map(from: Set<PeripheralBond>) =
-        from.filterSet { it.state == PeripheralBond.State.CONNECTED }
-            .mapSet(::createBondEntity)
+    override fun map(from: Set<PeripheralBond>) = from.mapSet(::createBondEntity)
 
     private fun createBondEntity(peripheralBond: PeripheralBond) = BondEntity(
-        audioServiceId,
-        peripheralBond.bondId
+        serviceId = audioServiceId,
+        bondId = peripheralBond.bondId,
+        state = peripheralBond.state
     )
 }

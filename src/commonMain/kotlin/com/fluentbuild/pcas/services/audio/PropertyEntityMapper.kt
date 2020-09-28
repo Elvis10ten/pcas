@@ -30,12 +30,7 @@ class PropertyEntityMapper(
         serviceId = audioServiceId,
         bondId = profile.bondId,
         hasUsage = apexUsage != null,
-        rank = 1.0 // todo
+        priority = apexUsage?.priority ?: AudioProperty.NO_PRIORITY,
+        timestamp = timeProvider.currentTimeMillis()
     )
-
-    /*val rank = (5.0.pow(priority)) * booleanToInt(isConnected) * booleanToInt(isInteractive) * log10(timestamp.toDouble())
-
-    private fun booleanToInt(boolean: Boolean): Int {
-        return if(boolean) 2 else 1
-    }*/
 }

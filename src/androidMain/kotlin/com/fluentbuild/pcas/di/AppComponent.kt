@@ -3,6 +3,8 @@ package com.fluentbuild.pcas.di
 import android.content.Context
 import android.os.Handler
 import com.fluentbuild.pcas.peripheral.Peripheral
+import timber.log.LogcatTree
+import timber.log.Timber
 import javax.crypto.SecretKey
 
 class AppComponent(
@@ -25,13 +27,14 @@ class AppComponent(
 
     private val ledgerModule = LedgerModule(ioModule, hostModule, utilsModule, asyncModule)
 
-    private val audioServiceModule = AudioServiceModule(appContext, audioPeripheral, utilsModule)
+    val audioServiceModule = AudioServiceModule(appContext, audioPeripheral, utilsModule)
 
     private val servicesModule = ServicesModule(audioServiceModule)
 
-    private val middlewareModule = MiddlewareModule(servicesModule, ledgerModule)
+    val middlewareModule = MiddlewareModule(ioModule, servicesModule, ledgerModule, utilsModule)
 
     fun init() {
+        Timber.plant(LogcatTree())
         audioServiceModule.init(middlewareModule.serviceRegistry)
     }
 

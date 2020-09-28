@@ -11,10 +11,11 @@ class AudioCommandHandler(
     private val audioPeripheral: Peripheral,
     private val a2dpConnector: PeripheralConnector,
     private val hspConnector: PeripheralConnector,
-    private val audioRouter: AudioRouter
+    private val audioRouterClient: AudioRouterClient
 ): CommandHandler {
 
     override fun handle(command: Command) {
+        // todo: handle throttling
         val audioProfile = AudioProfile.from(command.bondId)
         when(command.action) {
             Command.Action.CONNECT -> {
@@ -39,11 +40,11 @@ class AudioCommandHandler(
     }
 
     private fun startRouting(remoteSink: HostInfo) {
-        audioRouter.start(remoteSink)
+        audioRouterClient.start(remoteSink)
     }
 
     private fun stopRouting() {
-        audioRouter.stop()
+        audioRouterClient.stop()
     }
 
     private fun connect(audioProfile: AudioProfile) {

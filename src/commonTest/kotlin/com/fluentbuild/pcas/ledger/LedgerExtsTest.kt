@@ -1,6 +1,6 @@
 package com.fluentbuild.pcas.ledger
 
-import com.fluentbuild.pcas.host.HostInfo
+/*import com.fluentbuild.pcas.host.HostInfo
 import com.fluentbuild.pcas.io.Address
 import com.fluentbuild.pcas.ledger.models.BondEntity
 import com.fluentbuild.pcas.ledger.models.Entry
@@ -81,4 +81,4 @@ class LedgerExtsTest {
     fun `filterHost WHEN entries doesn't contain specified host SHOULD return empty entries`() {
         assertContentEquals(emptySet(), bonds.filterHost(hostStub4))
     }
-}
+}*/

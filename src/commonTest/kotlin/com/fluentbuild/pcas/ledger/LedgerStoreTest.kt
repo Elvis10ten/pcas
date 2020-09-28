@@ -1,6 +1,6 @@
 package com.fluentbuild.pcas.ledger
 
-import com.fluentbuild.pcas.host.HostInfo
+/*import com.fluentbuild.pcas.host.HostInfo
 import com.fluentbuild.pcas.ledger.models.PropertyEntity
 import com.fluentbuild.pcas.ledger.models.BondEntity
 import com.fluentbuild.pcas.ledger.models.Ledger
@@ -76,4 +76,4 @@ class LedgerStoreTest {
 
     private fun createCharacteristics(num: Int) =
         PropertyEntity(num, num, num, false)*/
-}
+}*/

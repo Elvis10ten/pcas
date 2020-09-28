@@ -1,15 +1,15 @@
 package com.fluentbuild.pcas.ledger.models
 
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.protobuf.ProtoId
+import kotlinx.serialization.protobuf.ProtoNumber
 
 @Serializable
 data class Packet(
-    @ProtoId(1)
+    @ProtoNumber(1)
     val type: Type,
-    @ProtoId(2)
+    @ProtoNumber(2)
     val ledger: Ledger,
-    @ProtoId(3)
+    @ProtoNumber(3)
     val broadcastTimestamp: Long
 ) {
 

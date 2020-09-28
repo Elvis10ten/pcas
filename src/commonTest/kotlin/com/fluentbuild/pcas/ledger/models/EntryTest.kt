@@ -1,6 +1,6 @@
 package com.fluentbuild.pcas.ledger.models
 
-import com.fluentbuild.pcas.host.HostInfo
+/*import com.fluentbuild.pcas.host.HostInfo
 import com.fluentbuild.pcas.io.Address
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -58,4 +58,4 @@ class EntryTest {
         val entry2 = Entry(entityStub2, hostStub2, timestampStub2)
         assertNotEquals(entry1, entry2)
     }
-}
+}*/

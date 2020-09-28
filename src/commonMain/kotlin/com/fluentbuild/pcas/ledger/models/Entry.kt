@@ -2,15 +2,15 @@ package com.fluentbuild.pcas.ledger.models
 
 import com.fluentbuild.pcas.host.HostInfo
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.protobuf.ProtoId
+import kotlinx.serialization.protobuf.ProtoNumber
 
 @Serializable
 data class Entry<EntityT: Entity>(
-    @ProtoId(1)
+    @ProtoNumber(1)
     val entity: EntityT,
-    @ProtoId(2)
+    @ProtoNumber(2)
     val host: HostInfo,
-    @ProtoId(3)
+    @ProtoNumber(3)
     internal val timestamp: Long
 ) {
 

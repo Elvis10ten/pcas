@@ -1,6 +1,6 @@
 package com.fluentbuild.pcas.ledger.models
 
-import kotlin.test.Test
+/*import kotlin.test.Test
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
@@ -19,4 +19,4 @@ class EntitiesTest {
         val bondEntity1 = BondEntity(3, 2)
         assertFalse(propertyEntity1.equals(bondEntity1))
     }
-}
+}*/

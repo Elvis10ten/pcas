@@ -7,12 +7,13 @@ import com.fluentbuild.pcas.android.bluetoothAdapter
 import com.fluentbuild.pcas.async.Cancellable
 import com.fluentbuild.pcas.async.SentinelCancellable
 import com.fluentbuild.pcas.utils.logger
+import java.util.*
 
 class BluetoothProfileHolder(private val context: Context) {
 
     private val log by logger()
     private val cachedProfiles = mutableMapOf<ProfileId, BluetoothProfile>()
-    private val pendingConsumers = mutableMapOf<ProfileId, MutableList<Consumer>>().withDefault { mutableListOf() }
+    private val pendingConsumers = mutableMapOf<ProfileId, Queue<Consumer>>()
 
     fun useProfile(profileId: ProfileId, consumer: Function1<BluetoothProfile, Unit>): Cancellable {
         val cachedProfile = cachedProfiles[profileId]
@@ -21,10 +22,16 @@ class BluetoothProfileHolder(private val context: Context) {
             consumer(cachedProfile)
             SentinelCancellable
         } else {
-            pendingConsumers.getValue(profileId) += consumer
+            getProfileConsumers(profileId) += consumer
             loadProfile(profileId)
-            Cancellable { pendingConsumers.getValue(profileId) -= consumer }
+            Cancellable {
+                getProfileConsumers(profileId) -= consumer
+            }
         }
+    }
+
+    private fun getProfileConsumers(profileId: ProfileId): Queue<Consumer> {
+        return pendingConsumers.getOrPut(profileId, { ArrayDeque() })
     }
 
     private fun loadProfile(profileId: ProfileId) {
@@ -49,11 +56,11 @@ class BluetoothProfileHolder(private val context: Context) {
     }
 
     private fun invokePendingConsumers(profileId: ProfileId, profile: BluetoothProfile) {
-        pendingConsumers.callAndRemove()
-        val iterator = pendingConsumers.getValue(profileId).listIterator()
-        for (consumer in iterator) {
+        val pendingConsumers = getProfileConsumers(profileId)
+        while(pendingConsumers.isNotEmpty()) {
+            val consumer = pendingConsumers.remove()
+            log.debug { "Invoking pending consumer" }
             consumer(profile)
-            iterator.remove()
         }
     }
 

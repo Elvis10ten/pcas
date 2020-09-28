@@ -78,6 +78,7 @@ class LedgerStore(
         val oldLedger = ledger
         ledger = newLedger
 
+        // todo: equals doesn't work like we expect
         if(oldLedger != newLedger) {
             onChanged(newLedger)
         }

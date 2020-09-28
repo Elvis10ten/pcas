@@ -1,17 +1,18 @@
 package com.fluentbuild.pcas.services.audio
 
+import com.fluentbuild.pcas.utils.filterSet
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.protobuf.ProtoId
+import kotlinx.serialization.protobuf.ProtoNumber
 
 @Serializable
 data class AudioProperty(
-    @ProtoId(1)
+    @ProtoNumber(1)
     val usages: Set<Usage>
 ) {
 
-    val unidirectionalUsages = usages.filter { it.direction == Direction.UNIDIRECTIONAL }
+    val unidirectionalUsages = usages.filterSet { it.direction == Direction.UNIDIRECTIONAL }
 
-    val bidirectionalUsages = usages.filter { it.direction == Direction.BIDIRECTIONAL }
+    val bidirectionalUsages = usages.filterSet { it.direction == Direction.BIDIRECTIONAL }
 
     enum class Usage(
         val priority: Int,
@@ -30,12 +31,17 @@ data class AudioProperty(
         GAME(4, Direction.UNIDIRECTIONAL),
         // Such as VoIP.
         VOICE_COMMUNICATION(5, Direction.BIDIRECTIONAL),
-        // Telephony
+        // Telephony call
         TELEPHONY_CALL(6, Direction.BIDIRECTIONAL)
     }
 
     enum class Direction {
         UNIDIRECTIONAL,
         BIDIRECTIONAL
+    }
+
+    companion object {
+
+        const val NO_PRIORITY = 0
     }
 }

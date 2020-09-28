@@ -10,13 +10,14 @@ class PropertyConflictResolver: ConflictResolver<PropertyEntity> {
 
     override fun resolve(ledger: Ledger, conflicts: Set<Conflict<PropertyEntity>>): Set<Command> {
         return conflicts.mapSet { conflict ->
-            val maxOthersRank = conflict.others.maxOf { it.entity.rank }
             val selfEntity = conflict.self.entity
+            if(conflict.others.isEmpty()) return@mapSet Command(selfEntity, Action.CONNECT)
+            val maxOthersRank = conflict.others.maxOf { it.entity.getRank() }
 
             when {
-                selfEntity.rank > maxOthersRank -> Command(selfEntity, Action.CONNECT)
-                selfEntity.rank < maxOthersRank -> Command(selfEntity, Action.DISCONNECT)
-                selfEntity.rank == maxOthersRank -> Command(selfEntity, Action.AMBIGUOUS)
+                selfEntity.getRank() > maxOthersRank -> Command(selfEntity, Action.CONNECT)
+                selfEntity.getRank() < maxOthersRank -> Command(selfEntity, Action.DISCONNECT)
+                selfEntity.getRank() == maxOthersRank -> Command(selfEntity, Action.AMBIGUOUS)
                 else -> throw IllegalStateException("Impossible!")
             }
         }

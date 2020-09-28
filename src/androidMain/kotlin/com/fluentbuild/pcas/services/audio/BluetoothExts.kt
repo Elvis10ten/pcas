@@ -34,21 +34,18 @@ internal fun Int.bluetoothProfileStateToPeripheralState(): PeripheralBond.State 
 
 @Throws(RemoteException::class)
 internal fun BluetoothProfile.connect(device: BluetoothDevice): Boolean {
-    return javaClass.getDeclaredMethod("connect", BluetoothDevice::class.java).run {
-        invoke(this, device) as Boolean
-    }
+    val connectMethod = javaClass.getDeclaredMethod("connect", BluetoothDevice::class.java)
+    return connectMethod.invoke(this, device) as Boolean
 }
 
 @Throws(RemoteException::class)
 internal fun BluetoothProfile.disconnect(device: BluetoothDevice): Boolean {
-    return javaClass.getDeclaredMethod("disconnect", BluetoothDevice::class.java).run {
-        invoke(this, device) as Boolean
-    }
+    val disconnectMethod = javaClass.getDeclaredMethod("disconnect", BluetoothDevice::class.java)
+    return disconnectMethod.invoke(this, device) as Boolean
 }
 
 @Throws(RemoteException::class)
 internal fun BluetoothProfile.setActiveDevice(device: BluetoothDevice?): Boolean {
-    return javaClass.getDeclaredMethod("setActiveDevice", BluetoothDevice::class.java).run {
-        invoke(this, device) as Boolean
-    }
+    val setActiveDeviceMethod = javaClass.getDeclaredMethod("setActiveDevice", BluetoothDevice::class.java)
+    return setActiveDeviceMethod.invoke(this, device) as Boolean
 }

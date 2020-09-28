@@ -11,10 +11,10 @@ class JvmPayloadCipher(
     private val decryptCipher = ThreadLocal.withInitial { createCipher(Cipher.DECRYPT_MODE) }
 
     override fun encrypt(payload: ByteArray): ByteArray =
-        encryptCipher.get().doFinal(payload)
+        encryptCipher.get()!!.doFinal(payload)
 
     override fun decrypt(payload: ByteArray): ByteArray =
-        decryptCipher.get().doFinal(payload)
+        decryptCipher.get()!!.doFinal(payload)
 
     private fun createCipher(mode: Int): Cipher {
         return Cipher.getInstance("AES/ECB/PKCS5Padding").apply {

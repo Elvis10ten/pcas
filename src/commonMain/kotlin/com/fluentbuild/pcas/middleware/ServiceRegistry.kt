@@ -5,10 +5,12 @@ import com.fluentbuild.pcas.ledger.models.PropertyEntity
 import com.fluentbuild.pcas.ledger.models.BondEntity
 import com.fluentbuild.pcas.ledger.models.Ledger
 import com.fluentbuild.pcas.ledger.models.ServiceId
+import com.fluentbuild.pcas.middleware.routing.RouterServerDeMultiplexer
 import com.fluentbuild.pcas.utils.logger
 
 class ServiceRegistry(
     private val ledgerProtocol: LedgerProtocol,
+    private val routerServerDeMultiplexer: RouterServerDeMultiplexer,
     private val interceptors: List<UpdateInterceptor>,
     private val serviceHandlers: Map<ServiceId, CommandHandler>
 ) {
@@ -17,6 +19,7 @@ class ServiceRegistry(
 
     fun init() {
         log.debug(::init)
+        routerServerDeMultiplexer.init()
         ledgerProtocol.init(::onLedgerUpdated)
     }
 
@@ -24,6 +27,7 @@ class ServiceRegistry(
         log.debug(::close)
         serviceHandlers.values.forEach { it.release() }
         ledgerProtocol.close()
+        routerServerDeMultiplexer.close()
     }
 
     fun updateBonds(bonds: Set<BondEntity>) {
@@ -39,11 +43,7 @@ class ServiceRegistry(
     private fun onLedgerUpdated(ledger: Ledger) {
         log.debug(::onLedgerUpdated, ledger)
         interceptors.forEach { interceptor ->
-            try {
-                interceptor.intercept(ledger).forEach(::handle)
-            } catch (e: RuntimeException) {
-                log.error(e) { "Interceptor error" }
-            }
+            interceptor.intercept(ledger).forEach(::handle)
         }
     }
 

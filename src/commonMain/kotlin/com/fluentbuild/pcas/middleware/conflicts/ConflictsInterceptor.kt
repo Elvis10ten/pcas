@@ -19,7 +19,7 @@ class ConflictsInterceptor: UpdateInterceptor {
     }
 
     private val Ledger.propsConflicts
-        get() = ownerProps.mapSet { it.getPropConflicts(othersProps) }.filterSet { it.others.isNotEmpty() }
+        get() = ownerProps.mapSet { it.getPropConflicts(othersProps) }
 
     private fun Entry<PropertyEntity>.getPropConflicts(others: Set<Entry<PropertyEntity>>) = Conflict(
         self = this,

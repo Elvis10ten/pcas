@@ -33,7 +33,7 @@ class LedgerModule(
             ledgerStore = ledgerStore,
             packetBroadcaster = packetBroadcaster,
             timerProvider = utilsModule.timeProvider,
-            executor = asyncModule.provideThreadExecutor()
+            runner = asyncModule.provideThreadExecutor()
         )
     }
 

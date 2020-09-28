@@ -24,7 +24,7 @@ class PacketBroadcaster(
 
     private fun broadcast(packet: Packet) {
         log.debug { "Broadcasting packet: $packet" }
-        multicastChannel.broadcast(protoBuf.dump(packetSerializer, packet))
+        multicastChannel.broadcast(protoBuf.encodeToByteArray(packetSerializer, packet))
     }
 
     private fun createPacket(type: Packet.Type) = Packet(type, ledgerStore.get(), timeProvider.currentTimeMillis())

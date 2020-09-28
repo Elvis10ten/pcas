@@ -1,6 +1,6 @@
 package com.fluentbuild.pcas.ledger.models
 
-import kotlin.test.Test
+/*import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotEquals
 
@@ -23,4 +23,4 @@ class BondEntityTest {
         assertNotEquals(entity1, entity3)
         assertNotEquals(entity1, entity4)
     }
-}
+}*/

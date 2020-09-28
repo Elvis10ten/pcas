@@ -15,7 +15,7 @@ class HostModule(
         NetworkAddressProvider(appContext)
     }
 
-    val selfHostInfoWatcher: Watcher<HostInfo> by lazy {
+    val selfHostInfoWatcher: HostInfoWatcher by lazy {
         AndroidHostInfoWatcher(
             context = appContext,
             hostUuid = hostUuid,

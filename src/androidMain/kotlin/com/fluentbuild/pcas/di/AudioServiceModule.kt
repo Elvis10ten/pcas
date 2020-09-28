@@ -7,6 +7,7 @@ import com.fluentbuild.pcas.services.audio.PeripheralConnector
 import com.fluentbuild.pcas.ledger.models.BondEntity
 import com.fluentbuild.pcas.ledger.models.PropertyEntity
 import com.fluentbuild.pcas.middleware.ServiceRegistry
+import com.fluentbuild.pcas.middleware.routing.RouterServer
 import com.fluentbuild.pcas.peripheral.Peripheral
 import com.fluentbuild.pcas.peripheral.PeripheralBond
 import com.fluentbuild.pcas.services.audio.*
@@ -14,7 +15,7 @@ import com.fluentbuild.pcas.utils.Mapper
 
 class AudioServiceModule(
     private val appContext: Context,
-    private val peripheral: Peripheral,
+    private val audioPeripheral: Peripheral,
     private val utilsModule: UtilsModule
 ) {
 
@@ -22,8 +23,8 @@ class AudioServiceModule(
 
     lateinit var audioStateUpdater: AudioStateUpdater
 
-    private val audioRouter: AudioRouter by lazy {
-        AndroidAudioRouter()
+    private val audioRouterClient: AudioRouterClient by lazy {
+        AndroidAudioRouterClient()
     }
 
     private val profileHolder: BluetoothProfileHolder by lazy {
@@ -47,7 +48,7 @@ class AudioServiceModule(
     }
 
     private val bondsWatcher: PeripheralBondsWatcher by lazy {
-        AudioBondsWatcher(appContext, profileHolder)
+        AudioBondsWatcher(appContext, audioPeripheral, profileHolder)
     }
 
     private val bondsEntityMapper: Mapper<Set<PeripheralBond>, Set<BondEntity>> by lazy {
@@ -56,11 +57,15 @@ class AudioServiceModule(
 
     val commandHandler: AudioCommandHandler by lazy {
         AudioCommandHandler(
-            audioPeripheral = peripheral,
+            audioPeripheral = audioPeripheral,
             a2dpConnector = a2dpConnector,
             hspConnector = hspConnector,
-            audioRouter = audioRouter
+            audioRouterClient = audioRouterClient
         )
+    }
+
+    val routerServer: RouterServer by lazy {
+        AndroidAudioRouterServer()
     }
 
     fun init(serviceRegistry: ServiceRegistry) {

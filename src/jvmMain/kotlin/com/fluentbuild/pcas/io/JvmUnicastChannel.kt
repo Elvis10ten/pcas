@@ -22,7 +22,6 @@ open class JvmUnicastChannel(
         require(socket == null) { "UnicastChannel already initialized" }
         socket = DatagramSocket().apply {
             trafficClass = IP_TOS_THROUGHPUT
-            bind(InetSocketAddress(0))
         }
 
         runner.runOnBackground {
