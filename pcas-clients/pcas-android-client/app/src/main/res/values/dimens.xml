@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- High emphasis of 87% for typography. -->
+    <item name="alphaEmphasisHigh" format="float" type="dimen">0.87</item>
+    <!-- Medium emphasis of 60% is the same for typography and icon. -->
+    <item name="alphaEmphasisMedium" format="float" type="dimen">0.6</item>
+    <!-- Disabled emphasis of 38% is the same for typography and icon. -->
+    <item name="alphaEmphasisDisabled" format="float" type="dimen">0.38</item>
+
+    <dimen name="aboveBottomAppBar">92dp</dimen>
+    <dimen name="serviceIconSize">56dp</dimen>
+    <dimen name="serviceIconBadgeSize">16dp</dimen>
+
+    <dimen name="size1">2dp</dimen>
+    <dimen name="size2">4dp</dimen>
+    <dimen name="size3">8dp</dimen>
+    <dimen name="size4">12dp</dimen>
+    <dimen name="size5">16dp</dimen>
+    <dimen name="size6">24dp</dimen>
+    <dimen name="size7">32dp</dimen>
+</resources>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:clickable="true"
+    android:background="?selectableItemBackgroundBorderless"
+    android:orientation="vertical"
+    android:gravity="center_horizontal"
+    android:layout_margin="@dimen/size5">
+
+    <ImageView
+        android:id="@+id/serviceIconView"
+        android:layout_width="@dimen/serviceIconSize"
+        android:layout_height="@dimen/serviceIconSize"
+        android:background="@drawable/bg_oval"
+        android:padding="@dimen/size5"
+        tools:src="@drawable/ic_headset"
+        tools:backgroundTint="#FEF7DF"
+        tools:ignore="ContentDescription"
+        />
+
+    <ImageView
+        android:id="@+id/serviceIconBadgeView"
+        android:layout_width="@dimen/serviceIconBadgeSize"
+        android:layout_height="@dimen/serviceIconBadgeSize"
+        android:padding="@dimen/size1"
+        android:background="@drawable/bg_oval"
+        android:layout_marginTop="-8dp"
+        app:tint="?attr/colorControlNormal"
+        app:backgroundTint="?android:colorBackground"
+        tools:src="@drawable/ic_check"
+        tools:ignore="ContentDescription"
+        />
+
+    <TextView
+        android:id="@+id/serviceNameView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/size2"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+        android:alpha="@dimen/alphaEmphasisMedium"
+        tools:text="Audio"
+        />
+
+</LinearLayout>

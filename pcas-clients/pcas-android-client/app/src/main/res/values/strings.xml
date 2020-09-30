@@ -1,3 +1,14 @@
 <resources>
-    <string name="app_name">AndroidClient</string>
+    <string name="appName">Pcas</string>
+    <string name="titleServices">Services</string>
+    <string name="titleConsole">Console</string>
+    <string name="captionBonded">Bonded</string>
+    <string name="captionUnbonded">Unbonded</string>
+    <string name="captionBonding">Bonding…</string>
+    <string name="actionPair">Pair</string>
+
+    <string name="serviceAudio">Audio</string>
+    <string name="serviceMouse">Mouse</string>
+    <string name="serviceKeypad">Keypad</string>
+    <string name="serviceHealth">Health</string>
 </resources>

@@ -1,0 +1,6 @@
+<resources>
+    <attr name="alphaEmphasisHigh" format="float"/>
+    <attr name="alphaEmphasisMedium" format="float"/>
+    <attr name="alphaEmphasisDisabled" format="float"/>
+    <attr name="dividerColor" format="color"/>
+</resources>
