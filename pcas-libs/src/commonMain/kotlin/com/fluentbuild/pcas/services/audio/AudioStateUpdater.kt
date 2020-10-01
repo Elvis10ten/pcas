@@ -7,7 +7,7 @@ import com.fluentbuild.pcas.middleware.ServiceRegistry
 import com.fluentbuild.pcas.ledger.models.BondEntity
 import com.fluentbuild.pcas.ledger.models.PropertyEntity
 import com.fluentbuild.pcas.peripheral.PeripheralBond
-import com.fluentbuild.pcas.utils.Mapper
+import com.fluentbuild.pcas.services.Mapper
 
 class AudioStateUpdater(
     private val serviceRegistry: ServiceRegistry,

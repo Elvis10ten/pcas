@@ -1,4 +1,4 @@
-package com.fluentbuild.pcas.utils
+package com.fluentbuild.pcas.services
 
 fun interface Mapper<FromT, ToT> {
 

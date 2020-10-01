@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="CompilerConfiguration">
-    <bytecodeTargetLevel target="11" />
+    <bytecodeTargetLevel target="11">
+      <module name="pcas-libs.androidAndroidTest" target="1.6" />
+      <module name="pcas-libs.androidAndroidTestDebug" target="1.6" />
+      <module name="pcas-libs.androidDebug" target="1.6" />
+      <module name="pcas-libs.androidDebugAndroidTest" target="1.6" />
+      <module name="pcas-libs.androidDebugUnitTest" target="1.6" />
+      <module name="pcas-libs.androidMain" target="1.6" />
+      <module name="pcas-libs.androidRelease" target="1.6" />
+      <module name="pcas-libs.androidReleaseUnitTest" target="1.6" />
+      <module name="pcas-libs.androidTest" target="1.6" />
+      <module name="pcas-libs.androidTestDebug" target="1.6" />
+      <module name="pcas-libs.androidTestRelease" target="1.6" />
+    </bytecodeTargetLevel>
   </component>
 </project>

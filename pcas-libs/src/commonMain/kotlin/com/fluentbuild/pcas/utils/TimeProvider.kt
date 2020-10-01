@@ -2,7 +2,7 @@ package com.fluentbuild.pcas.utils
 
 import kotlinx.datetime.Clock
 
-class TimeProvider {
+class TimeProvider(private val clock: Clock) {
 
-    fun currentTimeMillis() = Clock.System.now().toEpochMilliseconds()
+    fun currentTimeMillis() = clock.now().toEpochMilliseconds()
 }

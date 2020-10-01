@@ -13,7 +13,7 @@ val serializationVersion = "1.0.0-RC"
 repositories {
     gradlePluginPortal()
     google()
-    maven(url = "https://kotlin.bintray.com/kotlinx/") // soon will be just jcenter()
+    maven(url = "https://kotlin.bintray.com/kotlinx/") // For kotlinx.datetime: soon will be just jcenter()
     jcenter()
     mavenCentral()
     maven(url = "https://oss.sonatype.org/content/repositories/snapshots/")
@@ -65,6 +65,7 @@ kotlin {
                 implementation(kotlin("test-common"))
                 implementation(kotlin("test-annotations-common"))
                 implementation("com.jakewharton.timber:timber-jdk:5.0.0-SNAPSHOT")
+                implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.1.0")
             }
         }
 

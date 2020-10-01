@@ -21,12 +21,12 @@ class SimpleLogger(private val className: String) {
     }
 
     fun error(throwable: Throwable, message: () -> String) {
-        println("E/$className: $throwable")
         println("E/$className: ${message()}")
+        throwable.printStackTrace()
     }
 
     fun debug(function: KFunction<*>, vararg args: Any) {
-        val arguments = args.joinToString { it.toString() }
-        debug { "${function.name}($arguments)" }
+        val argsText = args.joinToString { it.toString() }
+        debug { "${function.name}($argsText)" }
     }
 }

@@ -3,7 +3,7 @@ package com.fluentbuild.pcas.services.audio
 import com.fluentbuild.pcas.ledger.models.PropertyEntity
 import com.fluentbuild.pcas.ledger.models.ServiceId
 import com.fluentbuild.pcas.peripheral.audio.AudioProfile
-import com.fluentbuild.pcas.utils.Mapper
+import com.fluentbuild.pcas.services.Mapper
 import com.fluentbuild.pcas.utils.TimeProvider
 
 class PropertyEntityMapper(
