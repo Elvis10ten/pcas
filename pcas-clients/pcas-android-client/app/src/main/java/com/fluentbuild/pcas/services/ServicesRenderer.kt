@@ -13,16 +13,24 @@ internal class ServicesRenderer(
     private val onClick: (ServiceUiModel) -> Unit
 ) {
 
-    fun update() {
-        val services = provider.get()
-        if(container.childCount != services.size) {
-            container.removeAllViews()
-            repeat(services.size) { container.inflateInto<View>(R.layout.item_service) }
-        }
+    private lateinit var audioServiceView: View
+    private lateinit var mouseServiceView: View
+    private lateinit var keypadServiceView: View
+    private lateinit var healthServiceView: View
 
-        services.forEachIndexed { index, service ->
-            service.bind(container.getChildAt(index))
-        }
+    fun init() {
+        audioServiceView = container.inflateInto(R.layout.item_service)
+        mouseServiceView = container.inflateInto(R.layout.item_service)
+        keypadServiceView = container.inflateInto(R.layout.item_service)
+        healthServiceView = container.inflateInto(R.layout.item_service)
+    }
+
+    fun update() {
+        provider.getAudioService().bind(audioServiceView)
+        provider.getMouseService().bind(mouseServiceView)
+        provider.getKeypadService().bind(keypadServiceView)
+        provider.getHealthService().bind(healthServiceView)
+
     }
 
     private fun ServiceUiModel.bind(view: View) {

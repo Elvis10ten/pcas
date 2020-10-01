@@ -4,22 +4,13 @@ import android.graphics.Color
 import com.fluentbuild.pcas.R
 
 class ServicesProvider(
-    private val audioServiceId: Int,
-    private val mouseServiceId: Int,
-    private val keypadServiceId: Int,
-    private val healthServiceId: Int
+    val audioServiceId: Int,
+    val mouseServiceId: Int,
+    val keypadServiceId: Int,
+    val healthServiceId: Int
 ) {
 
-    fun get(): Set<ServiceUiModel> {
-        return setOf(
-            getAudioService(),
-            getMouseService(),
-            getKeypadService(),
-            getHealthService()
-        )
-    }
-
-    private fun getAudioService(): ServiceUiModel {
+    fun getAudioService(): ServiceUiModel {
         return ServiceUiModel(
             id = audioServiceId,
             name = R.string.serviceAudio,
@@ -30,7 +21,7 @@ class ServicesProvider(
         )
     }
 
-    private fun getMouseService(): ServiceUiModel {
+    fun getMouseService(): ServiceUiModel {
         return ServiceUiModel(
             id = mouseServiceId,
             name = R.string.serviceMouse,
@@ -41,7 +32,7 @@ class ServicesProvider(
         )
     }
 
-    private fun getKeypadService(): ServiceUiModel {
+    fun getKeypadService(): ServiceUiModel {
         return ServiceUiModel(
             id = keypadServiceId,
             name = R.string.serviceKeypad,
@@ -52,7 +43,7 @@ class ServicesProvider(
         )
     }
 
-    private fun getHealthService(): ServiceUiModel {
+    fun getHealthService(): ServiceUiModel {
         return ServiceUiModel(
             id = healthServiceId,
             name = R.string.serviceHealth,

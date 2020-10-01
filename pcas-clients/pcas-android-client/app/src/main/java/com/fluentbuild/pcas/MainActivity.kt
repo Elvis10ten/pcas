@@ -41,8 +41,9 @@ class MainActivity : AppCompatActivity() {
 
         servicesRenderer = ServicesRenderer(
             servicesProvider,
-            servicesListContainer
+            servicesContainer
         ) {}
+        servicesRenderer.init()
         servicesRenderer.update()
 
         consoleItemProvider = ConsoleItemProvider()

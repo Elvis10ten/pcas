@@ -13,5 +13,5 @@ pluginManagement {
         }
     }
 }
-rootProject.name = "pcas"
+rootProject.name = "pcas-libs"
 

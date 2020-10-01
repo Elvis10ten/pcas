@@ -27,19 +27,13 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Title"
             />
 
-        <HorizontalScrollView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <LinearLayout
-                android:id="@+id/servicesListContainer"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_gravity="center_horizontal"
-                />
-
-        </HorizontalScrollView>
+        <LinearLayout
+            android:id="@+id/servicesContainer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="center_horizontal"
+            />
 
         <TextView
             android:layout_width="wrap_content"
@@ -53,8 +47,6 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:layout_marginStart="@dimen/size3"
-            android:layout_marginEnd="@dimen/size3"
             app:cardBackgroundColor="#282a36"
             app:contentPadding="@dimen/size5">
 
@@ -62,15 +54,15 @@
                 android:id="@+id/consoleTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@android:color/white"
                 android:alpha="@dimen/alphaEmphasisHigh"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                 />
+
         </androidx.cardview.widget.CardView>
     </LinearLayout>
 
     <com.google.android.material.bottomappbar.BottomAppBar
-        android:id="@+id/bottomAppBar"
+        android:id="@+id/bottomAppBarView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
@@ -78,11 +70,11 @@
         />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/runtimeSwitch"
+        android:id="@+id/powerButtonView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/ic_play_arrow"
-        app:layout_anchor="@id/bottomAppBar"
+        app:layout_anchor="@id/bottomAppBarView"
         />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
