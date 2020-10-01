@@ -5,9 +5,8 @@ import com.fluentbuild.pcas.host.HostInfo
 import com.fluentbuild.pcas.utils.logger
 import java.lang.Exception
 import java.net.DatagramSocket
-import java.net.InetSocketAddress
 
-open class JvmUnicastChannel(
+open class JvmUnicastChannel internal constructor(
     private val cipher: PayloadCipher,
     private val runner: ThreadRunner
 ): UnicastChannel {
@@ -24,7 +23,7 @@ open class JvmUnicastChannel(
             trafficClass = IP_TOS_THROUGHPUT
         }
 
-        runner.runOnBackground {
+        runner.runOnIo {
             while(socket != null) {
                 try {
                     val decryptedPayload = socket!!.awaitPayload(receiveBuffer, cipher)
@@ -38,7 +37,7 @@ open class JvmUnicastChannel(
 
     override fun send(recipient: HostInfo, payload: ByteArray) {
         log.debug { "Sending payload to: $recipient" }
-        runner.runOnBackground {
+        runner.runOnIo {
             val encryptedPayload = cipher.encrypt(payload)
             val packet = createDatagramPacket(encryptedPayload, recipient.address, recipient.port)
             socket!!.send(packet)

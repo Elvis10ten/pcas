@@ -20,7 +20,7 @@ class AsyncModule(
         )
     }
 
-    fun provideThreadExecutor() = AndroidThreadRunner(mainThreadHandler, threadPool)
+    internal fun provideThreadExecutor() = AndroidThreadRunner(mainThreadHandler, threadPool)
 
     companion object {
 

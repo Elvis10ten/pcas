@@ -1,7 +1,6 @@
 package com.fluentbuild.pcas.di
 
 import android.content.Context
-import com.fluentbuild.pcas.async.Watcher
 import com.fluentbuild.pcas.host.*
 
 class HostModule(
@@ -15,8 +14,8 @@ class HostModule(
         NetworkAddressProvider(appContext)
     }
 
-    val selfHostInfoWatcher: HostInfoWatcher by lazy {
-        AndroidHostInfoWatcher(
+    internal val selfHostInfoWatcher: HostInfoObservable by lazy {
+        AndroidHostInfoObservable(
             context = appContext,
             hostUuid = hostUuid,
             hostName = hostName,

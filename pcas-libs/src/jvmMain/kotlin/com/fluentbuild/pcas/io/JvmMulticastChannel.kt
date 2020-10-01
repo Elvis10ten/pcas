@@ -5,7 +5,7 @@ import com.fluentbuild.pcas.utils.logger
 import java.lang.Exception
 import java.net.MulticastSocket
 
-open class JvmMulticastChannel(
+open class JvmMulticastChannel internal constructor(
     private val cipher: PayloadCipher,
     private val runner: ThreadRunner
 ): MulticastChannel {
@@ -24,7 +24,7 @@ open class JvmMulticastChannel(
             joinGroup(GROUP_ADDRESS.inetAddress)
         }
 
-        runner.runOnBackground {
+        runner.runOnIo {
             while(socket != null) {
                 try {
                     val decryptedPayload = socket!!.awaitPayload(receiveBuffer, cipher)
@@ -38,7 +38,7 @@ open class JvmMulticastChannel(
 
     override fun broadcast(payload: ByteArray) {
         log.debug { "Broadcasting payload" }
-        runner.runOnBackground {
+        runner.runOnIo {
             val encryptedPayload = cipher.encrypt(payload)
             val packet = createDatagramPacket(encryptedPayload, GROUP_ADDRESS, GROUP_PORT)
             socket!!.send(packet)

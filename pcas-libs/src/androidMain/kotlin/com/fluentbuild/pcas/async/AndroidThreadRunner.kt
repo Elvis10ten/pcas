@@ -4,7 +4,7 @@ import android.os.Handler
 import androidx.annotation.MainThread
 import java.util.concurrent.ThreadPoolExecutor
 
-class AndroidThreadRunner(
+internal class AndroidThreadRunner(
     private val mainThreadHandler: Handler,
     threadPool: ThreadPoolExecutor
 ): JvmThreadRunner(threadPool) {

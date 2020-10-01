@@ -5,7 +5,7 @@ import android.net.wifi.WifiManager
 import com.fluentbuild.pcas.android.wifiManager
 import com.fluentbuild.pcas.async.ThreadRunner
 
-class AndroidMulticastChannel(
+class AndroidMulticastChannel internal constructor(
     private val context: Context,
     cipher: PayloadCipher,
     runner: ThreadRunner

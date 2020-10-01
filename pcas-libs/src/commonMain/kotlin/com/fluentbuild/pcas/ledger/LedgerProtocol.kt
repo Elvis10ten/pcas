@@ -1,8 +1,7 @@
 package com.fluentbuild.pcas.ledger
 
-import com.fluentbuild.pcas.host.HostInfoWatcher
+import com.fluentbuild.pcas.host.HostInfoObservable
 import com.fluentbuild.pcas.async.Cancellables
-import com.fluentbuild.pcas.async.Watcher
 import com.fluentbuild.pcas.host.HostInfo
 import com.fluentbuild.pcas.io.MulticastChannel
 import com.fluentbuild.pcas.ledger.models.PropertyEntity
@@ -10,9 +9,9 @@ import com.fluentbuild.pcas.ledger.models.BondEntity
 import com.fluentbuild.pcas.ledger.models.Ledger
 import com.fluentbuild.pcas.utils.logger
 
-class LedgerProtocol(
+class LedgerProtocol internal constructor(
     private val multicastChannel: MulticastChannel,
-    private val hostInfoWatcher: HostInfoWatcher,
+    private val hostInfoWatcher: HostInfoObservable,
     private val packetBroadcaster: PacketBroadcaster,
     private val packetReceiver: PacketReceiver,
     private val ledgerWatchdog: LedgerWatchdog,
@@ -25,7 +24,7 @@ class LedgerProtocol(
     fun init(onLedgerChanged: (Ledger) -> Unit) {
         log.info { "Initializing LedgerProtocol" }
         ledgerStore.setup(hostInfoWatcher.currentValue, onLedgerChanged)
-        cancellables += hostInfoWatcher.watch(::onHostInfoChanged)
+        cancellables += hostInfoWatcher.subscribe(::onHostInfoChanged)
 
         multicastChannel.init(packetReceiver::onReceived)
         packetBroadcaster.broadcastIntro()

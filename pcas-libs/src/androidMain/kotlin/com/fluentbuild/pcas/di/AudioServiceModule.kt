@@ -1,8 +1,8 @@
 package com.fluentbuild.pcas.di
 
 import android.content.Context
-import com.fluentbuild.pcas.async.Watcher
-import com.fluentbuild.pcas.services.audio.PeripheralBondsWatcher
+import com.fluentbuild.pcas.async.Observable
+import com.fluentbuild.pcas.services.audio.PeripheralBondsObservable
 import com.fluentbuild.pcas.services.audio.PeripheralConnector
 import com.fluentbuild.pcas.ledger.models.BondEntity
 import com.fluentbuild.pcas.ledger.models.PropertyEntity
@@ -39,16 +39,16 @@ class AudioServiceModule(
         HspConnector(appContext, profileHolder)
     }
 
-    private val propertyWatcher: Watcher<AudioProperty> by lazy {
-        AudioPropertyWatcher(appContext)
+    private val propertyObservable: Observable<AudioProperty> by lazy {
+        AudioPropertyObservable(appContext)
     }
 
     private val propertyEntityMapper: Mapper<AudioProperty, Set<PropertyEntity>> by lazy {
         PropertyEntityMapper(serviceId, utilsModule.timeProvider)
     }
 
-    private val bondsWatcher: PeripheralBondsWatcher by lazy {
-        AudioBondsWatcher(appContext, audioPeripheral, profileHolder)
+    private val bondsObservable: PeripheralBondsObservable by lazy {
+        AudioBondsObservable(appContext, audioPeripheral, profileHolder)
     }
 
     private val bondsEntityMapper: Mapper<Set<PeripheralBond>, Set<BondEntity>> by lazy {
@@ -71,9 +71,9 @@ class AudioServiceModule(
     fun init(serviceRegistry: ServiceRegistry) {
         audioStateUpdater = AudioStateUpdater(
             serviceRegistry = serviceRegistry,
-            propertyWatcher = propertyWatcher,
+            propertyObservable = propertyObservable,
             propertyEntityMapper = propertyEntityMapper,
-            bondsWatcher = bondsWatcher,
+            bondsObservable = bondsObservable,
             bondsEntityMapper = bondsEntityMapper
         )
     }

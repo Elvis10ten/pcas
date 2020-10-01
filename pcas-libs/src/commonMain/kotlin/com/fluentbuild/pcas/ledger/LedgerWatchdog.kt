@@ -6,7 +6,7 @@ import com.fluentbuild.pcas.ledger.models.Ledger.Companion.ENTRY_EVICTION_NOTICE
 import com.fluentbuild.pcas.utils.TimeProvider
 import com.fluentbuild.pcas.utils.logger
 
-class LedgerWatchdog(
+class LedgerWatchdog internal constructor(
     private val ledgerStore: LedgerStore,
     private val packetBroadcaster: PacketBroadcaster,
     private val runner: ThreadRunner,

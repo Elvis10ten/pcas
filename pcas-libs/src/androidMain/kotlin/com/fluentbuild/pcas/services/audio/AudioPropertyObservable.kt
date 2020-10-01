@@ -9,21 +9,21 @@ import com.fluentbuild.pcas.android.CallStateCallback
 import com.fluentbuild.pcas.android.audioManager
 import com.fluentbuild.pcas.android.telephonyManager
 import com.fluentbuild.pcas.async.Cancellable
-import com.fluentbuild.pcas.async.Watcher
+import com.fluentbuild.pcas.async.Observable
 import com.fluentbuild.pcas.utils.logger
 
-class AudioPropertyWatcher(
+internal class AudioPropertyObservable(
     private val context: Context
-): Watcher<AudioProperty> {
+): Observable<AudioProperty> {
 
     private val log by logger()
 
-    override fun watch(consumer: (AudioProperty) -> Unit): Cancellable {
+    override fun subscribe(observer: (AudioProperty) -> Unit): Cancellable {
         log.debug { "Watching AudioProperty" }
         val notifyConsumer = {
             context.audioManager.activePlaybackConfigurations.toAudioProperty().let {
                 log.debug { "Current AudioProperty: $it" }
-                consumer(it)
+                observer(it)
             }
         }
 

@@ -1,14 +1,14 @@
 package com.fluentbuild.pcas.async
 
-fun interface Cancellable {
+internal fun interface Cancellable {
     fun cancel()
 }
 
-object SentinelCancellable: Cancellable {
+internal object SentinelCancellable: Cancellable {
     override fun cancel() {}
 }
 
-class Cancellables: Cancellable {
+internal class Cancellables: Cancellable {
 
     private val cancellables = mutableListOf<Cancellable>()
 

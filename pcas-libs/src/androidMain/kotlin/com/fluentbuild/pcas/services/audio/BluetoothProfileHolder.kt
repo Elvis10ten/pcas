@@ -15,7 +15,7 @@ class BluetoothProfileHolder(private val context: Context) {
     private val cachedProfiles = mutableMapOf<ProfileId, BluetoothProfile>()
     private val pendingConsumers = mutableMapOf<ProfileId, Queue<Consumer>>()
 
-    fun useProfile(profileId: ProfileId, consumer: Function1<BluetoothProfile, Unit>): Cancellable {
+    internal fun useProfile(profileId: ProfileId, consumer: Function1<BluetoothProfile, Unit>): Cancellable {
         val cachedProfile = cachedProfiles[profileId]
         return if(cachedProfile != null) {
             log.debug { "Using cached profile: $cachedProfile" }

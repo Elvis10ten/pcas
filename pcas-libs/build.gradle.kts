@@ -6,6 +6,7 @@ plugins {
     id("kotlin-android-extensions")
     kotlin("plugin.serialization") version "1.4.10"
 }
+
 group = "com.fluentbuild"
 version = "1.0-SNAPSHOT"
 val serializationVersion = "1.0.0-RC"

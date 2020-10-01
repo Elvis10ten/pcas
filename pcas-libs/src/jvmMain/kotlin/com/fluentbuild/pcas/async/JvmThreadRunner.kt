@@ -3,7 +3,7 @@ package com.fluentbuild.pcas.async
 import java.util.concurrent.Future
 import java.util.concurrent.ThreadPoolExecutor
 
-open class JvmThreadRunner(
+internal open class JvmThreadRunner(
     private val threadPool: ThreadPoolExecutor
 ): ThreadRunner {
 
@@ -17,7 +17,7 @@ open class JvmThreadRunner(
         TODO("Not yet implemented")
     }
 
-    override fun runOnBackground(action: () -> Unit) {
+    override fun runOnIo(action: () -> Unit) {
         futures += threadPool.submit {
             try {
                 action()

@@ -15,18 +15,18 @@ import com.fluentbuild.pcas.peripheral.PeripheralBond
 import com.fluentbuild.pcas.utils.logger
 import com.fluentbuild.pcas.utils.unsafeLazy
 
-class AudioBondsWatcher(
+internal class AudioBondsObservable(
     private val context: Context,
     private val audioPeripheral: Peripheral,
     private val profileHolder: BluetoothProfileHolder
-): PeripheralBondsWatcher {
+): PeripheralBondsObservable {
 
     private val log by logger()
     private val bluetoothDevice by unsafeLazy { context.bluetoothAdapter.toBluetoothDevice(audioPeripheral) }
 
     private val bonds = mutableSetOf<PeripheralBond>()
 
-    override fun watch(consumer: (Set<PeripheralBond>) -> Unit): Cancellable {
+    override fun subscribe(consumer: (Set<PeripheralBond>) -> Unit): Cancellable {
         val cancellables = Cancellables()
         val connectionChangeReceiver = object: BroadcastReceiver() {
 
