@@ -8,8 +8,9 @@ internal interface UnicastChannel {
     fun init(receiver: PayloadReceiver)
 
     @Throws(Exception::class)
-    fun send(recipient: HostInfo, payload: ByteArray)
+    fun send(recipient: HostInfo, payload: ByteArray, payloadSize: Int)
 
+    @Throws(Exception::class)
     fun getPort(): Port
 
     fun close()

@@ -49,6 +49,7 @@ kotlin {
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-core:${serializationVersion}")
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-protobuf:${serializationVersion}")
                 implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.1.0")
+                api("io.ktor:ktor-io:1.4.1")
             }
         }
 

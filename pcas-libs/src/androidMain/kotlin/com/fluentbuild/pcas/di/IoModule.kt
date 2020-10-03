@@ -1,24 +1,25 @@
 package com.fluentbuild.pcas.di
 
 import android.content.Context
+import com.fluentbuild.pcas.async.ThreadRunner
 import com.fluentbuild.pcas.io.*
+import java.net.DatagramSocket
+import java.security.SecureRandom
 import javax.crypto.SecretKey
 
-class IoModule(
+class IoModule internal constructor(
     private val appContext: Context,
-    private val payloadKey: SecretKey,
-    private val asyncModule: AsyncModule
+    private val networkKey: SecretKey,
+    private val threadRunnerProvider: () -> ThreadRunner,
+    private val secureRandom: SecureRandom
 ) {
 
-    private val cipher: PayloadCipher by lazy {
-        JvmPayloadCipher(payloadKey)
-    }
+    private val parceler: Parceler by lazy { Parceler(networkKey, secureRandom, BufferObjectPool) }
 
-    internal val multicastChannel: MulticastChannel by lazy {
-        AndroidMulticastChannel(appContext, cipher, asyncModule.provideThreadExecutor())
-    }
+    internal val multicastChannel: MulticastChannel by lazy { AndroidMulticastChannel(appContext, getSocketWrapper()) }
 
-    internal val unicastChannel: UnicastChannel by lazy {
-        JvmUnicastChannel(cipher, asyncModule.provideThreadExecutor())
-    }
+    internal val unicastChannel: UnicastChannel by lazy { SecuredUnicastChannel(getSocketWrapper()) }
+
+    private fun <SocketT: DatagramSocket> getSocketWrapper() =
+        SocketWrapper<SocketT>(parceler, BufferObjectPool, threadRunnerProvider())
 }

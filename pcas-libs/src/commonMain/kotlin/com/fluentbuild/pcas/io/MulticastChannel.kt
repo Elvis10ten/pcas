@@ -6,7 +6,7 @@ internal interface MulticastChannel {
     fun init(receiver: PayloadReceiver)
 
     @Throws(Exception::class)
-    fun broadcast(payload: ByteArray)
+    fun broadcast(payload: ByteArray, payloadSize: Int)
 
     fun close()
 }

@@ -3,13 +3,12 @@ package com.fluentbuild.pcas.io
 import android.content.Context
 import android.net.wifi.WifiManager
 import com.fluentbuild.pcas.android.wifiManager
-import com.fluentbuild.pcas.async.ThreadRunner
+import java.net.MulticastSocket
 
-class AndroidMulticastChannel internal constructor(
+internal class AndroidMulticastChannel internal constructor(
     private val context: Context,
-    cipher: PayloadCipher,
-    runner: ThreadRunner
-): JvmMulticastChannel(cipher, runner) {
+    socketWrapper: SocketWrapper<MulticastSocket>
+): SecuredMulticastChannel(socketWrapper) {
 
     private var multicastLock: WifiManager.MulticastLock? = null
 
