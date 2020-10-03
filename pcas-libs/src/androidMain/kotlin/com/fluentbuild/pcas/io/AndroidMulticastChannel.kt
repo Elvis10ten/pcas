@@ -12,7 +12,7 @@ internal class AndroidMulticastChannel internal constructor(
 
     private var multicastLock: WifiManager.MulticastLock? = null
 
-    override fun init(receiver: PayloadReceiver) {
+    override fun init(receiver: MessageReceiver) {
         multicastLock = context.wifiManager.createMulticastLock(TAG_MULTICAST_LOCK).apply {
             setReferenceCounted(false)
             acquire()

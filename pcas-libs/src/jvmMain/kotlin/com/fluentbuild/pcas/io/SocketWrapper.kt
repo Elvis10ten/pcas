@@ -43,12 +43,12 @@ internal class SocketWrapper<SocketT: DatagramSocket>(
 	}
 
 	@Throws(IOException::class)
-	fun startReceiving(receiver: PayloadReceiver) {
+	fun startReceiving(receiver: MessageReceiver) {
 		socket.requireOpenAndBounded()
 		runner.runOnIo { receiveBlocking(receiver) }
 	}
 
-	private fun receiveBlocking(receiver: PayloadReceiver) {
+	private fun receiveBlocking(receiver: MessageReceiver) {
 		while(socket.canReceive()) {
 			try {
 				log.debug { "Receiving..." }

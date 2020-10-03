@@ -9,7 +9,7 @@ internal open class SecuredUnicastChannel(
 ): UnicastChannel {
 
     @Throws(IOException::class)
-    override fun init(receiver: PayloadReceiver) {
+    override fun init(receiver: MessageReceiver) {
         socketWrapper.init(DatagramSocket())
         socketWrapper.startReceiving(receiver)
     }

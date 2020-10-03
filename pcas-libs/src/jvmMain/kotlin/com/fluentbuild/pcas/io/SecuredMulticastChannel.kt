@@ -11,7 +11,7 @@ internal open class SecuredMulticastChannel(
     private val log by logger()
 
     @Throws(IOException::class)
-    override fun init(receiver: PayloadReceiver) {
+    override fun init(receiver: MessageReceiver) {
         socketWrapper.init(MulticastSocket(MULTICAST_PORT)) {
             timeToLive = MULTICAST_TTL
             joinGroup(MULTICAST_ADDRESS.inetAddress)

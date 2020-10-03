@@ -1,6 +1,6 @@
 package com.fluentbuild.pcas.ledger
 
-import com.fluentbuild.pcas.io.PayloadReceiver
+import com.fluentbuild.pcas.io.MessageReceiver
 import com.fluentbuild.pcas.ledger.models.Packet
 import com.fluentbuild.pcas.utils.logger
 import kotlinx.serialization.protobuf.ProtoBuf
@@ -9,7 +9,7 @@ class PacketReceiver(
     private val protoBuf: ProtoBuf,
     private val packetBroadcaster: PacketBroadcaster,
     private val ledgerStore: LedgerStore
-): PayloadReceiver {
+): MessageReceiver {
 
     private val log by logger()
     private val packetSerializer = Packet.serializer()

@@ -1,6 +1,6 @@
 package com.fluentbuild.pcas.middleware.routing
 
-import com.fluentbuild.pcas.io.PayloadReceiver
+import com.fluentbuild.pcas.io.MessageReceiver
 import com.fluentbuild.pcas.io.UnicastChannel
 import com.fluentbuild.pcas.ledger.models.ServiceId
 import com.fluentbuild.pcas.utils.logger
@@ -10,7 +10,7 @@ class RouterServerDeMultiplexer(
     private val protoBuf: ProtoBuf,
     private val unicastChannel: UnicastChannel,
     private val serviceRouters: Map<ServiceId, RouterServer>
-) : PayloadReceiver {
+) : MessageReceiver {
 
     private val log by logger()
     private val frameSerializer = RouterFrame.serializer()
