@@ -3,6 +3,7 @@ package com.fluentbuild.pcas.io
 import com.fluentbuild.pcas.async.ThreadRunner
 import com.fluentbuild.pcas.host.HostInfo
 import com.fluentbuild.pcas.utils.logger
+import kotlinx.io.core.IoBuffer
 import java.lang.Exception
 import java.net.DatagramSocket
 
@@ -35,6 +36,9 @@ open class JvmUnicastChannel internal constructor(
         }
     }
 
+    override fun send(recipient: HostInfo, payload: IoBuffer) {
+        TODO("Not yet implemented")
+    }
     override fun send(recipient: HostInfo, payload: ByteArray) {
         log.debug { "Sending payload to: $recipient" }
         runner.runOnIo {

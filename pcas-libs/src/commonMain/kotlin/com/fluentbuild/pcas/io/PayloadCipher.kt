@@ -1,6 +1,6 @@
 package com.fluentbuild.pcas.io
 
-interface PayloadCipher {
+internal interface PayloadCipher {
 
     fun encrypt(payload: ByteArray): ByteArray
 

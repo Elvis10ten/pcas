@@ -1,9 +1,11 @@
 package com.fluentbuild.pcas.io
 
-interface MulticastChannel {
+internal interface MulticastChannel {
 
+    @Throws(Exception::class)
     fun init(receiver: PayloadReceiver)
 
+    @Throws(Exception::class)
     fun broadcast(payload: ByteArray)
 
     fun close()

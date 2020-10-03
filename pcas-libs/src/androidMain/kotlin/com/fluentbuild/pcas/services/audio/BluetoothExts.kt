@@ -10,7 +10,7 @@ import com.fluentbuild.pcas.peripheral.PeripheralBond
 import com.fluentbuild.pcas.peripheral.audio.AudioProfile
 
 fun BluetoothAdapter.toBluetoothDevice(peripheral: Peripheral): BluetoothDevice =
-    getRemoteDevice(peripheral.address.macHexFormat)
+    getRemoteDevice(peripheral.address.colonHex)
 
 fun BluetoothDevice.toPeripheral() = Peripheral(name, Address.Mac(address))
 

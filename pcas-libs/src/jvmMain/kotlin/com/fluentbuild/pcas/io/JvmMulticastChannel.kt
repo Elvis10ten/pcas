@@ -20,9 +20,11 @@ open class JvmMulticastChannel internal constructor(
         require(socket == null) { "MulticastChannel already initialized" }
         socket = MulticastSocket(GROUP_PORT).apply {
             timeToLive = MULTICAST_TTL
+            IPTOS_LOWDELAY = 0x10
             trafficClass = IP_TOS_THROUGHPUT
             joinGroup(GROUP_ADDRESS.inetAddress)
         }
+        socket!!.soTimeout
 
         runner.runOnIo {
             while(socket != null) {
@@ -40,6 +42,7 @@ open class JvmMulticastChannel internal constructor(
         log.debug { "Broadcasting payload" }
         runner.runOnIo {
             val encryptedPayload = cipher.encrypt(payload)
+            // todo
             val packet = createDatagramPacket(encryptedPayload, GROUP_ADDRESS, GROUP_PORT)
             socket!!.send(packet)
         }
@@ -51,12 +54,5 @@ open class JvmMulticastChannel internal constructor(
         socket?.leaveGroup(GROUP_ADDRESS.inetAddress)
         socket?.close()
         socket = null
-    }
-
-    companion object {
-
-        private const val MULTICAST_TTL = 255
-        private const val GROUP_PORT = 49137
-        private val GROUP_ADDRESS = Address.Ipv4("225.139.089.176")
     }
 }
