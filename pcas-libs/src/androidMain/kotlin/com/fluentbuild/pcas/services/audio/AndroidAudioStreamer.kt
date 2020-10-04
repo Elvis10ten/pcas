@@ -3,12 +3,12 @@ package com.fluentbuild.pcas.services.audio
 import com.fluentbuild.pcas.host.HostInfo
 import com.fluentbuild.pcas.utils.logger
 
-class AndroidAudioRouterClient: AudioRouterClient {
+class AndroidAudioStreamer: AudioStreamer {
 
     private val log by logger()
 
-    override fun start(remoteSink: HostInfo) {
-        log.debug(::start, remoteSink)
+    override fun start(destination: HostInfo) {
+        log.debug(::start, destination)
     }
 
     override fun stop() {

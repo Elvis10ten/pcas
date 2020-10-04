@@ -2,9 +2,9 @@ package com.fluentbuild.pcas.services.audio
 
 import com.fluentbuild.pcas.host.HostInfo
 
-interface AudioRouterClient {
+interface AudioStreamer {
 
-    fun start(remoteSink: HostInfo)
+    fun start(destination: HostInfo)
 
     fun stop()
 }

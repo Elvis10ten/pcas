@@ -2,7 +2,7 @@ package com.fluentbuild.pcas.di
 
 import com.fluentbuild.pcas.ledger.*
 
-class LedgerModule(
+internal class LedgerModule(
     private val ioModule: IoModule,
     private val hostModule: HostModule,
     private val utilsModule: UtilsModule,

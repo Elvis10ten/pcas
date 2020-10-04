@@ -23,7 +23,7 @@ data class Conflict(
 
         data class Stream(
             override val selfBlock: Block,
-            val host: HostInfo
+            val destination: HostInfo
         ): Resolution()
     }
 }

@@ -49,7 +49,6 @@ kotlin {
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-core:${serializationVersion}")
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-protobuf:${serializationVersion}")
                 implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.1.0")
-                api("io.ktor:ktor-io:1.4.1")
             }
         }
 
@@ -66,7 +65,7 @@ kotlin {
                 implementation(kotlin("stdlib"))
                 implementation(kotlin("test-common"))
                 implementation(kotlin("test-annotations-common"))
-                implementation("com.jakewharton.timber:timber-jdk:5.0.0-SNAPSHOT")
+                api("com.jakewharton.timber:timber-jdk:5.0.0-SNAPSHOT")
                 implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.1.0")
             }
         }
@@ -82,7 +81,7 @@ kotlin {
             dependencies {
                 dependsOn(jvmMain)
                 implementation("androidx.core:core-ktx:1.3.1")
-                implementation("com.jakewharton.timber:timber-android:5.0.0-SNAPSHOT")
+                api("com.jakewharton.timber:timber-android:5.0.0-SNAPSHOT")
             }
         }
 

@@ -15,11 +15,11 @@ import com.fluentbuild.pcas.peripheral.PeripheralBond
 import com.fluentbuild.pcas.utils.logger
 import com.fluentbuild.pcas.utils.unsafeLazy
 
-internal class AudioBondsObservable(
+internal class AndroidAudioBondsObservable(
     private val context: Context,
     private val audioPeripheral: Peripheral,
     private val profileHolder: BluetoothProfileHolder
-): PeripheralBondsObservable {
+): AudioBondsObservable {
 
     private val log by logger()
     private val bluetoothDevice by unsafeLazy { context.bluetoothAdapter.toBluetoothDevice(audioPeripheral) }

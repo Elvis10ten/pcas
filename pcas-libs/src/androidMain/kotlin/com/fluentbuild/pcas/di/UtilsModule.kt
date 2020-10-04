@@ -5,13 +5,11 @@ import kotlinx.serialization.protobuf.ProtoBuf
 import kotlinx.datetime.Clock
 import java.security.SecureRandom
 
-class UtilsModule {
+internal class UtilsModule {
 
-    val protoBuf: ProtoBuf by lazy { ProtoBuf }
+    val protoBuf = ProtoBuf
 
-    val secureRandom by lazy {
-        SecureRandom()
-    }
+    val secureRandom = SecureRandom()
 
-    val timeProvider: TimeProvider by lazy { TimeProvider(Clock.System) }
+    val timeProvider = TimeProvider(Clock.System)
 }

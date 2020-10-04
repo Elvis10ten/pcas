@@ -2,29 +2,26 @@ package com.fluentbuild.pcas.di
 
 import android.content.Context
 import com.fluentbuild.pcas.async.Observable
-import com.fluentbuild.pcas.services.audio.PeripheralBondsObservable
-import com.fluentbuild.pcas.services.audio.PeripheralConnector
-import com.fluentbuild.pcas.ledger.models.BondEntity
-import com.fluentbuild.pcas.ledger.models.PropertyEntity
+import com.fluentbuild.pcas.host.HostInfoObservable
+import com.fluentbuild.pcas.services.audio.AudioBondsObservable
+import com.fluentbuild.pcas.peripheral.PeripheralConnector
 import com.fluentbuild.pcas.middleware.ServiceRegistry
 import com.fluentbuild.pcas.stream.StreamHandler
 import com.fluentbuild.pcas.peripheral.Peripheral
-import com.fluentbuild.pcas.peripheral.PeripheralBond
 import com.fluentbuild.pcas.services.audio.*
-import com.fluentbuild.pcas.services.Mapper
+import com.fluentbuild.pcas.utils.TimeProvider
 
-class AudioServiceModule(
+internal class AudioServiceModule(
     private val appContext: Context,
     private val audioPeripheral: Peripheral,
-    private val utilsModule: UtilsModule
+    private val hostInfoObservable: () -> HostInfoObservable,
+    private val timeProvider: TimeProvider
 ) {
-
-    val serviceId = 1
 
     lateinit var audioStateUpdater: AudioStateUpdater
 
-    private val audioRouterClient: AudioRouterClient by lazy {
-        AndroidAudioRouterClient()
+    private val audioStreamer: AudioStreamer by lazy {
+        AndroidAudioStreamer()
     }
 
     private val profileHolder: BluetoothProfileHolder by lazy {
@@ -43,24 +40,20 @@ class AudioServiceModule(
         AudioPropertyObservable(appContext)
     }
 
-    private val propertyEntityMapper: Mapper<AudioProperty, Set<PropertyEntity>> by lazy {
-        PropertyEntityMapper(serviceId, utilsModule.timeProvider)
+    private val blocksBuilder: AudioBlocksBuilder by lazy {
+        AudioBlocksBuilder(timeProvider, hostInfoObservable())
     }
 
-    private val bondsObservable: PeripheralBondsObservable by lazy {
-        AudioBondsObservable(appContext, audioPeripheral, profileHolder)
+    private val bondsObservable: AudioBondsObservable by lazy {
+        AndroidAudioBondsObservable(appContext, audioPeripheral, profileHolder)
     }
 
-    private val bondsEntityMapper: Mapper<Set<PeripheralBond>, Set<BondEntity>> by lazy {
-        BondsEntityMapper(serviceId)
-    }
-
-    val commandHandler: AudioCommandHandler by lazy {
-        AudioCommandHandler(
+    val resolutionHandler: AudioResolutionHandler by lazy {
+        AudioResolutionHandler(
             audioPeripheral = audioPeripheral,
             a2dpConnector = a2dpConnector,
             hspConnector = hspConnector,
-            audioRouterClient = audioRouterClient
+            audioStreamer = audioStreamer
         )
     }
 
@@ -72,9 +65,8 @@ class AudioServiceModule(
         audioStateUpdater = AudioStateUpdater(
             serviceRegistry = serviceRegistry,
             propertyObservable = propertyObservable,
-            propertyEntityMapper = propertyEntityMapper,
             bondsObservable = bondsObservable,
-            bondsEntityMapper = bondsEntityMapper
+            blocksBuilder = blocksBuilder
         )
     }
 }

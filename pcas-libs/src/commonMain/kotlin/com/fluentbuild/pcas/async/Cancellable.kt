@@ -1,6 +1,6 @@
 package com.fluentbuild.pcas.async
 
-internal fun interface Cancellable {
+fun interface Cancellable {
     fun cancel()
 }
 

@@ -7,11 +7,11 @@ import java.net.DatagramSocket
 import java.security.SecureRandom
 import javax.crypto.SecretKey
 
-class IoModule internal constructor(
+internal class IoModule(
     private val appContext: Context,
     private val networkKey: SecretKey,
     private val secureRandom: SecureRandom,
-    private val threadRunnerProvider: () -> ThreadRunner
+    private val threadRunner: () -> ThreadRunner
 ) {
 
     private val parceler: Parceler by lazy { Parceler(networkKey, secureRandom, BufferObjectPool) }
@@ -21,5 +21,5 @@ class IoModule internal constructor(
     internal val unicastChannel: UnicastChannel by lazy { SecuredUnicastChannel(getSocketWrapper()) }
 
     private fun <SocketT: DatagramSocket> getSocketWrapper() =
-        SocketWrapper<SocketT>(parceler, BufferObjectPool, threadRunnerProvider())
+        SocketWrapper<SocketT>(parceler, BufferObjectPool, threadRunner())
 }

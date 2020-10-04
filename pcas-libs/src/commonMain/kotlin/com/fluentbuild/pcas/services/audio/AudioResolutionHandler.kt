@@ -1,50 +1,51 @@
 package com.fluentbuild.pcas.services.audio
 
 import com.fluentbuild.pcas.host.HostInfo
-import com.fluentbuild.pcas.services.audio.PeripheralConnector.Action
+import com.fluentbuild.pcas.peripheral.PeripheralConnector.Action
 import com.fluentbuild.pcas.middleware.ResolutionHandler
 import com.fluentbuild.pcas.middleware.Conflict
 import com.fluentbuild.pcas.peripheral.Peripheral
+import com.fluentbuild.pcas.peripheral.PeripheralConnector
 import com.fluentbuild.pcas.peripheral.audio.AudioProfile
 
-class AudioCommandHandler(
+class AudioResolutionHandler(
     private val audioPeripheral: Peripheral,
     private val a2dpConnector: PeripheralConnector,
     private val hspConnector: PeripheralConnector,
-    private val audioRouterClient: AudioRouterClient
+    private val audioStreamer: AudioStreamer
 ): ResolutionHandler {
 
     override fun handle(resolution: Conflict.Resolution) {
-        // todo: handle throttling
-        val audioProfile = AudioProfile.from(resolution.bondId)
+        // todo: handle throttling maybe
+        val audioProfile = AudioProfile.from(resolution.selfBlock.bondId)
         when(resolution) {
             is Conflict.Resolution.Connect -> {
-                stopRouting()
+                stopStreaming()
                 connect(audioProfile)
             }
             is Conflict.Resolution.Disconnect -> {
-                stopRouting()
+                stopStreaming()
                 disconnect(audioProfile)
             }
             is Conflict.Resolution.Stream -> {
-                startRouting(resolution.other!!)
+                startStreaming(resolution.destination)
             }
             is Conflict.Resolution.Ambiguous -> {}
         }
     }
 
     override fun release() {
-        stopRouting()
+        stopStreaming()
         a2dpConnector.release()
         hspConnector.release()
     }
 
-    private fun startRouting(remoteSink: HostInfo) {
-        audioRouterClient.start(remoteSink)
+    private fun startStreaming(remoteSink: HostInfo) {
+        audioStreamer.start(remoteSink)
     }
 
-    private fun stopRouting() {
-        audioRouterClient.stop()
+    private fun stopStreaming() {
+        audioStreamer.stop()
     }
 
     private fun connect(audioProfile: AudioProfile) {

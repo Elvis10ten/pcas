@@ -4,7 +4,7 @@ import com.fluentbuild.pcas.middleware.ConflictsResolver
 import com.fluentbuild.pcas.middleware.ServiceRegistry
 import com.fluentbuild.pcas.stream.StreamDemux
 
-class MiddlewareModule(
+internal class MiddlewareModule(
     private val ioModule: IoModule,
     private val servicesModule: ServicesModule,
     private val ledgerModule: LedgerModule

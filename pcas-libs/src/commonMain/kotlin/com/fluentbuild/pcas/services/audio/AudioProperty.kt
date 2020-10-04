@@ -1,14 +1,8 @@
 package com.fluentbuild.pcas.services.audio
 
 import com.fluentbuild.pcas.utils.filterSet
-import kotlinx.serialization.Serializable
-import kotlinx.serialization.protobuf.ProtoNumber
 
-@Serializable
-data class AudioProperty(
-    @ProtoNumber(1)
-    val usages: Set<Usage>
-) {
+data class AudioProperty(val usages: Set<Usage>) {
 
     val unidirectionalUsages = usages.filterSet { it.direction == Direction.UNIDIRECTIONAL }
 
@@ -38,10 +32,5 @@ data class AudioProperty(
     enum class Direction {
         UNIDIRECTIONAL,
         BIDIRECTIONAL
-    }
-
-    companion object {
-
-        const val NO_PRIORITY = 0
     }
 }

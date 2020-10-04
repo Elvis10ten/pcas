@@ -1,6 +1,4 @@
-package com.fluentbuild.pcas.services.audio
-
-import com.fluentbuild.pcas.peripheral.Peripheral
+package com.fluentbuild.pcas.peripheral
 
 interface PeripheralConnector {
 

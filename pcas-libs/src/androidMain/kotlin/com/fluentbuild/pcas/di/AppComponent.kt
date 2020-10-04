@@ -2,6 +2,7 @@ package com.fluentbuild.pcas.di
 
 import android.content.Context
 import android.os.Handler
+import com.fluentbuild.pcas.Pcas
 import com.fluentbuild.pcas.peripheral.Peripheral
 import timber.log.LogcatTree
 import timber.log.Timber
@@ -21,17 +22,38 @@ class AppComponent(
 
     private val utilsModule = UtilsModule()
 
-    private val ioModule = IoModule(appContext, payloadKey, asyncModule)
+    private val ioModule = IoModule(
+        appContext,
+        payloadKey,
+        utilsModule.secureRandom,
+        { asyncModule.provideThreadExecutor() }
+    )
 
     private val hostModule = HostModule(appContext, hostUuid, hostName, ioModule)
 
     private val ledgerModule = LedgerModule(ioModule, hostModule, utilsModule, asyncModule)
 
-    val audioServiceModule = AudioServiceModule(appContext, audioPeripheral, utilsModule)
+    private val audioServiceModule = AudioServiceModule(
+        appContext,
+        audioPeripheral,
+        { hostModule.selfHostInfoWatcher },
+        utilsModule.timeProvider
+    )
 
     private val servicesModule = ServicesModule(audioServiceModule)
 
-    val middlewareModule = MiddlewareModule(ioModule, servicesModule, ledgerModule, utilsModule)
+    private val middlewareModule = MiddlewareModule(
+        ioModule,
+        servicesModule,
+        ledgerModule
+    )
+
+    val pcas by lazy {
+        Pcas(
+            middlewareModule.serviceRegistry,
+            audioServiceModule.audioStateUpdater
+        )
+    }
 
     fun init() {
         Timber.plant(LogcatTree())

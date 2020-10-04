@@ -1,33 +1,37 @@
 package com.fluentbuild.pcas.services.audio
 
+import com.fluentbuild.pcas.async.Cancellable
 import com.fluentbuild.pcas.async.Cancellables
 import com.fluentbuild.pcas.async.Observable
 import com.fluentbuild.pcas.middleware.ServiceRegistry
-import com.fluentbuild.pcas.ledger.models.BondEntity
-import com.fluentbuild.pcas.ledger.models.PropertyEntity
-import com.fluentbuild.pcas.peripheral.PeripheralBond
-import com.fluentbuild.pcas.services.Mapper
 
-class AudioStateUpdater internal constructor(
+internal class AudioStateUpdater(
     private val serviceRegistry: ServiceRegistry,
     private val propertyObservable: Observable<AudioProperty>,
-    private val propertyEntityMapper: Mapper<AudioProperty, Set<PropertyEntity>>,
-    private val bondsObservable: PeripheralBondsObservable,
-    private val bondsEntityMapper: Mapper<Set<PeripheralBond>, Set<BondEntity>>
+    private val bondsObservable: AudioBondsObservable,
+    private val blocksBuilder: AudioBlocksBuilder,
 ) {
 
-    private val cancellables = Cancellables()
-
-    fun start() {
-        cancellables += propertyObservable.subscribe { usage ->
-            serviceRegistry.updateProps(propertyEntityMapper.map(usage))
+    fun start(): Cancellable {
+        // todo
+        val update = {
+            blocksBuilder.buildNew()?.let { serviceRegistry.updateBlocks(it) }
         }
-        cancellables += bondsObservable.subscribe { connections ->
-            serviceRegistry.updateBonds(bondsEntityMapper.map(connections))
-        }
-    }
 
-    fun stop() {
-        cancellables.cancel()
+        val cancellables = Cancellables()
+        cancellables += propertyObservable.subscribe { audioProp ->
+            blocksBuilder.setProp(audioProp)
+            update()
+        }
+
+        cancellables += bondsObservable.subscribe { bonds ->
+            blocksBuilder.setBonds(bonds)
+            update()
+        }
+
+        return Cancellable {
+            cancellables.cancel()
+            blocksBuilder.clear()
+        }
     }
 }
