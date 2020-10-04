@@ -9,10 +9,10 @@ class LedgerModule(
     private val asyncModule: AsyncModule
 ) {
 
-    private val ledgerStore: LedgerStore by lazy { LedgerStore(utilsModule.timeProvider) }
+    private val ledgerStore: LedgerDb by lazy { LedgerDb(utilsModule.timeProvider) }
 
-    private val packetBroadcaster: PacketBroadcaster by lazy {
-        PacketBroadcaster(
+    private val ledgerMessageSender: LedgerMessageSender by lazy {
+        LedgerMessageSender(
             protoBuf = utilsModule.protoBuf,
             multicastChannel = ioModule.multicastChannel,
             ledgerStore = ledgerStore,
@@ -20,10 +20,10 @@ class LedgerModule(
         )
     }
 
-    private val packetReceiver: PacketReceiver by lazy {
-        PacketReceiver(
+    private val ledgerMessageReceiver: LedgerMessageReceiver by lazy {
+        LedgerMessageReceiver(
             protoBuf = utilsModule.protoBuf,
-            packetBroadcaster = packetBroadcaster,
+            packetBroadcaster = ledgerMessageSender,
             ledgerStore = ledgerStore
         )
     }
@@ -31,7 +31,7 @@ class LedgerModule(
     private val ledgerWatchdog: LedgerWatchdog by lazy {
         LedgerWatchdog(
             ledgerStore = ledgerStore,
-            packetBroadcaster = packetBroadcaster,
+            packetBroadcaster = ledgerMessageSender,
             timerProvider = utilsModule.timeProvider,
             runner = asyncModule.provideThreadExecutor()
         )
@@ -41,8 +41,8 @@ class LedgerModule(
         LedgerProtocol(
             multicastChannel = ioModule.multicastChannel,
             hostInfoWatcher = hostModule.selfHostInfoWatcher,
-            packetBroadcaster = packetBroadcaster,
-            packetReceiver = packetReceiver,
+            packetBroadcaster = ledgerMessageSender,
+            packetReceiver = ledgerMessageReceiver,
             ledgerWatchdog = ledgerWatchdog,
             ledgerStore = ledgerStore
         )

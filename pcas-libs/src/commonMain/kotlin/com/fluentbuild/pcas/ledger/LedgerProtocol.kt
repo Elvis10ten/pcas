@@ -2,55 +2,41 @@ package com.fluentbuild.pcas.ledger
 
 import com.fluentbuild.pcas.host.HostInfoObservable
 import com.fluentbuild.pcas.async.Cancellables
-import com.fluentbuild.pcas.host.HostInfo
 import com.fluentbuild.pcas.io.MulticastChannel
-import com.fluentbuild.pcas.ledger.models.PropertyEntity
-import com.fluentbuild.pcas.ledger.models.BondEntity
-import com.fluentbuild.pcas.ledger.models.Ledger
-import com.fluentbuild.pcas.utils.logger
 
-class LedgerProtocol internal constructor(
-    private val multicastChannel: MulticastChannel,
-    private val hostInfoWatcher: HostInfoObservable,
-    private val packetBroadcaster: PacketBroadcaster,
-    private val packetReceiver: PacketReceiver,
+internal class LedgerProtocol(
+    private val multicast: MulticastChannel,
+    private val hostObservable: HostInfoObservable,
+    private val messageSender: LedgerMessageSender,
+    private val messageReceiver: LedgerMessageReceiver,
     private val ledgerWatchdog: LedgerWatchdog,
-    private val ledgerStore: LedgerStore
+    private val ledgerDb: LedgerDb
 ) {
 
-    private val log by logger()
     private val cancellables = Cancellables()
 
-    fun init(onLedgerChanged: (Ledger) -> Unit) {
-        log.info { "Initializing LedgerProtocol" }
-        ledgerStore.setup(hostInfoWatcher.currentValue, onLedgerChanged)
-        cancellables += hostInfoWatcher.subscribe(::onHostInfoChanged)
+    fun init(onLedgerUpdated: (Ledger) -> Unit) {
+        ledgerDb.create(hostObservable.currentValue, onLedgerUpdated)
 
-        multicastChannel.init(packetReceiver::onReceived)
-        packetBroadcaster.broadcastIntro()
+        cancellables += hostObservable.subscribe {
+            ledgerDb.updateSelf(it)
+            messageSender.sendUpdate()
+        }
 
-        ledgerWatchdog.start()
+        multicast.init(messageReceiver::onReceived)
+        messageSender.sendGenesis()
+        cancellables += ledgerWatchdog.run()
     }
 
     fun close() {
-        log.info { "Closing LedgerProtocol" }
-        ledgerWatchdog.stop()
+        messageSender.sendExodus()
         cancellables.cancel()
-        multicastChannel.close()
-        ledgerStore.clear()
+        multicast.close()
+        ledgerDb.destroy()
     }
 
-    fun updateBonds(bonds: Set<BondEntity>) {
-        ledgerStore.upsertBonds(hostInfoWatcher.currentValue, bonds)
-        packetBroadcaster.broadcastUpdate()
-    }
-
-    fun updateProps(props: Set<PropertyEntity>) {
-        ledgerStore.upsertProps(hostInfoWatcher.currentValue, props)
-        packetBroadcaster.broadcastUpdate()
-    }
-
-    private fun onHostInfoChanged(self: HostInfo) {
-        ledgerStore.updateSelf(self)
+    fun updateBlocks(blocks: Set<Block>) {
+        ledgerDb.upsert(blocks)
+        messageSender.sendUpdate()
     }
 }

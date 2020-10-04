@@ -1,6 +1,6 @@
 package com.fluentbuild.pcas.peripheral.audio
 
-import com.fluentbuild.pcas.ledger.models.BondId
+import com.fluentbuild.pcas.peripheral.BondId
 
 enum class AudioProfile(val bondId: BondId) {
     A2DP(0),

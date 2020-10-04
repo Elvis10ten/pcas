@@ -3,8 +3,8 @@ package com.fluentbuild.pcas.di
 import com.fluentbuild.pcas.middleware.ServiceRegistry
 import com.fluentbuild.pcas.middleware.UpdateInterceptor
 import com.fluentbuild.pcas.middleware.conflicts.ConflictsInterceptor
-import com.fluentbuild.pcas.middleware.routing.RouterClientInterceptor
-import com.fluentbuild.pcas.middleware.routing.RouterServerDeMultiplexer
+import com.fluentbuild.pcas.middleware.conflicts.BondConflictsResolver
+import com.fluentbuild.pcas.routing.RouterServerDeMultiplexer
 
 class MiddlewareModule(
     private val ioModule: IoModule,
@@ -14,7 +14,7 @@ class MiddlewareModule(
 ) {
 
     private val interceptors: List<UpdateInterceptor> by lazy {
-        listOf(ConflictsInterceptor(), RouterClientInterceptor())
+        listOf(ConflictsInterceptor(), BondConflictsResolver())
     }
 
     private val routerServerDeMultiplexer: RouterServerDeMultiplexer by lazy {

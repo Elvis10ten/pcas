@@ -1,8 +1,8 @@
 package com.fluentbuild.pcas.di
 
-import com.fluentbuild.pcas.ledger.models.ServiceId
+import com.fluentbuild.pcas.services.ServiceId
 import com.fluentbuild.pcas.middleware.CommandHandler
-import com.fluentbuild.pcas.middleware.routing.RouterServer
+import com.fluentbuild.pcas.routing.RouterServer
 
 class ServicesModule(
     private val audioServiceModule: AudioServiceModule

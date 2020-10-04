@@ -1,41 +1,43 @@
 package com.fluentbuild.pcas.ledger
 
+import com.fluentbuild.pcas.async.Cancellable
 import com.fluentbuild.pcas.async.ThreadRunner
-import com.fluentbuild.pcas.host.HostInfo
-import com.fluentbuild.pcas.ledger.models.Ledger.Companion.ENTRY_EVICTION_NOTICE_THRESHOLD_MILLIS
+import com.fluentbuild.pcas.host.HostUuid
 import com.fluentbuild.pcas.utils.TimeProvider
+import com.fluentbuild.pcas.utils.Timestamp
 import com.fluentbuild.pcas.utils.logger
 
-class LedgerWatchdog internal constructor(
-    private val ledgerStore: LedgerStore,
-    private val packetBroadcaster: PacketBroadcaster,
+internal class LedgerWatchdog(
+    private val ledgerDb: LedgerDb,
+    private val messageSender: LedgerMessageSender,
     private val runner: ThreadRunner,
-    private val timerProvider: TimeProvider
+    private val timeProvider: TimeProvider
 ) {
 
     private val log by logger()
-    private var lastEvictionNotices = setOf<HostInfo>()
+    private val lastHeartbeatTimestamps = mutableMapOf<HostUuid, Timestamp>()
 
-    fun start() {
-        val interval = ENTRY_EVICTION_NOTICE_THRESHOLD_MILLIS / 2
-        runner.runOnMainRepeating(interval) {
-            val latestEvictionNotices = ledgerStore.get().getEvictionNotices(timerProvider.currentTimeMillis())
-            log.debug { "Latest eviction notices: $latestEvictionNotices" }
+    fun run(): Cancellable {
+        runner.runOnMainRepeating(HEARTBEAT_INTERVAL_MILLIS) {
+            messageSender.sendHeartbeat()
 
-            latestEvictionNotices.forEach { host ->
-                if(latestEvictionNotices.contains(host)) {
-                    ledgerStore.evict(host)
-                }
+            val currentTimestamp = timeProvider.currentTimeMillis()
+            val deadHosts = lastHeartbeatTimestamps.filter { currentTimestamp - it.value > HOST_TTL_MILLIS }.keys
+
+            if(deadHosts.isNotEmpty()) {
+                log.info { "Removing dead hosts: $deadHosts" }
+                ledgerDb.delete(deadHosts)
+                deadHosts.forEach { lastHeartbeatTimestamps.remove(it) }
             }
+        }
 
-            lastEvictionNotices = latestEvictionNotices
-            if(latestEvictionNotices.isNotEmpty()) {
-                packetBroadcaster.broadcastEvictionNotice()
-            }
+        return Cancellable {
+            runner.cancelAll()
+            lastHeartbeatTimestamps.clear()
         }
     }
 
-    fun stop() {
-        runner.cancelAll()
+    fun onHostHeartbeatReceived(hostUuid: HostUuid) {
+        lastHeartbeatTimestamps[hostUuid] = timeProvider.currentTimeMillis()
     }
 }

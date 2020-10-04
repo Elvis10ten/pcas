@@ -10,8 +10,8 @@ import javax.crypto.SecretKey
 class IoModule internal constructor(
     private val appContext: Context,
     private val networkKey: SecretKey,
-    private val threadRunnerProvider: () -> ThreadRunner,
-    private val secureRandom: SecureRandom
+    private val secureRandom: SecureRandom,
+    private val threadRunnerProvider: () -> ThreadRunner
 ) {
 
     private val parceler: Parceler by lazy { Parceler(networkKey, secureRandom, BufferObjectPool) }

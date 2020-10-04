@@ -3,7 +3,7 @@ package com.fluentbuild.pcas.ledger
 /*import com.fluentbuild.pcas.host.HostInfo
 import com.fluentbuild.pcas.ledger.models.PropertyEntity
 import com.fluentbuild.pcas.ledger.models.BondEntity
-import com.fluentbuild.pcas.ledger.models.Ledger
+import com.fluentbuild.pcas.ledger.Ledger
 import com.fluentbuild.pcas.utils.TimeProvider
 import io.mockk.called
 import io.mockk.mockk

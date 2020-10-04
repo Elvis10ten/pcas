@@ -1,16 +1,15 @@
 package com.fluentbuild.pcas.peripheral
 
-import com.fluentbuild.pcas.ledger.models.BondId
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.protobuf.ProtoNumber
 
 @Serializable
 data class PeripheralBond(
-    @ProtoNumber(1)
+	@ProtoNumber(1)
     val peripheral: Peripheral,
-    @ProtoNumber(2)
+	@ProtoNumber(2)
     val bondId: BondId,
-    @ProtoNumber(3)
+	@ProtoNumber(3)
     val state: State
 ) {
 

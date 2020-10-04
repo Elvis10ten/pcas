@@ -1,7 +1,7 @@
 package com.fluentbuild.pcas.services.audio
 
 import com.fluentbuild.pcas.ledger.models.BondEntity
-import com.fluentbuild.pcas.ledger.models.ServiceId
+import com.fluentbuild.pcas.services.ServiceId
 import com.fluentbuild.pcas.peripheral.PeripheralBond
 import com.fluentbuild.pcas.services.Mapper
 import com.fluentbuild.pcas.utils.mapSet

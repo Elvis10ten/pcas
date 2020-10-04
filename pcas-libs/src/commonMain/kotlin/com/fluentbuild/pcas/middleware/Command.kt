@@ -1,9 +1,9 @@
 package com.fluentbuild.pcas.middleware
 
 import com.fluentbuild.pcas.host.HostInfo
-import com.fluentbuild.pcas.ledger.models.BondId
-import com.fluentbuild.pcas.ledger.models.Entity
-import com.fluentbuild.pcas.ledger.models.ServiceId
+import com.fluentbuild.pcas.peripheral.BondId
+import com.fluentbuild.pcas.ledger.Block
+import com.fluentbuild.pcas.services.ServiceId
 
 data class Command(
     val serviceId: ServiceId,
@@ -12,14 +12,13 @@ data class Command(
     val other: HostInfo? = null
 ) {
 
-    constructor(entity: Entity, action: Action): this(entity.serviceId, entity.bondId, action)
+    constructor(entity: Block, action: Action): this(entity.serviceId, entity.bondId, action)
 
-    constructor(entity: Entity, action: Action, other: HostInfo): this(entity.serviceId, entity.bondId, action, other)
+    constructor(entity: Block, action: Action, other: HostInfo): this(entity.serviceId, entity.bondId, action, other)
 
     enum class Action {
         CONNECT,
         DISCONNECT,
-        ROUTE,
-        AMBIGUOUS
+        ROUTE
     }
 }

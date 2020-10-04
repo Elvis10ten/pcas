@@ -1,6 +1,6 @@
 package com.fluentbuild.pcas.middleware.conflicts
 
-import com.fluentbuild.pcas.ledger.models.Ledger
+import com.fluentbuild.pcas.ledger.Ledger
 import com.fluentbuild.pcas.ledger.models.PropertyEntity
 import com.fluentbuild.pcas.middleware.Command
 import com.fluentbuild.pcas.utils.mapSet

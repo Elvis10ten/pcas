@@ -1,4 +1,4 @@
-package com.fluentbuild.pcas.middleware.routing
+package com.fluentbuild.pcas.routing
 
 import com.fluentbuild.pcas.host.HostInfo
 

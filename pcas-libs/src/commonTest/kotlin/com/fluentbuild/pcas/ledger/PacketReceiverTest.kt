@@ -1,7 +1,7 @@
 package com.fluentbuild.pcas.ledger
 
 /*import com.fluentbuild.pcas.host.HostInfo
-import com.fluentbuild.pcas.ledger.models.Ledger
+import com.fluentbuild.pcas.ledger.Ledger
 import io.mockk.mockk
 import io.mockk.verify
 import kotlinx.serialization.protobuf.ProtoBuf

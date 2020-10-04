@@ -1,19 +1,19 @@
-package com.fluentbuild.pcas.middleware.routing
+package com.fluentbuild.pcas.routing
 
 import com.fluentbuild.pcas.io.MessageReceiver
 import com.fluentbuild.pcas.io.UnicastChannel
-import com.fluentbuild.pcas.ledger.models.ServiceId
+import com.fluentbuild.pcas.services.ServiceId
 import com.fluentbuild.pcas.utils.logger
 import kotlinx.serialization.protobuf.ProtoBuf
 
-class RouterServerDeMultiplexer(
+internal class RouterServerDeMultiplexer(
     private val protoBuf: ProtoBuf,
     private val unicastChannel: UnicastChannel,
     private val serviceRouters: Map<ServiceId, RouterServer>
 ) : MessageReceiver {
 
     private val log by logger()
-    private val frameSerializer = RouterFrame.serializer()
+    private val frameSerializer = RouterMessage.serializer()
 
     fun init() {
         log.debug(::init)

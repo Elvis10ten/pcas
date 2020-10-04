@@ -13,6 +13,7 @@ internal open class SecuredMulticastChannel(
     @Throws(IOException::class)
     override fun init(receiver: MessageReceiver) {
         socketWrapper.init(MulticastSocket(MULTICAST_PORT)) {
+            loopbackMode = true
             timeToLive = MULTICAST_TTL
             joinGroup(MULTICAST_ADDRESS.inetAddress)
         }

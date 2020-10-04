@@ -8,7 +8,7 @@ import kotlinx.serialization.protobuf.ProtoNumber
 @Serializable
 data class HostInfo(
     @ProtoNumber(1)
-    val uuid: String,
+    val uuid: HostUuid,
     @ProtoNumber(2)
     val name: String,
     @ProtoNumber(3)
