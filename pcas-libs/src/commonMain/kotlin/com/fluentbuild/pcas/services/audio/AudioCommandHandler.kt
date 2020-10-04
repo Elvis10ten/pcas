@@ -2,8 +2,8 @@ package com.fluentbuild.pcas.services.audio
 
 import com.fluentbuild.pcas.host.HostInfo
 import com.fluentbuild.pcas.services.audio.PeripheralConnector.Action
-import com.fluentbuild.pcas.middleware.CommandHandler
-import com.fluentbuild.pcas.middleware.Command
+import com.fluentbuild.pcas.middleware.ResolutionHandler
+import com.fluentbuild.pcas.middleware.Conflict
 import com.fluentbuild.pcas.peripheral.Peripheral
 import com.fluentbuild.pcas.peripheral.audio.AudioProfile
 
@@ -12,24 +12,24 @@ class AudioCommandHandler(
     private val a2dpConnector: PeripheralConnector,
     private val hspConnector: PeripheralConnector,
     private val audioRouterClient: AudioRouterClient
-): CommandHandler {
+): ResolutionHandler {
 
-    override fun handle(command: Command) {
+    override fun handle(resolution: Conflict.Resolution) {
         // todo: handle throttling
-        val audioProfile = AudioProfile.from(command.bondId)
-        when(command.action) {
-            Command.Action.CONNECT -> {
+        val audioProfile = AudioProfile.from(resolution.bondId)
+        when(resolution) {
+            is Conflict.Resolution.Connect -> {
                 stopRouting()
                 connect(audioProfile)
             }
-            Command.Action.DISCONNECT -> {
+            is Conflict.Resolution.Disconnect -> {
                 stopRouting()
                 disconnect(audioProfile)
             }
-            Command.Action.ROUTE -> {
-                startRouting(command.other!!)
+            is Conflict.Resolution.Stream -> {
+                startRouting(resolution.other!!)
             }
-            Command.Action.AMBIGUOUS -> {}
+            is Conflict.Resolution.Ambiguous -> {}
         }
     }
 

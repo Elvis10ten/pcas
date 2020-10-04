@@ -1,22 +1,22 @@
 package com.fluentbuild.pcas.di
 
 import com.fluentbuild.pcas.services.ServiceId
-import com.fluentbuild.pcas.middleware.CommandHandler
-import com.fluentbuild.pcas.routing.RouterServer
+import com.fluentbuild.pcas.middleware.ResolutionHandler
+import com.fluentbuild.pcas.stream.StreamHandler
 
 class ServicesModule(
     private val audioServiceModule: AudioServiceModule
 ) {
 
-    val serviceHandlers: Map<ServiceId, CommandHandler> by lazy {
+    val serviceHandlers: Map<ServiceId, ResolutionHandler> by lazy {
         mapOf(
             audioServiceModule.serviceId to audioServiceModule.commandHandler
         )
     }
 
-    val routerServers: Map<ServiceId, RouterServer> by lazy {
+    val routerServers: Map<ServiceId, StreamHandler> by lazy {
         mapOf(
-            audioServiceModule.serviceId to audioServiceModule.routerServer
+            audioServiceModule.serviceId to audioServiceModule.streamHandler
         )
     }
 }

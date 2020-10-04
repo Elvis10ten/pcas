@@ -17,8 +17,8 @@ data class Ledger(
 ) {
 
     @Transient
-    val selfBlocks by unsafeLazy { blocks.filterSet { it.host == self } }
+    val selfBlocks = blocks.filterSet { it.host == self }
 
     @Transient
-    val othersBlocks by unsafeLazy { blocks.filterSet { it.host != self } }
+    val othersBlocks = blocks.filterSet { it.host != self }
 }

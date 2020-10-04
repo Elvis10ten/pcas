@@ -1,35 +1,30 @@
 package com.fluentbuild.pcas.di
 
+import com.fluentbuild.pcas.middleware.ConflictsResolver
 import com.fluentbuild.pcas.middleware.ServiceRegistry
-import com.fluentbuild.pcas.middleware.UpdateInterceptor
-import com.fluentbuild.pcas.middleware.conflicts.ConflictsInterceptor
-import com.fluentbuild.pcas.middleware.conflicts.BondConflictsResolver
-import com.fluentbuild.pcas.routing.RouterServerDeMultiplexer
+import com.fluentbuild.pcas.stream.StreamDemux
 
 class MiddlewareModule(
     private val ioModule: IoModule,
     private val servicesModule: ServicesModule,
-    private val ledgerModule: LedgerModule,
-    private val utilsModule: UtilsModule
+    private val ledgerModule: LedgerModule
 ) {
 
-    private val interceptors: List<UpdateInterceptor> by lazy {
-        listOf(ConflictsInterceptor(), BondConflictsResolver())
-    }
+    private val conflictsResolver: ConflictsResolver by lazy { ConflictsResolver() }
 
-    private val routerServerDeMultiplexer: RouterServerDeMultiplexer by lazy {
-        RouterServerDeMultiplexer(
-            protoBuf = utilsModule.protoBuf,
-            unicastChannel = ioModule.unicastChannel,
-            serviceRouters = servicesModule.routerServers
+    private val streamDemux: StreamDemux by lazy {
+        StreamDemux(
+            unicast = ioModule.unicastChannel,
+            serviceHandlers = servicesModule.routerServers
         )
     }
+
     val serviceRegistry: ServiceRegistry by lazy {
         ServiceRegistry(
             ledgerProtocol = ledgerModule.ledgerProtocol,
-            interceptors = interceptors,
             serviceHandlers = servicesModule.serviceHandlers,
-            routerServerDeMultiplexer = routerServerDeMultiplexer
+            streamDemux = streamDemux,
+            conflictsResolver = conflictsResolver
         )
     }
 }

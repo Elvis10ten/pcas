@@ -9,42 +9,42 @@ class LedgerModule(
     private val asyncModule: AsyncModule
 ) {
 
-    private val ledgerStore: LedgerDb by lazy { LedgerDb(utilsModule.timeProvider) }
+    private val ledgerDb: LedgerDb by lazy { LedgerDb() }
 
     private val ledgerMessageSender: LedgerMessageSender by lazy {
         LedgerMessageSender(
             protoBuf = utilsModule.protoBuf,
-            multicastChannel = ioModule.multicastChannel,
-            ledgerStore = ledgerStore,
-            timeProvider = utilsModule.timeProvider
+            multicast = ioModule.multicastChannel,
+            ledgerDb = ledgerDb
+        )
+    }
+
+    private val ledgerWatchdog: LedgerWatchdog by lazy {
+        LedgerWatchdog(
+            runner = asyncModule.provideThreadExecutor(),
+            ledgerDb = ledgerDb,
+            messageSender = ledgerMessageSender,
+            timeProvider = utilsModule.timeProvider,
         )
     }
 
     private val ledgerMessageReceiver: LedgerMessageReceiver by lazy {
         LedgerMessageReceiver(
             protoBuf = utilsModule.protoBuf,
-            packetBroadcaster = ledgerMessageSender,
-            ledgerStore = ledgerStore
+            messageSender = ledgerMessageSender,
+            ledgerDb = ledgerDb,
+            watchdog = ledgerWatchdog
         )
     }
 
-    private val ledgerWatchdog: LedgerWatchdog by lazy {
-        LedgerWatchdog(
-            ledgerStore = ledgerStore,
-            packetBroadcaster = ledgerMessageSender,
-            timerProvider = utilsModule.timeProvider,
-            runner = asyncModule.provideThreadExecutor()
-        )
-    }
-
-    val ledgerProtocol: LedgerProtocol by lazy {
+    internal val ledgerProtocol: LedgerProtocol by lazy {
         LedgerProtocol(
-            multicastChannel = ioModule.multicastChannel,
-            hostInfoWatcher = hostModule.selfHostInfoWatcher,
-            packetBroadcaster = ledgerMessageSender,
-            packetReceiver = ledgerMessageReceiver,
             ledgerWatchdog = ledgerWatchdog,
-            ledgerStore = ledgerStore
+            multicast = ioModule.multicastChannel,
+            hostObservable = hostModule.selfHostInfoWatcher,
+            messageSender = ledgerMessageSender,
+            messageReceiver = ledgerMessageReceiver,
+            ledgerDb = ledgerDb
         )
     }
 }

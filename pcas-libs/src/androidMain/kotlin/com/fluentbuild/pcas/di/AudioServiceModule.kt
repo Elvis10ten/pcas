@@ -7,7 +7,7 @@ import com.fluentbuild.pcas.services.audio.PeripheralConnector
 import com.fluentbuild.pcas.ledger.models.BondEntity
 import com.fluentbuild.pcas.ledger.models.PropertyEntity
 import com.fluentbuild.pcas.middleware.ServiceRegistry
-import com.fluentbuild.pcas.routing.RouterServer
+import com.fluentbuild.pcas.stream.StreamHandler
 import com.fluentbuild.pcas.peripheral.Peripheral
 import com.fluentbuild.pcas.peripheral.PeripheralBond
 import com.fluentbuild.pcas.services.audio.*
@@ -64,8 +64,8 @@ class AudioServiceModule(
         )
     }
 
-    val routerServer: RouterServer by lazy {
-        AndroidAudioRouterServer()
+    val streamHandler: StreamHandler by lazy {
+        AndroidAudioStreamHandler()
     }
 
     fun init(serviceRegistry: ServiceRegistry) {
