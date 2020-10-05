@@ -5,12 +5,12 @@ import android.content.Context
 import com.fluentbuild.pcas.android.bluetoothAdapter
 import com.fluentbuild.pcas.async.Cancellable
 import com.fluentbuild.pcas.async.SentinelCancellable
-import com.fluentbuild.pcas.logs.logger
+import com.fluentbuild.pcas.logs.getLog
 import java.util.*
 
 class BluetoothProfileHolder(private val context: Context) {
 
-    private val log by logger()
+    private val log = getLog()
     private val cachedProfiles = mutableMapOf<ProfileId, BluetoothProfile>()
     private val pendingConsumers = mutableMapOf<ProfileId, Queue<Consumer>>()
 

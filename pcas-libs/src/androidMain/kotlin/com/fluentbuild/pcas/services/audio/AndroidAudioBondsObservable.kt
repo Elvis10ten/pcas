@@ -12,7 +12,7 @@ import com.fluentbuild.pcas.async.Cancellable
 import com.fluentbuild.pcas.async.Cancellables
 import com.fluentbuild.pcas.peripheral.Peripheral
 import com.fluentbuild.pcas.peripheral.PeripheralBond
-import com.fluentbuild.pcas.logs.logger
+import com.fluentbuild.pcas.logs.getLog
 import com.fluentbuild.pcas.utils.unsafeLazy
 
 internal class AndroidAudioBondsObservable(
@@ -21,7 +21,7 @@ internal class AndroidAudioBondsObservable(
     private val profileHolder: BluetoothProfileHolder
 ): AudioBondsObservable {
 
-    private val log by logger()
+    private val log = getLog()
     private val bluetoothDevice by unsafeLazy { context.bluetoothAdapter.toBluetoothDevice(audioPeripheral) }
 
     private var a2dpBond: PeripheralBond? = null

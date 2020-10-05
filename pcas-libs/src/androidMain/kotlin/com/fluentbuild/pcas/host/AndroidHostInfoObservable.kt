@@ -1,23 +1,25 @@
 package com.fluentbuild.pcas.host
 
 import android.content.Context
+import android.os.Handler
 import com.fluentbuild.pcas.async.Cancellable
 import com.fluentbuild.pcas.services.audio.AudioConfig
 import com.fluentbuild.pcas.android.ActiveNetworkCallback
 import com.fluentbuild.pcas.android.InteractivityCallback
 import com.fluentbuild.pcas.android.powerManager
 import com.fluentbuild.pcas.io.UnicastChannel
-import com.fluentbuild.pcas.logs.logger
+import com.fluentbuild.pcas.logs.getLog
 
 internal class AndroidHostInfoObservable(
     private val context: Context,
+    private val mainHandler: Handler,
     private val hostUuid: String,
     private val hostName: String,
     private val addressProvider: HostAddressProvider,
     private val unicastChannel: UnicastChannel
 ): HostInfoObservable {
 
-    private val log by logger()
+    private val log = getLog()
 
     override fun subscribe(observer: (HostInfo) -> Unit): Cancellable {
         log.debug { "Watching HostInfo" }
@@ -28,7 +30,7 @@ internal class AndroidHostInfoObservable(
             }
         }
 
-        val activeNetworkCallback = ActiveNetworkCallback(context, notifyConsumer)
+        val activeNetworkCallback = ActiveNetworkCallback(context, mainHandler, notifyConsumer)
         val interactivityCallback = InteractivityCallback(context, notifyConsumer)
 
         notifyConsumer()

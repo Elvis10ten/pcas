@@ -1,6 +1,6 @@
 package com.fluentbuild.pcas.io
 
-import com.fluentbuild.pcas.logs.logger
+import com.fluentbuild.pcas.logs.getLog
 import java.io.IOException
 import java.net.MulticastSocket
 
@@ -8,7 +8,7 @@ internal open class SecuredMulticastChannel(
     private val socketWrapper: SocketWrapper<MulticastSocket>
 ): MulticastChannel {
 
-    private val log by logger()
+    private val log = getLog()
 
     @Throws(IOException::class)
     override fun init(receiver: MessageReceiver) {

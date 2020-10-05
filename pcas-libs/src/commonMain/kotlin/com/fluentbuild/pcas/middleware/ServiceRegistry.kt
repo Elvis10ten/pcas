@@ -5,7 +5,7 @@ import com.fluentbuild.pcas.ledger.LedgerProtocol
 import com.fluentbuild.pcas.ledger.Ledger
 import com.fluentbuild.pcas.services.ServiceId
 import com.fluentbuild.pcas.stream.StreamDemux
-import com.fluentbuild.pcas.logs.logger
+import com.fluentbuild.pcas.logs.getLog
 
 class ServiceRegistry internal constructor(
     private val ledgerProtocol: LedgerProtocol,
@@ -14,7 +14,7 @@ class ServiceRegistry internal constructor(
     private val serviceHandlers: Map<ServiceId, ResolutionHandler>
 ) {
 
-    private val log by logger()
+    private val log = getLog()
     private var isInitialized = false
 
     fun init() {
@@ -39,7 +39,7 @@ class ServiceRegistry internal constructor(
     }
 
     private fun onLedgerUpdated(ledger: Ledger) {
-        log.info { "Ledger updated: $ledger" }
+        //log.info { "Ledger updated: $ledger" }
         conflictsResolver.resolve(ledger).forEach { resolution ->
             log.info { "Handling resolution: $resolution" }
             serviceHandlers.getValue(resolution.selfBlock.serviceId).handle(resolution)

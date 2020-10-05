@@ -1,7 +1,7 @@
 package com.fluentbuild.pcas.io
 
 import com.fluentbuild.pcas.async.ThreadRunner
-import com.fluentbuild.pcas.logs.logger
+import com.fluentbuild.pcas.logs.getLog
 import java.io.IOException
 import java.io.InterruptedIOException
 import java.net.DatagramPacket
@@ -14,7 +14,7 @@ internal class SocketWrapper<SocketT: DatagramSocket>(
 	private val runner: ThreadRunner
 ) {
 
-	private val log by logger()
+	private val log = getLog()
 	private var socket: SocketT? = null
 
 	@Throws(IOException::class)
@@ -52,7 +52,7 @@ internal class SocketWrapper<SocketT: DatagramSocket>(
 	private fun receiveBlocking(receiver: MessageReceiver) {
 		while(socket.canReceive()) {
 			try {
-				log.debug { "Receiving..." }
+				runner.runOnMain { log.debug { "Receiving..." } }
 				val packet = getReceivePacket()
 				socket!!.receive(packet)
 
@@ -64,7 +64,7 @@ internal class SocketWrapper<SocketT: DatagramSocket>(
 					}
 				}
 			} catch (e: Exception) {
-				log.error(e) { "Error receiving parcel" }
+				runner.runOnMain { log.error(e) { "Error receiving parcel" } }
 				if(e is InterruptedException || e is InterruptedIOException) {
 					break
 				}
@@ -86,7 +86,7 @@ internal class SocketWrapper<SocketT: DatagramSocket>(
 				bufferPool.recycle(it.data)
 			}
 		} catch (e: Exception) {
-			log.error(e) { "Error sending parcel" }
+			runner.runOnMain { log.error(e) { "Error sending parcel" } }
 		}
 	}
 

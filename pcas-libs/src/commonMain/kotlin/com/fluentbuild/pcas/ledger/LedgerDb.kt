@@ -3,12 +3,12 @@ package com.fluentbuild.pcas.ledger
 import com.fluentbuild.pcas.host.HostInfo
 import com.fluentbuild.pcas.host.HostUuid
 import com.fluentbuild.pcas.utils.filterSet
-import com.fluentbuild.pcas.logs.logger
+import com.fluentbuild.pcas.logs.getLog
 import com.fluentbuild.pcas.utils.mapSet
 
 internal class LedgerDb {
 
-    private val log by logger()
+    private val log = getLog()
     private var onLedgerUpdated: (Ledger) -> Unit = {}
     private lateinit var ledger: Ledger
 

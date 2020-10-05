@@ -2,14 +2,16 @@ package com.fluentbuild.pcas.android
 
 import android.content.Context
 import android.net.*
-import com.fluentbuild.pcas.logs.logger
+import android.os.Handler
+import com.fluentbuild.pcas.logs.getLog
 
 internal class ActiveNetworkCallback(
     private val context: Context,
+    private val mainHandler: Handler,
     private val onChanged: () -> Unit
 ): ConnectivityManager.NetworkCallback() {
 
-    private val log by logger()
+    private val log = getLog()
     private val networkRequest: NetworkRequest = NetworkRequest.Builder()
         .addTransportType(NetworkCapabilities.TRANSPORT_CELLULAR)
         .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
@@ -32,7 +34,7 @@ internal class ActiveNetworkCallback(
     }
 
     fun register() {
-        context.connectivityManager.registerNetworkCallback(networkRequest, this)
+        context.connectivityManager.registerNetworkCallback(networkRequest, this, mainHandler)
     }
 
     fun unregister() {

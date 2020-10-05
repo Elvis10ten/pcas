@@ -8,7 +8,7 @@ internal object SentinelCancellable: Cancellable {
     override fun cancel() {}
 }
 
-internal class Cancellables: Cancellable {
+class Cancellables: Cancellable {
 
     private val cancellables = mutableListOf<Cancellable>()
 

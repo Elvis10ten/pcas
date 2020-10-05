@@ -3,7 +3,7 @@ package com.fluentbuild.pcas.di
 import android.content.Context
 import android.os.Handler
 import com.fluentbuild.pcas.Pcas
-import com.fluentbuild.pcas.logs.ConsolePublisher
+import com.fluentbuild.pcas.logs.RichLog
 import com.fluentbuild.pcas.peripheral.Peripheral
 import timber.log.LogcatTree
 import timber.log.Timber
@@ -30,7 +30,13 @@ class AppComponent(
         { asyncModule.provideThreadExecutor() }
     )
 
-    private val hostModule = HostModule(appContext, hostUuid, hostName, ioModule)
+    private val hostModule = HostModule(
+        appContext,
+        mainThreadHandler,
+        hostUuid,
+        hostName,
+        ioModule
+    )
 
     private val ledgerModule = LedgerModule(ioModule, hostModule, utilsModule, asyncModule)
 
@@ -57,7 +63,6 @@ class AppComponent(
     }
 
     fun init(debug: Boolean) {
-        ConsolePublisher.isEnabled = debug
         if(debug) {
             Timber.plant(LogcatTree())
         }

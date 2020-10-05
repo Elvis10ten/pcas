@@ -3,14 +3,14 @@ package com.fluentbuild.pcas.stream
 import com.fluentbuild.pcas.io.MessageReceiver
 import com.fluentbuild.pcas.io.UnicastChannel
 import com.fluentbuild.pcas.services.ServiceId
-import com.fluentbuild.pcas.logs.logger
+import com.fluentbuild.pcas.logs.getLog
 
 internal class StreamDemux(
     private val unicast: UnicastChannel,
     private val serviceHandlers: Map<ServiceId, StreamHandler>
 ) : MessageReceiver {
 
-    private val log by logger()
+    private val log = getLog()
 
     fun init() {
         log.debug(::init)

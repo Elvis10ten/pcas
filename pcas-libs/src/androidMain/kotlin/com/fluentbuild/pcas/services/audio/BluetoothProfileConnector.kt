@@ -6,7 +6,7 @@ import com.fluentbuild.pcas.async.Cancellable
 import com.fluentbuild.pcas.async.SentinelCancellable
 import com.fluentbuild.pcas.peripheral.PeripheralConnector
 import com.fluentbuild.pcas.peripheral.PeripheralConnector.Action
-import com.fluentbuild.pcas.logs.logger
+import com.fluentbuild.pcas.logs.getLog
 
 abstract class BluetoothProfileConnector(
     private val context: Context,
@@ -14,7 +14,7 @@ abstract class BluetoothProfileConnector(
     private val profileId: Int
 ): PeripheralConnector {
 
-    private val log by logger()
+    private val log = getLog()
     private var cancellable: Cancellable = SentinelCancellable
 
     override fun perform(action: Action) {

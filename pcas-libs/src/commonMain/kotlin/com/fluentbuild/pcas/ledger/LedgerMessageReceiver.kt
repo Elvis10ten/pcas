@@ -2,7 +2,7 @@ package com.fluentbuild.pcas.ledger
 
 import com.fluentbuild.pcas.io.MessageReceiver
 import com.fluentbuild.pcas.utils.decodeFromByteArray
-import com.fluentbuild.pcas.logs.logger
+import com.fluentbuild.pcas.logs.getLog
 import kotlinx.serialization.protobuf.ProtoBuf
 
 internal class LedgerMessageReceiver(
@@ -12,7 +12,7 @@ internal class LedgerMessageReceiver(
     private val watchdog: LedgerWatchdog
 ): MessageReceiver {
 
-    private val log by logger()
+    private val log = getLog()
     private val ledger get() = ledgerDb.getLedger()
 
     override fun onReceived(marshalledMessage: ByteArray, actualSize: Int) {

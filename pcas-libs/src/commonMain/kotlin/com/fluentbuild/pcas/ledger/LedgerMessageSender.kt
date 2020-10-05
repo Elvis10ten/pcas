@@ -1,7 +1,7 @@
 package com.fluentbuild.pcas.ledger
 
 import com.fluentbuild.pcas.io.MulticastChannel
-import com.fluentbuild.pcas.logs.logger
+import com.fluentbuild.pcas.logs.getLog
 import kotlinx.serialization.encodeToByteArray
 import kotlinx.serialization.protobuf.ProtoBuf
 
@@ -11,7 +11,7 @@ internal class LedgerMessageSender(
     private val ledgerDb: LedgerDb
 ) {
 
-    private val log by logger()
+    private val log = getLog()
     private val ledger get() = ledgerDb.getLedger()
 
     fun sendGenesis() {

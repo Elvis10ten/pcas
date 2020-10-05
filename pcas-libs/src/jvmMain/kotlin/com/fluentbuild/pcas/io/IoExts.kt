@@ -1,6 +1,6 @@
 package com.fluentbuild.pcas.io
 
-import com.fluentbuild.pcas.logs.Logger
+import com.fluentbuild.pcas.logs.Log
 import java.io.Closeable
 import java.io.IOException
 import java.net.DatagramSocket
@@ -9,7 +9,7 @@ import java.net.SocketException
 
 internal inline val Address.Ipv4.inetAddress: InetAddress get() = InetAddress.getByName(quadDottedDecimal)
 
-internal fun Closeable.closeQuietly(log: Logger) {
+internal fun Closeable.closeQuietly(log: Log) {
     try {
         close()
     } catch (e: Exception) {

@@ -10,13 +10,13 @@ import com.fluentbuild.pcas.android.audioManager
 import com.fluentbuild.pcas.android.telephonyManager
 import com.fluentbuild.pcas.async.Cancellable
 import com.fluentbuild.pcas.async.Observable
-import com.fluentbuild.pcas.logs.logger
+import com.fluentbuild.pcas.logs.getLog
 
 internal class AudioPropertyObservable(
     private val context: Context
 ): Observable<AudioProperty> {
 
-    private val log by logger()
+    private val log = getLog()
 
     override fun subscribe(observer: (AudioProperty) -> Unit): Cancellable {
         log.debug { "Watching AudioProperty" }

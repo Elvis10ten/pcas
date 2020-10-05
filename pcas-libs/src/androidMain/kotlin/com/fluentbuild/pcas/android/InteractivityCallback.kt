@@ -4,14 +4,14 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import com.fluentbuild.pcas.logs.logger
+import com.fluentbuild.pcas.logs.getLog
 
 class InteractivityCallback(
     private val context: Context,
     private val onChanged: () -> Unit
 ): BroadcastReceiver() {
 
-    private val log by logger()
+    private val log = getLog()
 
     override fun onReceive(context: Context, intent: Intent) {
         if(intent.action == Intent.ACTION_SCREEN_ON || intent.action == Intent.ACTION_SCREEN_OFF) {

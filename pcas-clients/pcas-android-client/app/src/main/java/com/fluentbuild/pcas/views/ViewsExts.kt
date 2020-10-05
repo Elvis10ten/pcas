@@ -1,10 +1,16 @@
-package com.fluentbuild.pcas
+package com.fluentbuild.pcas.views
 
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ScrollView
 import androidx.annotation.LayoutRes
+
+internal fun ViewGroup.isScrolledToBottom() =
+    getChildAt(childCount - 1).bottom - (height + scrollY) <= 0
+
+internal fun ScrollView.scrollToBottom() = post { fullScroll(View.FOCUS_DOWN) }
 
 fun <T: View> ViewGroup.inflateInto(@LayoutRes layoutRes: Int) =
     context.inflate<T>(layoutRes, this).also { addView(it) }
