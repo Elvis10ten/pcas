@@ -17,13 +17,13 @@ internal class LedgerProtocol(
 
     fun init(onLedgerUpdated: (Ledger) -> Unit) {
         ledgerDb.create(hostObservable.currentValue, onLedgerUpdated)
+        multicast.init(messageReceiver::onReceived)
 
         cancellables += hostObservable.subscribe {
             ledgerDb.updateSelf(it)
             messageSender.sendUpdate()
         }
 
-        multicast.init(messageReceiver::onReceived)
         messageSender.sendGenesis()
         cancellables += ledgerWatchdog.run()
     }

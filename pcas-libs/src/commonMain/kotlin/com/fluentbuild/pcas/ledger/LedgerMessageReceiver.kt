@@ -2,7 +2,7 @@ package com.fluentbuild.pcas.ledger
 
 import com.fluentbuild.pcas.io.MessageReceiver
 import com.fluentbuild.pcas.utils.decodeFromByteArray
-import com.fluentbuild.pcas.utils.logger
+import com.fluentbuild.pcas.logs.logger
 import kotlinx.serialization.protobuf.ProtoBuf
 
 internal class LedgerMessageReceiver(

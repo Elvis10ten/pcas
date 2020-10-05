@@ -1,7 +1,7 @@
 package com.fluentbuild.pcas.services.audio
 
 import com.fluentbuild.pcas.host.HostInfo
-import com.fluentbuild.pcas.utils.logger
+import com.fluentbuild.pcas.logs.logger
 
 class AndroidAudioStreamer: AudioStreamer {
 

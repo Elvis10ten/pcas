@@ -6,7 +6,7 @@ import com.fluentbuild.pcas.async.Cancellable
 import com.fluentbuild.pcas.async.SentinelCancellable
 import com.fluentbuild.pcas.peripheral.PeripheralConnector
 import com.fluentbuild.pcas.peripheral.PeripheralConnector.Action
-import com.fluentbuild.pcas.utils.logger
+import com.fluentbuild.pcas.logs.logger
 
 abstract class BluetoothProfileConnector(
     private val context: Context,

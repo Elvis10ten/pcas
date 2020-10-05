@@ -12,7 +12,7 @@ import com.fluentbuild.pcas.async.Cancellable
 import com.fluentbuild.pcas.async.Cancellables
 import com.fluentbuild.pcas.peripheral.Peripheral
 import com.fluentbuild.pcas.peripheral.PeripheralBond
-import com.fluentbuild.pcas.utils.logger
+import com.fluentbuild.pcas.logs.logger
 import com.fluentbuild.pcas.utils.unsafeLazy
 
 internal class AndroidAudioBondsObservable(
@@ -24,7 +24,8 @@ internal class AndroidAudioBondsObservable(
     private val log by logger()
     private val bluetoothDevice by unsafeLazy { context.bluetoothAdapter.toBluetoothDevice(audioPeripheral) }
 
-    private val bonds = mutableSetOf<PeripheralBond>()
+    private var a2dpBond: PeripheralBond? = null
+    private var hspBond: PeripheralBond? = null
 
     override fun subscribe(consumer: (Set<PeripheralBond>) -> Unit): Cancellable {
         val cancellables = Cancellables()
@@ -57,22 +58,23 @@ internal class AndroidAudioBondsObservable(
         when(action) {
             BluetoothA2dp.ACTION_CONNECTION_STATE_CHANGED -> {
                 cancellables += profileHolder.useProfile(BluetoothProfile.A2DP) {
-                    consumer(retrieveBonds(BluetoothProfile.A2DP, it))
+                    a2dpBond = mapToBonds(BluetoothProfile.A2DP, it)
+                    update(consumer)
                 }
             }
             BluetoothHeadset.ACTION_CONNECTION_STATE_CHANGED -> {
                 cancellables += profileHolder.useProfile(BluetoothProfile.HEADSET) {
-                    consumer(retrieveBonds(BluetoothProfile.HEADSET, it))
+                    hspBond = mapToBonds(BluetoothProfile.HEADSET, it)
+                    update(consumer)
                 }
             }
         }
     }
 
-    private fun retrieveBonds(profileId: Int, profile: BluetoothProfile): Set<PeripheralBond> {
-        val updatedBond = mapToBonds(profileId, profile)
-        bonds -= updatedBond
-        bonds += updatedBond
-        return bonds
+    private fun update(consumer: (Set<PeripheralBond>) -> Unit) {
+        val a2dpBond = a2dpBond ?: return
+        val hspBond = hspBond ?: return
+        consumer(setOf(a2dpBond, hspBond))
     }
 
     private fun mapToBonds(profileId: Int, profile: BluetoothProfile): PeripheralBond {

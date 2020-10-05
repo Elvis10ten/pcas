@@ -1,7 +1,7 @@
 package com.fluentbuild.pcas.io
 
 import com.fluentbuild.pcas.async.ThreadRunner
-import com.fluentbuild.pcas.utils.logger
+import com.fluentbuild.pcas.logs.logger
 import java.io.IOException
 import java.io.InterruptedIOException
 import java.net.DatagramPacket
@@ -26,7 +26,8 @@ internal class SocketWrapper<SocketT: DatagramSocket>(
 			newSocket.trafficClass = IpTos.LOW_DELAY.value
 			modifier(newSocket)
 			socket = newSocket
-		} finally {
+		} catch(e: Exception) {
+			log.error(e) { "Error initializing socket" }
 			newSocket.closeQuietly(log)
 		}
 	}

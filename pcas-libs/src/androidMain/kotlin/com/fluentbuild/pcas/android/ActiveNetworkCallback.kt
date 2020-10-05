@@ -2,7 +2,7 @@ package com.fluentbuild.pcas.android
 
 import android.content.Context
 import android.net.*
-import com.fluentbuild.pcas.utils.logger
+import com.fluentbuild.pcas.logs.logger
 
 internal class ActiveNetworkCallback(
     private val context: Context,

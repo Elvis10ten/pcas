@@ -1,7 +1,7 @@
 package com.fluentbuild.pcas.ledger
 
 import com.fluentbuild.pcas.io.MulticastChannel
-import com.fluentbuild.pcas.utils.logger
+import com.fluentbuild.pcas.logs.logger
 import kotlinx.serialization.encodeToByteArray
 import kotlinx.serialization.protobuf.ProtoBuf
 

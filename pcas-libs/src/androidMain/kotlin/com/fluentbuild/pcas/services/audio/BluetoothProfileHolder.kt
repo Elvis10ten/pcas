@@ -1,12 +1,11 @@
 package com.fluentbuild.pcas.services.audio
 
-import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothProfile
 import android.content.Context
 import com.fluentbuild.pcas.android.bluetoothAdapter
 import com.fluentbuild.pcas.async.Cancellable
 import com.fluentbuild.pcas.async.SentinelCancellable
-import com.fluentbuild.pcas.utils.logger
+import com.fluentbuild.pcas.logs.logger
 import java.util.*
 
 class BluetoothProfileHolder(private val context: Context) {

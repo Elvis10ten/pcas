@@ -7,7 +7,7 @@ import com.fluentbuild.pcas.android.ActiveNetworkCallback
 import com.fluentbuild.pcas.android.InteractivityCallback
 import com.fluentbuild.pcas.android.powerManager
 import com.fluentbuild.pcas.io.UnicastChannel
-import com.fluentbuild.pcas.utils.logger
+import com.fluentbuild.pcas.logs.logger
 
 internal class AndroidHostInfoObservable(
     private val context: Context,

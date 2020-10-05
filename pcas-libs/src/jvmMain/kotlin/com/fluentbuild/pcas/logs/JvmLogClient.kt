@@ -1,9 +1,9 @@
-package com.fluentbuild.pcas.utils
+package com.fluentbuild.pcas.logs
 
 import timber.log.*
 import kotlin.reflect.KFunction
 
-open class JvmLogger(className: String) {
+class JvmLogClient(className: String) {
 
     private val tree = Timber.tagged(className)
 

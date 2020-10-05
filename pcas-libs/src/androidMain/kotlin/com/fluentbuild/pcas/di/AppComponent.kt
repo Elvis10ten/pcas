@@ -3,6 +3,7 @@ package com.fluentbuild.pcas.di
 import android.content.Context
 import android.os.Handler
 import com.fluentbuild.pcas.Pcas
+import com.fluentbuild.pcas.logs.ConsolePublisher
 import com.fluentbuild.pcas.peripheral.Peripheral
 import timber.log.LogcatTree
 import timber.log.Timber
@@ -55,8 +56,12 @@ class AppComponent(
         )
     }
 
-    fun init() {
-        Timber.plant(LogcatTree())
+    fun init(debug: Boolean) {
+        ConsolePublisher.isEnabled = debug
+        if(debug) {
+            Timber.plant(LogcatTree())
+        }
+
         audioServiceModule.init(middlewareModule.serviceRegistry)
     }
 

@@ -2,7 +2,6 @@ package com.fluentbuild.pcas.ledger
 
 import com.fluentbuild.pcas.host.HostInfo
 import com.fluentbuild.pcas.utils.filterSet
-import com.fluentbuild.pcas.utils.unsafeLazy
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 import kotlinx.serialization.protobuf.ProtoNumber

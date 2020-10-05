@@ -5,7 +5,7 @@ import com.fluentbuild.pcas.ledger.LedgerProtocol
 import com.fluentbuild.pcas.ledger.Ledger
 import com.fluentbuild.pcas.services.ServiceId
 import com.fluentbuild.pcas.stream.StreamDemux
-import com.fluentbuild.pcas.utils.logger
+import com.fluentbuild.pcas.logs.logger
 
 class ServiceRegistry internal constructor(
     private val ledgerProtocol: LedgerProtocol,

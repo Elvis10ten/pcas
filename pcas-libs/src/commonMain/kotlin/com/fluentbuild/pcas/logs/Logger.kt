@@ -2,17 +2,37 @@ package com.fluentbuild.pcas.logs
 
 import kotlin.reflect.KFunction
 
-expect class Logger(className: String) {
+class Logger(className: String) {
 
-    fun debug(function: KFunction<*>, vararg args: Any)
+    private val client = getLogClient(className)
+    private val publisher = ConsolePublisher
 
-    fun debug(message: () -> String)
+    fun debug(function: KFunction<*>, vararg args: Any) {
+        client.debug(function, args)
+    }
 
-    fun info(message: () -> String)
+    fun debug(message: () -> String) {
+        client.debug(message)
+    }
 
-    fun warn(message: () -> String)
+    fun info(message: () -> String) {
+        client.info(message)
+        publisher.publish(message, ConsolePublisher.Type.INFO)
+    }
 
-    fun error(message: () -> String)
+    fun warn(message: () -> String) {
+        client.warn(message)
+        publisher.publish(message, ConsolePublisher.Type.WARN)
+    }
 
-    fun error(throwable: Throwable, message: () -> String)
+    fun error(message: () -> String) {
+        client.error(message)
+        publisher.publish(message, ConsolePublisher.Type.ERROR)
+    }
+
+    fun error(throwable: Throwable, message: () -> String) {
+        client.error(throwable, message)
+        publisher.publish(message, ConsolePublisher.Type.ERROR)
+        publisher.publish({ throwable.toString() }, ConsolePublisher.Type.ERROR)
+    }
 }
