@@ -6,7 +6,6 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 import kotlinx.serialization.protobuf.ProtoNumber
 
-@Suppress("TRANSIENT_IS_REDUNDANT")
 @Serializable
 data class Ledger(
     @ProtoNumber(1)
@@ -16,8 +15,8 @@ data class Ledger(
 ) {
 
     @Transient
-    val selfBlocks = blocks.filterSet { it.host == self }
+    val selfBlocks = blocks.filterSet { it.owner == self }
 
     @Transient
-    val othersBlocks = blocks.filterSet { it.host != self }
+    val othersBlocks = blocks.filterSet { it.owner != self }
 }

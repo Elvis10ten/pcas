@@ -15,6 +15,6 @@ internal const val PAYLOAD_OFFSET = INDEX_SENDER_UUID + Uuid.BYTES_SIZE
 
 internal val MarshalledMessage.serviceId get() = this[INDEX_SERVICE_ID].toInt()
 
-internal val MarshalledMessage.senderUuid get() = Uuid.create(this, INDEX_SENDER_UUID)
+internal val MarshalledMessage.sender get() = Uuid.create(this, INDEX_SENDER_UUID)
 
 internal val MarshalledMessageSize.payloadSize get() = this - PAYLOAD_OFFSET

@@ -3,7 +3,7 @@ package com.fluentbuild.pcas.stream
 import com.fluentbuild.pcas.host.Uuid
 import com.fluentbuild.pcas.io.MarshalledMessageSize
 
-interface StreamHandler {
+internal interface StreamHandler {
 
     fun handle(sender: Uuid, payload: ByteArray, offset: Int, size: MarshalledMessageSize)
 

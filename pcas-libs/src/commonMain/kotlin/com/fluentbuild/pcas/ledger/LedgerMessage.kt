@@ -8,33 +8,33 @@ import kotlinx.serialization.protobuf.ProtoNumber
 @Serializable
 sealed class LedgerMessage {
 
-    abstract val senderUuid: Uuid
+    abstract val sender: Uuid
 
     @Serializable
     data class Genesis(
         @ProtoNumber(1)
-        override val senderUuid: Uuid
+        override val sender: Uuid
     ): LedgerMessage()
 
     @Serializable
     data class Exodus(
         @ProtoNumber(1)
-        override val senderUuid: Uuid
+        override val sender: Uuid
     ): LedgerMessage()
 
     @Serializable
     data class Heartbeat(
-		@ProtoNumber(1)
-        override val senderUuid: Uuid,
-		@ProtoNumber(2)
+        @ProtoNumber(1)
+        override val sender: Uuid,
+        @ProtoNumber(2)
         val hostBlocksMaxTimestamps: Map<Uuid, Timestamp>,
     ): LedgerMessage()
 
     @Serializable
     data class Update(
-		@ProtoNumber(1)
-        override val senderUuid: Uuid,
-		@ProtoNumber(2)
+        @ProtoNumber(1)
+        override val sender: Uuid,
+        @ProtoNumber(2)
         val senderBlocks: Set<Block>
     ): LedgerMessage()
 }

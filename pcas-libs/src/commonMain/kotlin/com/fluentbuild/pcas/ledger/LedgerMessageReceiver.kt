@@ -34,19 +34,19 @@ internal class LedgerMessageReceiver(
                 }
             }
             is LedgerMessage.Heartbeat -> {
-                watchdog.onHostHeartbeatReceived(message.senderUuid)
+                watchdog.onHostHeartbeatReceived(message.sender)
                 if(message.isSelfBlocksOnSenderStale()) {
                     messageSender.sendUpdate()
                 }
             }
             is LedgerMessage.Exodus -> {
-                ledgerDb.delete(setOf(message.senderUuid))
+                ledgerDb.delete(setOf(message.sender))
             }
         }
     }
 
     private fun LedgerMessage.Update.validateSenderBlocks() =
-        senderBlocks.isNotEmpty() && senderBlocks.all { it.host.uuid == senderUuid }
+        senderBlocks.isNotEmpty() && senderBlocks.all { it.owner.uuid == sender }
 
     private fun LedgerMessage.Heartbeat.isSelfBlocksOnSenderStale(): Boolean {
         val selfBlocksOnLocalMaxTimestamp = ledger.selfBlocks.getBlocksMaxTimestamp()

@@ -35,7 +35,7 @@ internal class LedgerDb {
 
     fun delete(hostUuids: Set<Uuid>) {
         log.debug(::delete, hostUuids)
-        val blocksWithoutHosts = ledger.blocks.filterSet { !hostUuids.contains(it.host.uuid) }
+        val blocksWithoutHosts = ledger.blocks.filterSet { !hostUuids.contains(it.owner.uuid) }
         update(ledger.copy(
             blocks = blocksWithoutHosts
         ))
@@ -43,7 +43,7 @@ internal class LedgerDb {
 
     fun updateSelf(newSelf: HostInfo) {
         log.debug(::updateSelf, newSelf)
-        val updatedSelfBlocks = ledger.selfBlocks.mapSet { it.copy(host = newSelf) }
+        val updatedSelfBlocks = ledger.selfBlocks.mapSet { it.copy(owner = newSelf) }
         update(ledger.copy(
             self = newSelf,
             blocks = (ledger.blocks - ledger.selfBlocks) + updatedSelfBlocks

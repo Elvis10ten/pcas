@@ -1,6 +1,8 @@
 package com.fluentbuild.pcas.ledger
 
-fun interface BlocksProducer {
+import com.fluentbuild.pcas.async.Cancellable
 
-	fun
+internal fun interface BlocksProducer {
+
+	fun subscribe(consumer: (Block) -> Unit): Cancellable
 }

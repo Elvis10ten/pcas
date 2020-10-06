@@ -28,7 +28,7 @@ internal class LedgerMessageSender(
 
     fun sendHeartbeat() {
         val hostBlocksMaxTimestamps = ledger.blocks
-            .groupBy { it.host.uuid }
+            .groupBy { it.owner.uuid }
             .mapValues { it.value.getBlocksMaxTimestamp() }
         broadcast(LedgerMessage.Heartbeat(ledger.self.uuid, hostBlocksMaxTimestamps))
     }

@@ -17,7 +17,7 @@ internal class StreamDemux(
 
         unicast.init { message, size ->
             handlers.getValue(message.serviceId).handle(
-                sender = message.senderUuid,
+                sender = message.sender,
                 payload = message,
                 offset = PAYLOAD_OFFSET,
                 size = size.payloadSize

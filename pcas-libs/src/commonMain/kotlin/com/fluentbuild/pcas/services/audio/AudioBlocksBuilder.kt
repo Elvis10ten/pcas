@@ -74,7 +74,7 @@ internal class AudioBlocksBuilder(
             priority = usages.maxOfOrNull { it.priority } ?: Block.NO_PRIORITY,
             timestamp = timeProvider.currentTimeMillis(),
             bondState = bonds.single { it.bondId == profile.bondId }.state,
-            host = hostObservable.currentValue
+            owner = hostObservable.currentValue
         )
     }
 

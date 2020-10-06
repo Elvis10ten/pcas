@@ -29,7 +29,7 @@ internal class ConflictsResolver {
                 }
                 conflict.selfBlock.rank < conflict.othersApex.rank -> {
                     if(conflict.selfBlock.hasPriority && !conflict.selfBlock.isConnected && conflict.othersApex.isConnected) {
-                        Resolution.Stream(conflict.selfBlock, conflict.othersApex.host)
+                        Resolution.Stream(conflict.selfBlock, conflict.othersApex.owner)
                     } else {
                         Resolution.Disconnect(conflict.selfBlock)
                     }
