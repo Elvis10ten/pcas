@@ -11,13 +11,9 @@ class Pcas internal constructor(
 ) {
 
 	fun run(): Cancellable {
-		val cancellables = Cancellables()
-		serviceRegistry.init()
-		cancellables += audioStateUpdater.start()
-
-		return Cancellable {
-			cancellables.cancel()
-			serviceRegistry.close()
+		return Cancellables().apply {
+			this += serviceRegistry.run()
+			this += audioStateUpdater.start()
 		}
 	}
 }

@@ -1,6 +1,6 @@
 package com.fluentbuild.pcas.middleware
 
-import com.fluentbuild.pcas.ledger.Block
+import com.fluentbuild.pcas.async.Cancellable
 import com.fluentbuild.pcas.ledger.LedgerProtocol
 import com.fluentbuild.pcas.ledger.Ledger
 import com.fluentbuild.pcas.services.ServiceId
@@ -15,27 +15,18 @@ class ServiceRegistry internal constructor(
 ) {
 
     private val log = getLog()
-    private var isInitialized = false
 
-    fun init() {
-        require(!isInitialized) { "ServiceRegistry already initialized" }
+    fun run(): Cancellable {
         log.info { "Initializing" }
         streamDemux.init()
         ledgerProtocol.init(::onLedgerUpdated)
-        isInitialized = true
-    }
 
-    fun close() {
-        log.info { "Closing" }
-        serviceHandlers.values.forEach { it.release() }
-        streamDemux.close()
-        ledgerProtocol.close()
-        isInitialized = false
-    }
-
-    fun updateBlocks(blocks: Set<Block>) {
-        log.info { "Updating blocks: $blocks" }
-        ledgerProtocol.updateBlocks(blocks)
+        return Cancellable {
+            log.info { "Closing" }
+            serviceHandlers.values.forEach { it.release() }
+            streamDemux.close()
+            ledgerProtocol.close()
+        }
     }
 
     private fun onLedgerUpdated(ledger: Ledger) {
