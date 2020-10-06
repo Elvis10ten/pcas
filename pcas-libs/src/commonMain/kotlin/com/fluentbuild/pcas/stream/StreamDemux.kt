@@ -1,34 +1,33 @@
 package com.fluentbuild.pcas.stream
 
 import com.fluentbuild.pcas.async.Cancellable
-import com.fluentbuild.pcas.io.MessageReceiver
 import com.fluentbuild.pcas.io.UnicastChannel
-import com.fluentbuild.pcas.services.ServiceId
 import com.fluentbuild.pcas.logs.getLog
+import com.fluentbuild.pcas.services.ServiceId
 
 internal class StreamDemux(
     private val unicast: UnicastChannel,
-    private val serviceHandlers: Map<ServiceId, StreamHandler>
-) : MessageReceiver {
+    private val handlers: Map<ServiceId, StreamHandler>
+) {
 
     private val log = getLog()
 
     fun run(): Cancellable {
-        log.debug(::init)
-        unicast.init(this)
-    }
+        log.debug { "Running StreamDemux" }
 
-    fun close() {
-        log.debug(::close)
-        serviceHandlers.values.forEach { it.release() }
-        unicast.close()
-    }
+        unicast.init { message, size ->
+            handlers.getValue(message.serviceId).handle(
+                sender = message.senderUuid,
+                payload = message,
+                offset = PAYLOAD_OFFSET,
+                size = size.payloadSize
+            )
+        }
 
-    override fun onReceived(marshalledMessage: ByteArray, actualSize: Int) {
-        // TODO cleanup this class
-        val serviceId = marshalledMessage[INDEX_SERVICE_ID].toInt()
-        val senderUuid = "sup" // todo
-        log.info { "Service($serviceId) stream message received from: $senderUuid" }
-        serviceHandlers.getValue(serviceId).handle(senderUuid, marshalledMessage, DATA_OFFSET, actualSize - DATA_OFFSET)
+        return Cancellable {
+            log.debug { "Stopping StreamDemux" }
+            handlers.values.forEach { it.release() }
+            unicast.close()
+        }
     }
 }

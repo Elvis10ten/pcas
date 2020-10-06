@@ -7,17 +7,17 @@ import kotlinx.serialization.protobuf.ProtoNumber
 
 @Serializable
 data class HostInfo(
-    @ProtoNumber(1)
-    val uuid: HostUuid,
-    @ProtoNumber(2)
+	@ProtoNumber(1)
+    val uuid: Uuid,
+	@ProtoNumber(2)
     val name: String,
-    @ProtoNumber(3)
+	@ProtoNumber(3)
     val address: Address.Ipv4,
-    @ProtoNumber(4)
+	@ProtoNumber(4)
     val port: Port,
-    @ProtoNumber(5)
+	@ProtoNumber(5)
     val isInteractive: Boolean,
-    @ProtoNumber(6)
+	@ProtoNumber(6)
     val minBufferSizeBytes: Int
 ) {
 

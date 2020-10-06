@@ -1,7 +1,7 @@
 package com.fluentbuild.pcas.ledger
 
 import com.fluentbuild.pcas.host.HostInfo
-import com.fluentbuild.pcas.host.HostUuid
+import com.fluentbuild.pcas.host.Uuid
 import com.fluentbuild.pcas.utils.filterSet
 import com.fluentbuild.pcas.logs.getLog
 import com.fluentbuild.pcas.utils.mapSet
@@ -33,7 +33,7 @@ internal class LedgerDb {
         ))
     }
 
-    fun delete(hostUuids: Set<HostUuid>) {
+    fun delete(hostUuids: Set<Uuid>) {
         log.debug(::delete, hostUuids)
         val blocksWithoutHosts = ledger.blocks.filterSet { !hostUuids.contains(it.host.uuid) }
         update(ledger.copy(

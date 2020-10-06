@@ -2,7 +2,7 @@ package com.fluentbuild.pcas.ledger
 
 import com.fluentbuild.pcas.async.Cancellable
 import com.fluentbuild.pcas.async.ThreadRunner
-import com.fluentbuild.pcas.host.HostUuid
+import com.fluentbuild.pcas.host.Uuid
 import com.fluentbuild.pcas.utils.TimeProvider
 import com.fluentbuild.pcas.utils.Timestamp
 import com.fluentbuild.pcas.logs.getLog
@@ -15,7 +15,7 @@ internal class LedgerWatchdog(
 ) {
 
     private val log = getLog()
-    private val lastHeartbeatTimestamps = mutableMapOf<HostUuid, Timestamp>()
+    private val lastHeartbeatTimestamps = mutableMapOf<Uuid, Timestamp>()
 
     // todo: Factor in interactivity for TTL. Device that are interactive should have shorter TTL, because
     // there is no OS throttling and more possibility of changes occurring.
@@ -41,7 +41,7 @@ internal class LedgerWatchdog(
         }
     }
 
-    fun onHostHeartbeatReceived(hostUuid: HostUuid) {
+    fun onHostHeartbeatReceived(hostUuid: Uuid) {
         lastHeartbeatTimestamps[hostUuid] = timeProvider.currentTimeMillis()
     }
 }
