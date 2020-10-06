@@ -2,14 +2,14 @@ package com.fluentbuild.pcas.utils
 
 class LimitedQueue<ElementT>(private val limit: Int) {
 
-	private val queue = ArrayDeque<ElementT>(limit)
+	private val elements = ArrayDeque<ElementT>(limit)
 
 	fun push(element: ElementT) {
-		queue.addLast(element)
-		if(queue.size >= limit) {
-			queue.removeFirst()
+		elements.addLast(element)
+		if(elements.size >= limit) {
+			elements.removeFirst()
 		}
 	}
 
-	fun getElements(): Collection<ElementT> = queue
+	fun getElements(): Collection<ElementT> = elements
 }

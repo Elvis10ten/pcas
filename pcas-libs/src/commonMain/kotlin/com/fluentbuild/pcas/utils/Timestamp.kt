@@ -1,3 +1,3 @@
 package com.fluentbuild.pcas.utils
 
-typealias Timestamp = Long
+internal typealias Timestamp = Long

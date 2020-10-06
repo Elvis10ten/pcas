@@ -1,13 +1,15 @@
 package com.fluentbuild.pcas.utils
 
+import com.fluentbuild.pcas.io.MarshalledMessage
+import com.fluentbuild.pcas.io.MarshalledMessageSize
 import com.fluentbuild.pcas.io.OFFSET_ZERO
 import kotlinx.serialization.BinaryFormat
 import kotlinx.serialization.serializer
 
-internal inline fun <reified T> BinaryFormat.decodeFromByteArray(marshalledMessage: ByteArray, actualSize: Int): T {
-	return if(marshalledMessage.size == actualSize) {
-		decodeFromByteArray(serializersModule.serializer(), marshalledMessage)
+internal inline fun <reified T> BinaryFormat.decode(message: MarshalledMessage, size: MarshalledMessageSize): T {
+	return if(message.size == size) {
+		decodeFromByteArray(serializersModule.serializer(), message)
 	} else {
-		decodeFromByteArray(serializersModule.serializer(), marshalledMessage.copyOfRange(OFFSET_ZERO, actualSize))
+		decodeFromByteArray(serializersModule.serializer(), message.copyOfRange(OFFSET_ZERO, size))
 	}
 }

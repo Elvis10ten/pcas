@@ -4,8 +4,8 @@ import com.fluentbuild.pcas.async.Cancellable
 import com.fluentbuild.pcas.async.ThreadRunner
 import com.fluentbuild.pcas.host.Uuid
 import com.fluentbuild.pcas.utils.TimeProvider
-import com.fluentbuild.pcas.utils.Timestamp
 import com.fluentbuild.pcas.logs.getLog
+import com.fluentbuild.pcas.utils.Timestamp
 
 internal class LedgerWatchdog(
     private val ledgerDb: LedgerDb,
