@@ -9,7 +9,8 @@ internal class UtilsModule {
 
     val protoBuf = ProtoBuf
 
-    val secureRandom = SecureRandom()
+    // https://tersesystems.com/blog/2015/12/17/the-right-way-to-use-securerandom/
+    val secureRandom = SecureRandom.getInstance("SHA1PRNG", "SUN")
 
     val timeProvider = TimeProvider(Clock.System)
 }

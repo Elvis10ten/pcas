@@ -51,6 +51,7 @@ internal class LedgerDb {
     }
 
     private fun update(newLedger: Ledger) {
+        log.debug { "Ledger updated: $newLedger" }
         ledger = newLedger
         onLedgerUpdated(newLedger)
     }

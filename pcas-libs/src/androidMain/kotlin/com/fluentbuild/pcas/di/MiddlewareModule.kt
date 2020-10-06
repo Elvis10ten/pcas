@@ -1,7 +1,7 @@
 package com.fluentbuild.pcas.di
 
 import com.fluentbuild.pcas.middleware.ConflictsResolver
-import com.fluentbuild.pcas.middleware.ServiceRegistry
+import com.fluentbuild.pcas.Engine
 import com.fluentbuild.pcas.stream.StreamDemux
 
 internal class MiddlewareModule(
@@ -19,8 +19,8 @@ internal class MiddlewareModule(
         )
     }
 
-    val serviceRegistry: ServiceRegistry by lazy {
-        ServiceRegistry(
+    val engine: Engine by lazy {
+        Engine(
             ledgerProtocol = ledgerModule.ledgerProtocol,
             serviceHandlers = servicesModule.serviceHandlers,
             streamDemux = streamDemux,

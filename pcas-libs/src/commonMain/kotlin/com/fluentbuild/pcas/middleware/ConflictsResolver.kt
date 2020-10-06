@@ -8,9 +8,14 @@ import com.fluentbuild.pcas.utils.mapSet
 
 internal class ConflictsResolver {
 
+    private val resolutionHandlers: Map<ServiceId, ResolutionHandler>,
     fun resolve(ledger: Ledger): Set<Resolution> {
         val conflicts = ledger.selfBlocks.mapSet { Conflict(it, it.getOthersConflict(ledger.othersBlocks)) }
         return resolve(conflicts)
+    }
+
+    fun release() {
+
     }
 
     private fun resolve(conflicts: Set<Conflict>): Set<Resolution> {

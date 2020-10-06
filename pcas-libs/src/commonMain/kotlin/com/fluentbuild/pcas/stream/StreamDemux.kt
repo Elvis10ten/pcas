@@ -1,5 +1,6 @@
 package com.fluentbuild.pcas.stream
 
+import com.fluentbuild.pcas.async.Cancellable
 import com.fluentbuild.pcas.io.MessageReceiver
 import com.fluentbuild.pcas.io.UnicastChannel
 import com.fluentbuild.pcas.services.ServiceId
@@ -12,7 +13,7 @@ internal class StreamDemux(
 
     private val log = getLog()
 
-    fun init() {
+    fun run(): Cancellable {
         log.debug(::init)
         unicast.init(this)
     }

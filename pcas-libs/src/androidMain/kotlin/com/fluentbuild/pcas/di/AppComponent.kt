@@ -2,8 +2,7 @@ package com.fluentbuild.pcas.di
 
 import android.content.Context
 import android.os.Handler
-import com.fluentbuild.pcas.Pcas
-import com.fluentbuild.pcas.logs.RichLog
+import com.fluentbuild.pcas.PcasRunner
 import com.fluentbuild.pcas.peripheral.Peripheral
 import timber.log.LogcatTree
 import timber.log.Timber
@@ -56,9 +55,9 @@ class AppComponent(
     )
 
     val pcas by lazy {
-        Pcas(
-            middlewareModule.serviceRegistry,
-            audioServiceModule.audioStateUpdater
+        PcasRunner(
+            middlewareModule.engine,
+            audioServiceModule.audioBlockWriter
         )
     }
 
@@ -67,7 +66,7 @@ class AppComponent(
             Timber.plant(LogcatTree())
         }
 
-        audioServiceModule.init(middlewareModule.serviceRegistry)
+        audioServiceModule.init(middlewareModule.engine)
     }
 
     fun release() {

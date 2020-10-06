@@ -5,11 +5,9 @@ import com.fluentbuild.pcas.async.Cancellables
 import com.fluentbuild.pcas.async.Observable
 import com.fluentbuild.pcas.ledger.LedgerProtocol
 import com.fluentbuild.pcas.logs.getLog
-import com.fluentbuild.pcas.middleware.ServiceRegistry
 
-internal class AudioStateUpdater(
+internal class AudioBlockWriter(
     private val ledgerProtocol: LedgerProtocol,
-    private val serviceRegistry: ServiceRegistry,
     private val propertyObservable: Observable<AudioProperty>,
     private val bondsObservable: AudioBondsObservable,
     private val blocksBuilder: AudioBlocksBuilder,

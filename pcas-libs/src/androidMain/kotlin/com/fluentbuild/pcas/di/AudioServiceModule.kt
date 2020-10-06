@@ -5,7 +5,7 @@ import com.fluentbuild.pcas.async.Observable
 import com.fluentbuild.pcas.host.HostInfoObservable
 import com.fluentbuild.pcas.services.audio.AudioBondsObservable
 import com.fluentbuild.pcas.peripheral.PeripheralConnector
-import com.fluentbuild.pcas.middleware.ServiceRegistry
+import com.fluentbuild.pcas.Engine
 import com.fluentbuild.pcas.stream.StreamHandler
 import com.fluentbuild.pcas.peripheral.Peripheral
 import com.fluentbuild.pcas.services.audio.*
@@ -18,7 +18,7 @@ internal class AudioServiceModule(
     private val timeProvider: TimeProvider
 ) {
 
-    lateinit var audioStateUpdater: AudioStateUpdater
+    lateinit var audioBlockWriter: AudioBlockWriter
 
     private val audioStreamer: AudioStreamer by lazy {
         AndroidAudioStreamer()
@@ -61,9 +61,9 @@ internal class AudioServiceModule(
         AndroidAudioStreamHandler()
     }
 
-    fun init(serviceRegistry: ServiceRegistry) {
-        audioStateUpdater = AudioStateUpdater(
-            serviceRegistry = serviceRegistry,
+    fun init(engine: Engine) {
+        audioBlockWriter = AudioBlockWriter(
+            serviceRegistry = engine,
             propertyObservable = propertyObservable,
             bondsObservable = bondsObservable,
             blocksBuilder = blocksBuilder
