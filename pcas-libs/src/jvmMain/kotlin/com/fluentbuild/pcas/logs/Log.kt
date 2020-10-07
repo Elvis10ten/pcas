@@ -3,7 +3,7 @@ package com.fluentbuild.pcas.logs
 import timber.log.*
 import kotlin.reflect.KFunction
 
-actual class Log actual constructor(private val className: String) {
+internal actual class Log actual constructor(private val className: String) {
 
 	private val tree = Timber.tagged(className)
 	private val richLog = RichLog

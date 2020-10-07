@@ -3,19 +3,15 @@ package com.fluentbuild.pcas.services.audio
 import android.media.AudioFormat
 import android.media.AudioTrack
 
-object AudioConfig {
+internal object AudioConfig {
 
-    val sampleRateHz: Int
-        get() = 44100
+    val sampleRateHz get() = 44100
 
-    val channelMask: Int
-        get() = AudioFormat.CHANNEL_IN_STEREO
+    val channelMask get() = AudioFormat.CHANNEL_IN_STEREO
 
-    val encoding: Int
-        get() = AudioFormat.ENCODING_PCM_16BIT
+    val encoding get() = AudioFormat.ENCODING_PCM_16BIT
 
-    val minBufferSizeBytes: Int
-        get() = AudioTrack.getMinBufferSize(sampleRateHz, channelMask, encoding)
+    val minBufferSizeBytes get() = AudioTrack.getMinBufferSize(sampleRateHz, channelMask, encoding)
 
     val audioFormat: AudioFormat
         get() = AudioFormat.Builder()

@@ -8,7 +8,7 @@ import com.fluentbuild.pcas.peripheral.PeripheralCommander
 import com.fluentbuild.pcas.peripheral.PeripheralCommander.Command
 import com.fluentbuild.pcas.logs.getLog
 
-abstract class BluetoothProfileConnector(
+internal abstract class BluetoothPeripheralCommander(
     private val context: Context,
     private val profileHolder: BluetoothProfileHolder,
     private val profileId: Int

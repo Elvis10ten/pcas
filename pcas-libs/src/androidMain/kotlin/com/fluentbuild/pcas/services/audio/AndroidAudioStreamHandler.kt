@@ -9,7 +9,7 @@ class AndroidAudioStreamHandler: StreamHandler {
     private val log = getLog()
 
     override fun handle(sender: Uuid, payload: ByteArray, offset: Int, size: Int) {
-        TODO("Not yet implemented")
+        log.debug(::handle)
     }
 
     override fun release() {

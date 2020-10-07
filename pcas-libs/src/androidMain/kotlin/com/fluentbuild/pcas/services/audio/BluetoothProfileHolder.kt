@@ -23,9 +23,7 @@ class BluetoothProfileHolder(private val context: Context) {
         } else {
             getProfileConsumers(profileId) += consumer
             loadProfile(profileId)
-            Cancellable {
-                getProfileConsumers(profileId) -= consumer
-            }
+            Cancellable { getProfileConsumers(profileId) -= consumer }
         }
     }
 

@@ -12,8 +12,6 @@ internal fun ViewGroup.isScrolledToBottom() =
 
 internal fun ScrollView.scrollToBottom() = post { fullScroll(View.FOCUS_DOWN) }
 
-fun <T: View> ViewGroup.inflateInto(@LayoutRes layoutRes: Int) =
-    context.inflate<T>(layoutRes, this).also { addView(it) }
 
 @Suppress("UNCHECKED_CAST")
 fun <T: View> Context.inflate(@LayoutRes layoutRes: Int, root: ViewGroup) =

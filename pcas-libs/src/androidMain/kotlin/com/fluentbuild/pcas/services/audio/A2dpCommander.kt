@@ -3,7 +3,7 @@ package com.fluentbuild.pcas.services.audio
 import android.bluetooth.BluetoothProfile
 import android.content.Context
 
-class HspConnector(
+internal class A2dpCommander(
     context: Context,
     profileHolder: BluetoothProfileHolder
-): BluetoothProfileConnector(context, profileHolder, BluetoothProfile.HEADSET)
+): BluetoothPeripheralCommander(context, profileHolder, BluetoothProfile.A2DP)

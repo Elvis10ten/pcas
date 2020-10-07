@@ -2,7 +2,8 @@ package com.fluentbuild.pcas.di
 
 import android.content.Context
 import android.os.Handler
-import com.fluentbuild.pcas.PcasRunner
+import com.fluentbuild.pcas.Engine
+import com.fluentbuild.pcas.host.Uuid
 import com.fluentbuild.pcas.peripheral.Peripheral
 import timber.log.LogcatTree
 import timber.log.Timber
@@ -11,9 +12,9 @@ import javax.crypto.SecretKey
 class AppComponent(
     appContext: Context,
     audioPeripheral: Peripheral,
-    hostUuid: String,
+    hostUuid: Uuid,
     hostName: String,
-    payloadKey: SecretKey
+    networkKey: SecretKey
 ) {
 
     private val mainThreadHandler = Handler(appContext.mainLooper)
@@ -24,9 +25,9 @@ class AppComponent(
 
     private val ioModule = IoModule(
         appContext,
-        payloadKey,
-        utilsModule.secureRandom,
-        { asyncModule.provideThreadExecutor() }
+        networkKey,
+        { asyncModule.provideThreadExecutor() },
+        utilsModule.secureRandom
     )
 
     private val hostModule = HostModule(
@@ -37,27 +38,40 @@ class AppComponent(
         ioModule
     )
 
-    private val ledgerModule = LedgerModule(ioModule, hostModule, utilsModule, asyncModule)
-
     private val audioServiceModule = AudioServiceModule(
         appContext,
+        mainThreadHandler,
         audioPeripheral,
-        { hostModule.selfHostInfoWatcher },
+        hostModule.selfHostInfoWatcher,
         utilsModule.timeProvider
     )
 
-    private val servicesModule = ServicesModule(audioServiceModule)
-
-    private val middlewareModule = MiddlewareModule(
-        ioModule,
-        servicesModule,
-        ledgerModule
+    private val ledgerModule = LedgerModule(
+        utilsModule.timeProvider,
+        { asyncModule.provideThreadExecutor() },
+        utilsModule.protoBuf,
+        hostModule.selfHostInfoWatcher,
+        ioModule.multicastChannel,
+        listOf(
+            audioServiceModule.audioBlocksProducer
+        )
     )
 
-    val pcas by lazy {
-        PcasRunner(
-            middlewareModule.engine,
-            audioServiceModule.audioBlocksProducer
+    private val streamModule = StreamModule(
+        ioModule.unicastChannel,
+        audioServiceModule.streamHandler
+    )
+
+    private val conflictModule = ConflictsModule(
+        utilsModule.timeProvider,
+        audioServiceModule.resolutionHandler
+    )
+
+    val engine: Engine by lazy {
+        Engine(
+            ledgerProtocol = ledgerModule.ledgerProtocol,
+            streamDemux = streamModule.streamDemux,
+            conflictsResolver = conflictModule.conflictsResolver
         )
     }
 
@@ -65,8 +79,6 @@ class AppComponent(
         if(debug) {
             Timber.plant(LogcatTree())
         }
-
-        audioServiceModule.init(middlewareModule.engine)
     }
 
     fun release() {

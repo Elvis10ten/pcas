@@ -2,9 +2,11 @@ package com.fluentbuild.pcas.services
 
 import android.content.res.ColorStateList
 import android.view.View
+import android.view.ViewGroup
 import android.widget.LinearLayout
+import androidx.annotation.LayoutRes
 import com.fluentbuild.pcas.R
-import com.fluentbuild.pcas.inflateInto
+import com.fluentbuild.pcas.views.inflate
 import kotlinx.android.synthetic.main.item_service.view.*
 
 internal class ServicesRenderer(
@@ -49,3 +51,6 @@ internal class ServicesRenderer(
         view.serviceIconBadgeView.setImageResource(badgeIcon)
     }
 }
+
+fun <T: View> ViewGroup.inflateInto(@LayoutRes layoutRes: Int) =
+    context.inflate<T>(layoutRes, this).also { addView(it) }

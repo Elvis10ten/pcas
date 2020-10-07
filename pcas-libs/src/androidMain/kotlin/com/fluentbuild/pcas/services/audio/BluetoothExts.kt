@@ -8,13 +8,16 @@ import com.fluentbuild.pcas.io.Address
 import com.fluentbuild.pcas.peripheral.Peripheral
 import com.fluentbuild.pcas.peripheral.PeripheralBond
 import com.fluentbuild.pcas.peripheral.PeripheralProfile
+import com.fluentbuild.pcas.services.AndroidBluetoothProfileId
+import com.fluentbuild.pcas.services.AndroidBluetoothProfileState
 
-fun BluetoothAdapter.toBluetoothDevice(peripheral: Peripheral): BluetoothDevice =
+
+internal fun BluetoothAdapter.toBluetoothDevice(peripheral: Peripheral): BluetoothDevice =
     getRemoteDevice(peripheral.address.colonHex)
 
-fun BluetoothDevice.toPeripheral() = Peripheral(name, Address.Mac(address))
+internal fun BluetoothDevice.toPeripheral() = Peripheral(name, Address.Mac(address))
 
-internal fun Int.bluetoothProfileIdToAudioProfile(): PeripheralProfile {
+internal fun AndroidBluetoothProfileId.toPeripheralProfile(): PeripheralProfile {
     return when(this) {
         BluetoothProfile.A2DP -> PeripheralProfile.A2DP
         BluetoothProfile.HEADSET -> PeripheralProfile.HSP
@@ -23,7 +26,7 @@ internal fun Int.bluetoothProfileIdToAudioProfile(): PeripheralProfile {
     }
 }
 
-internal fun Int.bluetoothProfileStateToPeripheralState(): PeripheralBond.State {
+internal fun AndroidBluetoothProfileState.toPeripheralState(): PeripheralBond.State {
     return when(this) {
         BluetoothProfile.STATE_CONNECTED -> PeripheralBond.State.CONNECTED
         BluetoothProfile.STATE_CONNECTING -> PeripheralBond.State.CONNECTING

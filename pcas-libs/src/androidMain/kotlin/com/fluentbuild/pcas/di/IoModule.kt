@@ -8,17 +8,17 @@ import java.security.SecureRandom
 import javax.crypto.SecretKey
 
 internal class IoModule(
-    private val appContext: Context,
-    private val networkKey: SecretKey,
-    private val secureRandom: SecureRandom,
-    private val threadRunner: () -> ThreadRunner
+    appContext: Context,
+    networkKey: SecretKey,
+    private val threadRunner: () -> ThreadRunner,
+    secureRandom: SecureRandom
 ) {
 
-    private val parceler: Parceler by lazy { Parceler(networkKey, secureRandom, BufferObjectPool) }
+    private val parceler = Parceler(networkKey, secureRandom, BufferObjectPool)
 
-    internal val multicastChannel: MulticastChannel by lazy { AndroidMulticastChannel(appContext, getSocketWrapper()) }
+    internal val multicastChannel = AndroidMulticastChannel(appContext, getSocketWrapper())
 
-    internal val unicastChannel: UnicastChannel by lazy { SecuredUnicastChannel(getSocketWrapper()) }
+    internal val unicastChannel = SecuredUnicastChannel(getSocketWrapper())
 
     private fun <SocketT: DatagramSocket> getSocketWrapper() =
         SocketWrapper<SocketT>(parceler, BufferObjectPool, threadRunner())

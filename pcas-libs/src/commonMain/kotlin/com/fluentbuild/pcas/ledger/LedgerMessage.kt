@@ -21,7 +21,7 @@ internal sealed class LedgerMessage {
         @ProtoNumber(1)
         override val sender: Uuid,
         @ProtoNumber(2)
-        val hostBlocksMaxTimestamp: Map<Uuid, Timestamp>,
+        val hostBlocksMaxTimestamp: Map<Uuid, Timestamp> = emptyMap(),
     ): LedgerMessage()
 
     @Serializable
@@ -29,6 +29,6 @@ internal sealed class LedgerMessage {
         @ProtoNumber(1)
         override val sender: Uuid,
         @ProtoNumber(2)
-        val senderBlocks: Set<Block>
+        val senderBlocks: Set<Block> = emptySet()
     ): LedgerMessage()
 }

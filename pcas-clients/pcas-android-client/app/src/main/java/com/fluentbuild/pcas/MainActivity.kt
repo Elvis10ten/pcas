@@ -1,18 +1,22 @@
 package com.fluentbuild.pcas
 
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Base64
 import android.util.Log
 import com.fluentbuild.pcas.async.Cancellables
 import com.fluentbuild.pcas.di.AppComponent
+import com.fluentbuild.pcas.host.Uuid
 import com.fluentbuild.pcas.io.Address
 import com.fluentbuild.pcas.peripheral.Peripheral
 import com.fluentbuild.pcas.services.ServicesProvider
 import com.fluentbuild.pcas.services.ServicesRenderer
 import kotlinx.android.synthetic.main.activity_main.*
+import java.util.*
 import javax.crypto.KeyGenerator
 import javax.crypto.spec.SecretKeySpec
+import java.nio.ByteBuffer
 
 class MainActivity : AppCompatActivity() {
 
@@ -52,12 +56,12 @@ class MainActivity : AppCompatActivity() {
         appComponent = AppComponent(
                 applicationContext,
                 audioPeripheral,
-                "host1",
-                "Samsung",
+                Uuid(UUID.randomUUID().getHostUuid()),
+                Build.MODEL,
                 originalKey
         )
         appComponent.init(BuildConfig.DEBUG)
-        cancellables += appComponent.pcas.run()
+        cancellables += appComponent.engine.run()
         Log.i("akon", "onCreated")
     }
 
@@ -71,4 +75,11 @@ class MainActivity : AppCompatActivity() {
         val secretKey = KeyGenerator.getInstance("AES").generateKey()
         return Base64.encodeToString(secretKey.encoded, Base64.DEFAULT)
     }
+}
+
+fun UUID.getHostUuid(): ByteArray {
+    val bb: ByteBuffer = ByteBuffer.wrap(ByteArray(16))
+    bb.putLong(mostSignificantBits)
+    bb.putLong(leastSignificantBits)
+    return bb.array()
 }

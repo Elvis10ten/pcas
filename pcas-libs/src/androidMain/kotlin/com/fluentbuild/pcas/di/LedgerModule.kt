@@ -1,50 +1,50 @@
 package com.fluentbuild.pcas.di
 
+import com.fluentbuild.pcas.async.ThreadRunner
+import com.fluentbuild.pcas.host.HostInfoObservable
+import com.fluentbuild.pcas.io.MulticastChannel
 import com.fluentbuild.pcas.ledger.*
+import com.fluentbuild.pcas.utils.TimeProvider
+import kotlinx.serialization.protobuf.ProtoBuf
 
 internal class LedgerModule(
-    private val ioModule: IoModule,
-    private val hostModule: HostModule,
-    private val utilsModule: UtilsModule,
-    private val asyncModule: AsyncModule
+    timeProvider: TimeProvider,
+    threadRunner: () -> ThreadRunner,
+    protoBuf: ProtoBuf,
+    hostObservable: HostInfoObservable,
+    multicast: MulticastChannel,
+    serviceBlocksProducers: List<BlocksProducer>
 ) {
 
-    private val ledgerDb: LedgerDb by lazy { LedgerDb() }
+    private val ledgerDb = LedgerDb()
 
-    private val ledgerMessageSender: LedgerMessageSender by lazy {
-        LedgerMessageSender(
-            protoBuf = utilsModule.protoBuf,
-            multicast = ioModule.multicastChannel,
-            ledgerDb = ledgerDb
-        )
-    }
+    private val ledgerMessageSender = LedgerMessageSender(
+        protoBuf = protoBuf,
+        multicast = multicast,
+        ledgerDb = ledgerDb
+    )
 
-    private val ledgerWatchdog: LedgerWatchdog by lazy {
-        LedgerWatchdog(
-            runner = asyncModule.provideThreadExecutor(),
-            ledgerDb = ledgerDb,
-            messageSender = ledgerMessageSender,
-            timeProvider = utilsModule.timeProvider,
-        )
-    }
+    private val ledgerWatchdog = LedgerWatchdog(
+        runner = threadRunner(),
+        ledgerDb = ledgerDb,
+        messageSender = ledgerMessageSender,
+        timeProvider = timeProvider,
+    )
 
-    private val ledgerMessageReceiver: LedgerMessageReceiver by lazy {
-        LedgerMessageReceiver(
-            protoBuf = utilsModule.protoBuf,
-            messageSender = ledgerMessageSender,
-            ledgerDb = ledgerDb,
-            watchdog = ledgerWatchdog
-        )
-    }
+    private val ledgerMessageReceiver = LedgerMessageReceiver(
+        protoBuf = protoBuf,
+        messageSender = ledgerMessageSender,
+        ledgerDb = ledgerDb,
+        watchdog = ledgerWatchdog
+    )
 
-    internal val ledgerProtocol: LedgerProtocol by lazy {
-        LedgerProtocol(
-            ledgerWatchdog = ledgerWatchdog,
-            multicast = ioModule.multicastChannel,
-            hostObservable = hostModule.selfHostInfoWatcher,
-            messageSender = ledgerMessageSender,
-            messageReceiver = ledgerMessageReceiver,
-            ledgerDb = ledgerDb
-        )
-    }
+    internal val ledgerProtocol = LedgerProtocol(
+        ledgerWatchdog = ledgerWatchdog,
+        multicast = multicast,
+        hostObservable = hostObservable,
+        messageSender = ledgerMessageSender,
+        messageReceiver = ledgerMessageReceiver,
+        ledgerDb = ledgerDb,
+        serviceBlocksProducers = serviceBlocksProducers
+    )
 }
