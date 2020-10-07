@@ -13,6 +13,10 @@ internal open class JvmThreadRunner(
         TODO("Not yet implemented")
     }
 
+    override fun runOnMainDelayed(delayMillis: Int, action: () -> Unit) {
+        TODO("Not yet implemented")
+    }
+
     override fun runOnMainRepeating(interval: Int, action: () -> Unit) {
         TODO("Not yet implemented")
     }

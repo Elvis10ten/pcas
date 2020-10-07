@@ -8,6 +8,7 @@ import com.fluentbuild.pcas.ledger.Block
 import com.fluentbuild.pcas.ledger.BlocksProducer
 import com.fluentbuild.pcas.peripheral.Peripheral
 import com.fluentbuild.pcas.peripheral.PeripheralBond
+import com.fluentbuild.pcas.async.Debouncer
 import com.fluentbuild.pcas.utils.TimeProvider
 
 internal class AudioBlocksProducer(
@@ -15,13 +16,16 @@ internal class AudioBlocksProducer(
     private val propObservable: Observable<AudioProperty>,
     private val bondsObservable: Observable<PeripheralBond>,
     private val timeProvider: TimeProvider,
-    private val hostObservable: HostInfoObservable
+    private val hostObservable: HostInfoObservable,
+    private val debouncer: Debouncer
 ): BlocksProducer {
 
     override fun subscribe(consumer: (Set<Block>) -> Unit): Cancellable {
         val builder = AudioBlocksBuilder(audioPeripheral, timeProvider, hostObservable)
         val cancellables = Cancellables()
-        val updateConsumer = { builder.buildNovel()?.let(consumer) }
+        val updateConsumer = {
+            debouncer.debounce { builder.buildNovel()?.let(consumer) }
+        }
 
         cancellables += propObservable.subscribe {
             builder.setProperty(it)

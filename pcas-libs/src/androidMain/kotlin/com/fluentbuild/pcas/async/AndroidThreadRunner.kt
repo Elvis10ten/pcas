@@ -24,6 +24,19 @@ internal class AndroidThreadRunner(
         mainThreadHandler.post(runnable)
     }
 
+    override fun runOnMainDelayed(delayMillis: Int, action: () -> Unit) {
+        val runnable = object: Runnable {
+
+            override fun run() {
+                action()
+                mainThreadRunnables.remove(this)
+            }
+        }
+
+        mainThreadRunnables += runnable
+        mainThreadHandler.postDelayed(runnable, delayMillis.toLong())
+    }
+
     override fun runOnMainRepeating(interval: Int, action: () -> Unit) {
         val intervalLong = interval.toLong()
         val runnable = object: Runnable {

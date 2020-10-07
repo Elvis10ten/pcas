@@ -46,22 +46,23 @@ internal class AndroidAudioBondsObservable(
         when(profile) {
             PeripheralProfile.A2DP -> {
                 cancellables += profileHolder.useProfile(BluetoothProfile.A2DP) {
-                    observer(mapToBonds(BluetoothProfile.A2DP, it))
+                    mapToBonds(BluetoothProfile.A2DP, it)?.let(observer)
                 }
             }
             PeripheralProfile.HSP -> {
                 cancellables += profileHolder.useProfile(BluetoothProfile.HEADSET) {
-                    observer(mapToBonds(BluetoothProfile.HEADSET, it))
+                    mapToBonds(BluetoothProfile.HEADSET, it)?.let(observer)
                 }
             }
             else -> log.error { "$profile not supported in audio service" }
         }
     }
 
-    private fun mapToBonds(profileId: AndroidBluetoothProfileId, profile: BluetoothProfile): PeripheralBond {
+    private fun mapToBonds(profileId: AndroidBluetoothProfileId, profile: BluetoothProfile): PeripheralBond? {
+        val state = profile.getConnectionState(bluetoothDevice).toPeripheralState() ?: return null
         return PeripheralBond(
             profile = profileId.toPeripheralProfile(),
-            state = profile.getConnectionState(bluetoothDevice).toPeripheralState()
+            state = state
         )
     }
 }

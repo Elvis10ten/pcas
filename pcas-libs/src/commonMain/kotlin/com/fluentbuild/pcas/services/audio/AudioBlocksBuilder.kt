@@ -27,12 +27,16 @@ internal class AudioBlocksBuilder(
     fun setBond(bond: PeripheralBond) {
         when (bond.profile) {
             PeripheralProfile.A2DP -> {
-                hasA2dpChanged = true
-                a2dpBondCache = bond
+                if(a2dpBondCache != bond) {
+                    hasA2dpChanged = true
+                    a2dpBondCache = bond
+                }
             }
             PeripheralProfile.HSP -> {
-                hasHspChanged = true
-                hspBondCache = bond
+                if(hspBondCache != bond) {
+                    hasHspChanged = true
+                    hspBondCache = bond
+                }
             }
             PeripheralProfile.HID -> error("HID profile not supported in audio service")
         }

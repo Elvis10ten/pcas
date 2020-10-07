@@ -6,6 +6,7 @@ import com.fluentbuild.pcas.values.Observable
 import com.fluentbuild.pcas.host.HostInfoObservable
 import com.fluentbuild.pcas.peripheral.PeripheralCommander
 import com.fluentbuild.pcas.Engine
+import com.fluentbuild.pcas.async.Debouncer
 import com.fluentbuild.pcas.stream.StreamHandler
 import com.fluentbuild.pcas.peripheral.Peripheral
 import com.fluentbuild.pcas.services.audio.*
@@ -16,7 +17,8 @@ internal class AudioServiceModule(
     mainHandler: Handler,
     audioPeripheral: Peripheral,
     hostObservable: HostInfoObservable,
-    timeProvider: TimeProvider
+    timeProvider: TimeProvider,
+    debouncer: () -> Debouncer
 ) {
 
     private val audioStreamer = AndroidAudioStreamer()
@@ -47,6 +49,7 @@ internal class AudioServiceModule(
         propObservable = propertyObservable,
         bondsObservable = bondsObservable,
         timeProvider = timeProvider,
-        hostObservable = hostObservable
+        hostObservable = hostObservable,
+        debouncer = debouncer()
     )
 }

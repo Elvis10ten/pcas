@@ -4,23 +4,27 @@ import com.fluentbuild.pcas.conflicts.Conflict.Resolution
 import com.fluentbuild.pcas.ledger.Ledger
 import com.fluentbuild.pcas.logs.getLog
 import com.fluentbuild.pcas.services.ServiceId
+import com.fluentbuild.pcas.async.Debouncer
 import com.fluentbuild.pcas.utils.mapSet
 
 internal class ConflictsResolver(
     private val resolutionHandlers: Map<ServiceId, ResolutionHandler>,
-    private val circuitBreaker: CircuitBreaker
+    private val throttle: Throttle,
+    private val debouncer: Debouncer
 ) {
 
     private val log = getLog()
 
     fun resolve(ledger: Ledger) {
+        log.info { "Resolving conflict" }
         val resolutions = ledger.conflicts.getResolutions()
-        resolutions.handle()
+        debouncer.debounce { resolutions.handle() }
     }
 
     private fun Set<Conflict>.getResolutions(): Set<Resolution> {
         log.debug { "Self blocks conflict: $this" }
         return mapSet { conflict ->
+            log.info { "RankSelf(${conflict.selfBlock.rank}) vs RankApex(${conflict.peersApexBlock?.rank})" }
             when {
                 conflict.peersApexBlock == null -> {
                     Resolution.Connect(conflict.selfBlock)
@@ -45,7 +49,7 @@ internal class ConflictsResolver(
 
     private fun Set<Resolution>.handle() {
         forEach { resolution ->
-            if(circuitBreaker.record(resolution)) {
+            if(throttle.record(resolution)) {
                 log.info { "Handling resolution: $resolution" }
                 resolutionHandlers.getValue(resolution.selfBlock.serviceId).handle(resolution)
             } else {
@@ -55,7 +59,8 @@ internal class ConflictsResolver(
     }
 
     fun release() {
-        circuitBreaker.reset()
+        debouncer.cancel()
+        throttle.reset()
         resolutionHandlers.values.forEach { it.release() }
     }
 

@@ -26,13 +26,11 @@ internal fun AndroidBluetoothProfileId.toPeripheralProfile(): PeripheralProfile 
     }
 }
 
-internal fun AndroidBluetoothProfileState.toPeripheralState(): PeripheralBond.State {
+internal fun AndroidBluetoothProfileState.toPeripheralState(): PeripheralBond.State? {
     return when(this) {
         BluetoothProfile.STATE_CONNECTED -> PeripheralBond.State.CONNECTED
-        BluetoothProfile.STATE_CONNECTING -> PeripheralBond.State.CONNECTING
         BluetoothProfile.STATE_DISCONNECTED -> PeripheralBond.State.DISCONNECTED
-        BluetoothProfile.STATE_DISCONNECTING -> PeripheralBond.State.DISCONNECTING
-        else -> error("Invalid bluetooth profile state: $this")
+        else -> null
     }
 }
 

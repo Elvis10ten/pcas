@@ -4,7 +4,7 @@ import android.content.Context
 import android.os.Handler
 import com.fluentbuild.pcas.async.Cancellable
 import com.fluentbuild.pcas.services.audio.AudioConfig
-import com.fluentbuild.pcas.android.ActiveNetworkCallback
+import com.fluentbuild.pcas.android.AddressChangeCallback
 import com.fluentbuild.pcas.android.InteractivityCallback
 import com.fluentbuild.pcas.android.powerManager
 import com.fluentbuild.pcas.io.UnicastChannel
@@ -26,11 +26,11 @@ internal class AndroidHostInfoObservable(
         log.debug { "Observing self HostInfo" }
         val notifyObserver = { observer(currentValue) }
 
-        val activeNetworkCallback = ActiveNetworkCallback(context, mainHandler, notifyObserver)
+        val activeNetworkCallback = AddressChangeCallback(context, mainHandler, addressProvider, notifyObserver)
         val interactivityCallback = InteractivityCallback(context, notifyObserver)
 
         notifyObserver()
-        activeNetworkCallback.register()
+        activeNetworkCallback.register(addressProvider.get())
         interactivityCallback.register()
 
         return Cancellable {

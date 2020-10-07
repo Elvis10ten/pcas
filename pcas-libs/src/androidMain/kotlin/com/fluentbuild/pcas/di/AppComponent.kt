@@ -43,7 +43,8 @@ class AppComponent(
         mainThreadHandler,
         audioPeripheral,
         hostModule.selfHostInfoWatcher,
-        utilsModule.timeProvider
+        utilsModule.timeProvider,
+        { asyncModule.provideDebouncer() }
     )
 
     private val ledgerModule = LedgerModule(
@@ -64,7 +65,8 @@ class AppComponent(
 
     private val conflictModule = ConflictsModule(
         utilsModule.timeProvider,
-        audioServiceModule.resolutionHandler
+        audioServiceModule.resolutionHandler,
+        { asyncModule.provideDebouncer() }
     )
 
     val engine: Engine by lazy {

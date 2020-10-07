@@ -26,7 +26,7 @@ internal class LedgerProtocol(
             messageSender.sendUpdate()
         }
 
-        cancellables += ledgerWatchdog.run()
+        //cancellables += ledgerWatchdog.run()
 
         val consumer = { blocks: Set<Block> ->
             ledgerDb.upsert(blocks)
