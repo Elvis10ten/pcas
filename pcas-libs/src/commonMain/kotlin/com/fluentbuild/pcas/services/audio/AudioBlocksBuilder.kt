@@ -4,8 +4,8 @@ import com.fluentbuild.pcas.host.HostInfoObservable
 import com.fluentbuild.pcas.ledger.Block
 import com.fluentbuild.pcas.peripheral.Peripheral
 import com.fluentbuild.pcas.peripheral.PeripheralBond
+import com.fluentbuild.pcas.peripheral.PeripheralProfile
 import com.fluentbuild.pcas.services.audio.AudioProperty.Usage
-import com.fluentbuild.pcas.peripheral.audio.AudioProfile
 import com.fluentbuild.pcas.services.AUDIO_SERVICE_ID
 import com.fluentbuild.pcas.utils.TimeProvider
 
@@ -25,16 +25,16 @@ internal class AudioBlocksBuilder(
     private var hasHspChanged = false
 
     fun setBond(bond: PeripheralBond) {
-        when (bond.bondId) {
-            AudioProfile.A2DP.bondId -> {
+        when (bond.profile) {
+            PeripheralProfile.A2DP -> {
                 hasA2dpChanged = true
                 a2dpBondCache = bond
             }
-            AudioProfile.HSP.bondId -> {
+            PeripheralProfile.HSP -> {
                 hasHspChanged = true
                 hspBondCache = bond
             }
-            else -> error("$bond is not supported in audio service")
+            PeripheralProfile.HID -> error("HID profile not supported in audio service")
         }
     }
 
@@ -73,7 +73,7 @@ internal class AudioBlocksBuilder(
 
     private fun createBlock(usages: Set<Usage>, bond: PeripheralBond) = Block(
         serviceId = AUDIO_SERVICE_ID,
-        bondId = bond.bondId,
+        profile = bond.profile,
         peripheral = audioPeripheral,
         priority = usages.maxOfOrNull { it.priority } ?: Block.NO_PRIORITY,
         timestamp = timeProvider.currentTimeMillis(),

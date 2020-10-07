@@ -1,10 +1,10 @@
 package com.fluentbuild.pcas.ledger
 
 import com.fluentbuild.pcas.host.HostInfo
-import com.fluentbuild.pcas.peripheral.BondId
 import com.fluentbuild.pcas.peripheral.Peripheral
 import com.fluentbuild.pcas.services.ServiceId
 import com.fluentbuild.pcas.peripheral.PeripheralBond
+import com.fluentbuild.pcas.peripheral.PeripheralProfile
 import com.fluentbuild.pcas.utils.unsafeLazy
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.protobuf.ProtoNumber
@@ -16,7 +16,7 @@ data class Block(
     @ProtoNumber(1)
     val serviceId: ServiceId,
     @ProtoNumber(2)
-    val bondId: BondId,
+    val profile: PeripheralProfile,
     @ProtoNumber(3)
     val peripheral: Peripheral,
     @ProtoNumber(4)
@@ -46,14 +46,14 @@ data class Block(
     override fun equals(other: Any?): Boolean {
         if(other !is Block) return false
         return serviceId == other.serviceId &&
-                bondId == other.bondId &&
+                profile == other.profile &&
                 peripheral == other.peripheral &&
                 owner == other.owner
     }
 
     override fun hashCode(): Int {
         var result = serviceId
-        result = 31 * result + bondId
+        result = 31 * result + profile.hashCode()
         result = 31 * result + peripheral.hashCode()
         result = 31 * result + owner.hashCode()
         return result

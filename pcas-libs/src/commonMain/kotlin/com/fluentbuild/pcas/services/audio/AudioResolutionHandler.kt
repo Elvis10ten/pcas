@@ -6,7 +6,7 @@ import com.fluentbuild.pcas.conflicts.ResolutionHandler
 import com.fluentbuild.pcas.conflicts.Conflict
 import com.fluentbuild.pcas.peripheral.Peripheral
 import com.fluentbuild.pcas.peripheral.PeripheralCommander
-import com.fluentbuild.pcas.peripheral.audio.AudioProfile
+import com.fluentbuild.pcas.peripheral.PeripheralProfile
 
 internal class AudioResolutionHandler(
     private val audioPeripheral: Peripheral,
@@ -16,15 +16,14 @@ internal class AudioResolutionHandler(
 ): ResolutionHandler {
 
     override fun handle(resolution: Conflict.Resolution) {
-        val audioProfile = AudioProfile.from(resolution.selfBlock.bondId)
         when(resolution) {
             is Conflict.Resolution.Connect -> {
                 stopStreaming()
-                audioProfile.connect()
+                resolution.selfBlock.profile.connect()
             }
             is Conflict.Resolution.Disconnect -> {
                 stopStreaming()
-                audioProfile.disconnect()
+                resolution.selfBlock.profile.disconnect()
             }
             is Conflict.Resolution.Stream -> {
                 startStreaming(resolution.destination)
@@ -47,17 +46,19 @@ internal class AudioResolutionHandler(
         audioStreamer.stop()
     }
 
-    private fun AudioProfile.connect() {
+    private fun PeripheralProfile.connect() {
         when(this) {
-            AudioProfile.A2DP -> a2dpCommander.perform(Command.Connect(audioPeripheral))
-            AudioProfile.HSP -> hspCommander.perform(Command.Connect(audioPeripheral))
+            PeripheralProfile.A2DP -> a2dpCommander.perform(Command.Connect(audioPeripheral))
+            PeripheralProfile.HSP -> hspCommander.perform(Command.Connect(audioPeripheral))
+            PeripheralProfile.HID -> error("HID profile not supported in audio service")
         }
     }
 
-    private fun AudioProfile.disconnect() {
+    private fun PeripheralProfile.disconnect() {
         when(this) {
-            AudioProfile.A2DP -> a2dpCommander.perform(Command.Disconnect(audioPeripheral))
-            AudioProfile.HSP -> hspCommander.perform(Command.Disconnect(audioPeripheral))
+            PeripheralProfile.A2DP -> a2dpCommander.perform(Command.Disconnect(audioPeripheral))
+            PeripheralProfile.HSP -> hspCommander.perform(Command.Disconnect(audioPeripheral))
+            PeripheralProfile.HID -> error("HID profile not supported in audio service")
         }
     }
 }

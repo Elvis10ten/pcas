@@ -79,8 +79,7 @@ internal class AndroidAudioBondsObservable(
 
     private fun mapToBonds(profileId: Int, profile: BluetoothProfile): PeripheralBond {
         return PeripheralBond(
-            peripheral = audioPeripheral,
-            bondId = profileId.bluetoothProfileIdToAudioProfile().bondId,
+            profile = profileId.bluetoothProfileIdToAudioProfile().id,
             state = profile.getConnectionState(bluetoothDevice).bluetoothProfileStateToPeripheralState()
         )
     }

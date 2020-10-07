@@ -1,7 +1,7 @@
 package com.fluentbuild.pcas.peripheral
 
 data class PeripheralBond(
-    val bondId: BondId,
+    val profile: PeripheralProfile,
     val state: State
 ) {
 

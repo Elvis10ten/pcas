@@ -7,17 +7,18 @@ import android.os.RemoteException
 import com.fluentbuild.pcas.io.Address
 import com.fluentbuild.pcas.peripheral.Peripheral
 import com.fluentbuild.pcas.peripheral.PeripheralBond
-import com.fluentbuild.pcas.peripheral.audio.AudioProfile
+import com.fluentbuild.pcas.peripheral.PeripheralProfile
 
 fun BluetoothAdapter.toBluetoothDevice(peripheral: Peripheral): BluetoothDevice =
     getRemoteDevice(peripheral.address.colonHex)
 
 fun BluetoothDevice.toPeripheral() = Peripheral(name, Address.Mac(address))
 
-internal fun Int.bluetoothProfileIdToAudioProfile(): AudioProfile {
+internal fun Int.bluetoothProfileIdToAudioProfile(): PeripheralProfile {
     return when(this) {
-        BluetoothProfile.A2DP -> AudioProfile.A2DP
-        BluetoothProfile.HEADSET -> AudioProfile.HSP
+        BluetoothProfile.A2DP -> PeripheralProfile.A2DP
+        BluetoothProfile.HEADSET -> PeripheralProfile.HSP
+        BluetoothProfile.HID_DEVICE -> PeripheralProfile.HID
         else -> error("Invalid bluetooth profile id: $this")
     }
 }
