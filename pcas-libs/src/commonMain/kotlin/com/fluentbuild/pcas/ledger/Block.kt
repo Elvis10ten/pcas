@@ -51,6 +51,13 @@ data class Block(
                 owner == other.owner
     }
 
+    fun hasConflict(other: Block): Boolean {
+        return serviceId == other.serviceId &&
+                profile == other.profile &&
+                peripheral == other.peripheral &&
+                (other.hasPriority || other.isConnected)
+    }
+
     override fun hashCode(): Int {
         var result = serviceId
         result = 31 * result + profile.hashCode()

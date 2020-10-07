@@ -2,14 +2,11 @@ package com.fluentbuild.pcas.conflicts
 
 import com.fluentbuild.pcas.host.HostInfo
 import com.fluentbuild.pcas.ledger.Block
-import com.fluentbuild.pcas.utils.unsafeLazy
 
 data class Conflict(
     val selfBlock: Block,
-    val othersBlocks: Set<Block>
+    val peersApexBlock: Block?
 ) {
-
-    val othersApex by unsafeLazy { othersBlocks.maxByOrNull { it.rank }!! }
 
     sealed class Resolution {
 

@@ -17,10 +17,6 @@ internal class LedgerWatchdog(
     private val log = getLog()
     private val lastHeartbeatTimestamps = mutableMapOf<Uuid, Timestamp>()
 
-    // todo: Factor in interactivity for TTL. Device that are interactive should have shorter TTL, because
-    // there is no OS throttling and more possibility of changes occurring.
-    // Battery level can be used to build a probability model for non-interactive, given that changes will only occur
-    // for: Disconnected from peripheral, host shutdown, or Bluetooth failure
     fun run(): Cancellable {
         runner.runOnMainRepeating(HEARTBEAT_INTERVAL_MILLIS) {
             messageSender.sendHeartbeat()
@@ -29,7 +25,7 @@ internal class LedgerWatchdog(
             val deadHosts = lastHeartbeatTimestamps.filter { currentTimestamp - it.value > HOST_TTL_MILLIS }.keys
 
             if(deadHosts.isNotEmpty()) {
-                log.info { "Removing dead hosts: $deadHosts" }
+                log.warn { "Removing dead hosts: $deadHosts" }
                 ledgerDb.delete(deadHosts)
                 deadHosts.forEach { lastHeartbeatTimestamps.remove(it) }
             }
@@ -41,7 +37,7 @@ internal class LedgerWatchdog(
         }
     }
 
-    fun onHostHeartbeatReceived(hostUuid: Uuid) {
+    fun onHeartbeatReceived(hostUuid: Uuid) {
         lastHeartbeatTimestamps[hostUuid] = timeProvider.currentTimeMillis()
     }
 }

@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.protobuf.ProtoNumber
 
 @Serializable
-sealed class LedgerMessage {
+internal sealed class LedgerMessage {
 
     abstract val sender: Uuid
 
@@ -17,17 +17,11 @@ sealed class LedgerMessage {
     ): LedgerMessage()
 
     @Serializable
-    data class Exodus(
-        @ProtoNumber(1)
-        override val sender: Uuid
-    ): LedgerMessage()
-
-    @Serializable
     data class Heartbeat(
         @ProtoNumber(1)
         override val sender: Uuid,
         @ProtoNumber(2)
-        val hostBlocksMaxTimestamps: Map<Uuid, Timestamp>,
+        val hostBlocksMaxTimestamp: Map<Uuid, Timestamp>,
     ): LedgerMessage()
 
     @Serializable

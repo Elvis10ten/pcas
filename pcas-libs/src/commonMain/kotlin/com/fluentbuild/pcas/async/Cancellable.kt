@@ -19,6 +19,10 @@ class Cancellables: Cancellable {
         cancellables += cancellable
     }
 
+    operator fun plusAssign(cancellableList: List<Cancellable>) {
+        cancellables += cancellableList
+    }
+
     override fun cancel() {
         cancellables.forEach {
             try {

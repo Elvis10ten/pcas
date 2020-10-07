@@ -1,22 +1,22 @@
 package com.fluentbuild.pcas.ledger
 
+import com.fluentbuild.pcas.conflicts.Conflict
 import com.fluentbuild.pcas.host.HostInfo
 import com.fluentbuild.pcas.utils.filterSet
-import kotlinx.serialization.Serializable
-import kotlinx.serialization.Transient
-import kotlinx.serialization.protobuf.ProtoNumber
+import com.fluentbuild.pcas.utils.mapSet
 
-@Serializable
 data class Ledger(
-    @ProtoNumber(1)
-    val self: HostInfo,
-    @ProtoNumber(2)
-    val blocks: Set<Block> = emptySet()
+    internal val self: HostInfo,
+    internal val blocks: Set<Block> = emptySet()
 ) {
 
-    @Transient
     val selfBlocks = blocks.filterSet { it.owner == self }
 
-    @Transient
-    val othersBlocks = blocks.filterSet { it.owner != self }
+    val peersBlocks = blocks.filterSet { it.owner != self }
+
+    val conflicts = selfBlocks.mapSet { Conflict(it, it.peersApexConflictBlock) }
+
+    private val Block.peersApexConflictBlock get() = peersBlocks
+        .filterSet { this.hasConflict(it) }
+        .maxByOrNull { it.rank }
 }

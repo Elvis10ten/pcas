@@ -18,19 +18,15 @@ internal class LedgerMessageSender(
         broadcast(LedgerMessage.Genesis(ledger.self.uuid))
     }
 
-    fun sendExodus() {
-        broadcast(LedgerMessage.Exodus(ledger.self.uuid))
-    }
-
     fun sendUpdate() {
         broadcast(LedgerMessage.Update(ledger.self.uuid, ledger.selfBlocks))
     }
 
     fun sendHeartbeat() {
-        val hostBlocksMaxTimestamps = ledger.blocks
+        val hostBlocksMaxTimestamp = ledger.blocks
             .groupBy { it.owner.uuid }
             .mapValues { it.value.getBlocksMaxTimestamp() }
-        broadcast(LedgerMessage.Heartbeat(ledger.self.uuid, hostBlocksMaxTimestamps))
+        broadcast(LedgerMessage.Heartbeat(ledger.self.uuid, hostBlocksMaxTimestamp))
     }
 
     private fun broadcast(message: LedgerMessage) {

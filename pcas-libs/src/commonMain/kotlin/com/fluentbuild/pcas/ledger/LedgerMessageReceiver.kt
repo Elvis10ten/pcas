@@ -1,5 +1,7 @@
 package com.fluentbuild.pcas.ledger
 
+import com.fluentbuild.pcas.io.MarshalledMessage
+import com.fluentbuild.pcas.io.MarshalledMessageSize
 import com.fluentbuild.pcas.io.MessageReceiver
 import com.fluentbuild.pcas.utils.decode
 import com.fluentbuild.pcas.logs.getLog
@@ -15,8 +17,8 @@ internal class LedgerMessageReceiver(
     private val log = getLog()
     private val ledger get() = ledgerDb.getLedger()
 
-    override fun onReceived(marshalledMessage: ByteArray, actualSize: Int) {
-        onReceived(protoBuf.decode(marshalledMessage, actualSize))
+    override fun onReceived(message: MarshalledMessage, size: MarshalledMessageSize) {
+        onReceived(protoBuf.decode(message, size))
     }
 
     private fun onReceived(message: LedgerMessage) {
@@ -27,30 +29,21 @@ internal class LedgerMessageReceiver(
                 messageSender.sendUpdate()
             }
             is LedgerMessage.Update -> {
-                if(message.validateSenderBlocks()) {
-                    ledgerDb.upsert(message.senderBlocks)
-                } else {
-                    log.warn { "Sender blocks is invalid" }
-                }
+                ledgerDb.upsert(message.senderBlocks)
             }
             is LedgerMessage.Heartbeat -> {
-                watchdog.onHostHeartbeatReceived(message.sender)
+                watchdog.onHeartbeatReceived(message.sender)
                 if(message.isSelfBlocksOnSenderStale()) {
+                    log.warn { "Self blocks stale on message sender" }
                     messageSender.sendUpdate()
                 }
-            }
-            is LedgerMessage.Exodus -> {
-                ledgerDb.delete(setOf(message.sender))
             }
         }
     }
 
-    private fun LedgerMessage.Update.validateSenderBlocks() =
-        senderBlocks.isNotEmpty() && senderBlocks.all { it.owner.uuid == sender }
-
     private fun LedgerMessage.Heartbeat.isSelfBlocksOnSenderStale(): Boolean {
         val selfBlocksOnLocalMaxTimestamp = ledger.selfBlocks.getBlocksMaxTimestamp()
-        val selfBlocksOnSenderMaxTimestamp = hostBlocksMaxTimestamps[ledger.self.uuid] ?: return true
+        val selfBlocksOnSenderMaxTimestamp = hostBlocksMaxTimestamp[ledger.self.uuid] ?: return true
         return selfBlocksOnLocalMaxTimestamp > selfBlocksOnSenderMaxTimestamp
     }
 }

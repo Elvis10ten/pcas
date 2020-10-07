@@ -11,34 +11,33 @@ internal class LedgerProtocol(
     private val messageSender: LedgerMessageSender,
     private val messageReceiver: LedgerMessageReceiver,
     private val ledgerWatchdog: LedgerWatchdog,
-    private val ledgerDb: LedgerDb
+    private val ledgerDb: LedgerDb,
+    private val serviceBlocksProducers: List<BlocksProducer>
 ) {
 
-    private val cancellables = Cancellables()
-
     fun run(onLedgerUpdated: (Ledger) -> Unit): Cancellable {
-        blocksProducer: List<BlocksProducer>,
+        val cancellables = Cancellables()
         ledgerDb.create(hostObservable.currentValue, onLedgerUpdated)
         multicast.init(messageReceiver::onReceived)
+        messageSender.sendGenesis()
 
         cancellables += hostObservable.subscribe {
             ledgerDb.updateSelf(it)
             messageSender.sendUpdate()
         }
 
-        messageSender.sendGenesis()
         cancellables += ledgerWatchdog.run()
-    }
 
-    fun close() {
-        messageSender.sendExodus()
-        cancellables.cancel()
-        multicast.close()
-        ledgerDb.destroy()
-    }
+        val consumer = { blocks: Set<Block> ->
+            ledgerDb.upsert(blocks)
+            messageSender.sendUpdate()
+        }
+        cancellables += serviceBlocksProducers.map { it.subscribe(consumer) }
 
-    fun updateBlocks(blocks: Set<Block>) {
-        ledgerDb.upsert(blocks)
-        messageSender.sendUpdate()
+        return Cancellable {
+            cancellables.cancel()
+            multicast.close()
+            ledgerDb.destroy()
+        }
     }
 }

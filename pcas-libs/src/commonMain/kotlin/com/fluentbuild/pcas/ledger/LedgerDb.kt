@@ -5,11 +5,12 @@ import com.fluentbuild.pcas.host.Uuid
 import com.fluentbuild.pcas.utils.filterSet
 import com.fluentbuild.pcas.logs.getLog
 import com.fluentbuild.pcas.utils.mapSet
+import com.fluentbuild.pcas.utils.upsert
 
 internal class LedgerDb {
 
     private val log = getLog()
-    private var onLedgerUpdated: (Ledger) -> Unit = {}
+    private var onLedgerUpdated: ((Ledger) -> Unit)? = null
     private lateinit var ledger: Ledger
 
     fun create(self: HostInfo, onLedgerUpdated: (Ledger) -> Unit) {
@@ -20,7 +21,7 @@ internal class LedgerDb {
 
     fun destroy() {
         log.debug(::destroy)
-        onLedgerUpdated = {}
+        onLedgerUpdated = null
         ledger = Ledger(ledger.self)
     }
 
@@ -28,31 +29,24 @@ internal class LedgerDb {
 
     fun upsert(hostBlocks: Set<Block>) {
         log.debug(::upsert, hostBlocks)
-        update(ledger.copy(
-            blocks = (ledger.blocks - hostBlocks) + hostBlocks
-        ))
+        update(ledger.copy(blocks = ledger.blocks.upsert(hostBlocks)))
     }
 
     fun delete(hostUuids: Set<Uuid>) {
         log.debug(::delete, hostUuids)
         val blocksWithoutHosts = ledger.blocks.filterSet { !hostUuids.contains(it.owner.uuid) }
-        update(ledger.copy(
-            blocks = blocksWithoutHosts
-        ))
+        update(ledger.copy(blocks = blocksWithoutHosts))
     }
 
     fun updateSelf(newSelf: HostInfo) {
         log.debug(::updateSelf, newSelf)
         val updatedSelfBlocks = ledger.selfBlocks.mapSet { it.copy(owner = newSelf) }
-        update(ledger.copy(
-            self = newSelf,
-            blocks = (ledger.blocks - ledger.selfBlocks) + updatedSelfBlocks
-        ))
+        update(ledger.copy(blocks = ledger.blocks.upsert(updatedSelfBlocks)))
     }
 
     private fun update(newLedger: Ledger) {
         log.debug { "Ledger updated: $newLedger" }
         ledger = newLedger
-        onLedgerUpdated(newLedger)
+        onLedgerUpdated?.invoke(newLedger)
     }
 }
