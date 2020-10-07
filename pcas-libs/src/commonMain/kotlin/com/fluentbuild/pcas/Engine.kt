@@ -5,7 +5,7 @@ import com.fluentbuild.pcas.async.Cancellables
 import com.fluentbuild.pcas.ledger.LedgerProtocol
 import com.fluentbuild.pcas.stream.StreamDemux
 import com.fluentbuild.pcas.logs.getLog
-import com.fluentbuild.pcas.middleware.ConflictsResolver
+import com.fluentbuild.pcas.conflicts.ConflictsResolver
 
 class Engine internal constructor(
 	private val ledgerProtocol: LedgerProtocol,

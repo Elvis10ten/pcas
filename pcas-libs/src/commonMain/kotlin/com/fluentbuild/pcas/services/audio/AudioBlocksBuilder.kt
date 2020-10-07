@@ -2,81 +2,87 @@ package com.fluentbuild.pcas.services.audio
 
 import com.fluentbuild.pcas.host.HostInfoObservable
 import com.fluentbuild.pcas.ledger.Block
+import com.fluentbuild.pcas.peripheral.Peripheral
 import com.fluentbuild.pcas.peripheral.PeripheralBond
 import com.fluentbuild.pcas.services.audio.AudioProperty.Usage
 import com.fluentbuild.pcas.peripheral.audio.AudioProfile
 import com.fluentbuild.pcas.services.AUDIO_SERVICE_ID
 import com.fluentbuild.pcas.utils.TimeProvider
 
-// todo: refactor
 internal class AudioBlocksBuilder(
+    private val audioPeripheral: Peripheral,
 	private val timeProvider: TimeProvider,
     private val hostObservable: HostInfoObservable
 ) {
 
-    private var bondsCache: Set<PeripheralBond>? = null
-    private var propCache: AudioProperty? = null
+    private var a2dpBondCache: PeripheralBond? = null
+    private var hspBondCache: PeripheralBond? = null
 
-    private var lastA2dpBlock: Block? = null
-    private var lastHspBlock: Block? = null
+    private var a2dpUsagesCache: Set<Usage>? = null
+    private var hspUsagesCache: Set<Usage>? = null
 
-    fun setProp(newProp: AudioProperty) {
-        when {
-            newProp.bidirectionalUsages != propCache?.bidirectionalUsages -> {
-                lastHspBlock = null
+    private var hasA2dpChanged = false
+    private var hasHspChanged = false
+
+    fun setBond(bond: PeripheralBond) {
+        when (bond.bondId) {
+            AudioProfile.A2DP.bondId -> {
+                hasA2dpChanged = true
+                a2dpBondCache = bond
             }
-            newProp.unidirectionalUsages != propCache?.unidirectionalUsages -> {
-                lastA2dpBlock = null
+            AudioProfile.HSP.bondId -> {
+                hasHspChanged = true
+                hspBondCache = bond
             }
+            else -> error("$bond is not supported in audio service")
         }
-        propCache = newProp
     }
 
-    fun setBonds(newBonds: Set<PeripheralBond>) {
-        when {
-            newBonds.getBond(AudioProfile.HSP) != bondsCache?.getBond(AudioProfile.HSP) -> {
-                lastHspBlock = null
-            }
-            newBonds.getBond(AudioProfile.A2DP) != bondsCache?.getBond(AudioProfile.A2DP) -> {
-                lastA2dpBlock = null
-            }
-        }
-        bondsCache = newBonds
-    }
-
-    fun buildNew(): Set<Block>? {
-        val bonds = bondsCache ?: return null
-        val prop = propCache ?: return null
-
-        if(lastA2dpBlock != null && lastHspBlock != null) {
-            return null
+    fun setProperty(property: AudioProperty) {
+        if(a2dpUsagesCache != property.unidirectionalUsages) {
+            hasA2dpChanged = true
+            a2dpUsagesCache = property.unidirectionalUsages
         }
 
-        val a2dpBlock = lastA2dpBlock ?: createBlock(AudioProfile.A2DP, prop.unidirectionalUsages, bonds)
-        val hspBlock = lastHspBlock ?: createBlock(AudioProfile.HSP, prop.bidirectionalUsages, bonds)
-        lastA2dpBlock = a2dpBlock
-        lastHspBlock = hspBlock
-
-        return setOf(a2dpBlock, hspBlock)
+        if(hspUsagesCache != property.bidirectionalUsages) {
+            hasHspChanged = true
+            hspUsagesCache = property.bidirectionalUsages
+        }
     }
 
-    fun clear() {
-        bondsCache = null
-        propCache = null
-        lastA2dpBlock = null
-        lastHspBlock = null
+    fun buildNovel(): Set<Block>? {
+        val a2dpBond = a2dpBondCache ?: return null
+        val hspBond = hspBondCache ?: return null
+        val a2dpUsages = a2dpUsagesCache ?: return null
+        val hspUsages = hspUsagesCache ?: return null
+
+        if(!hasA2dpChanged && !hasHspChanged) return null
+
+        return LinkedHashSet<Block>(NUM_BONDS).apply {
+            if(hasA2dpChanged) {
+                this += createBlock(a2dpUsages, a2dpBond)
+                hasA2dpChanged = false
+            }
+
+            if(hasHspChanged) {
+                this += createBlock(hspUsages, hspBond)
+                hasHspChanged = false
+            }
+        }
     }
 
-    private fun createBlock(profile: AudioProfile, usages: Set<Usage>, bonds: Set<PeripheralBond>): Block {
-        return Block(
-            serviceId = AUDIO_SERVICE_ID,
-            bondId = profile.bondId,
-            priority = usages.maxOfOrNull { it.priority } ?: Block.NO_PRIORITY,
-            timestamp = timeProvider.currentTimeMillis(),
-            bondState = bonds.single { it.bondId == profile.bondId }.state,
-            owner = hostObservable.currentValue
-        )
-    }
+    private fun createBlock(usages: Set<Usage>, bond: PeripheralBond) = Block(
+        serviceId = AUDIO_SERVICE_ID,
+        bondId = bond.bondId,
+        peripheral = audioPeripheral,
+        priority = usages.maxOfOrNull { it.priority } ?: Block.NO_PRIORITY,
+        timestamp = timeProvider.currentTimeMillis(),
+        bondState = bond.state,
+        owner = hostObservable.currentValue
+    )
 
-    private fun Set<PeripheralBond>.getBond(profile: AudioProfile) = single { it.bondId == profile.bondId }
+    companion object {
+
+        private const val NUM_BONDS = 2
+    }
 }

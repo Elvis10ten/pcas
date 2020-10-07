@@ -1,10 +1,10 @@
 package com.fluentbuild.pcas.di
 
 import android.content.Context
-import com.fluentbuild.pcas.async.Observable
+import com.fluentbuild.pcas.values.Observable
 import com.fluentbuild.pcas.host.HostInfoObservable
 import com.fluentbuild.pcas.services.audio.AudioBondsObservable
-import com.fluentbuild.pcas.peripheral.PeripheralConnector
+import com.fluentbuild.pcas.peripheral.PeripheralCommander
 import com.fluentbuild.pcas.Engine
 import com.fluentbuild.pcas.stream.StreamHandler
 import com.fluentbuild.pcas.peripheral.Peripheral
@@ -18,7 +18,7 @@ internal class AudioServiceModule(
     private val timeProvider: TimeProvider
 ) {
 
-    lateinit var audioBlockWriter: AudioBlockWriter
+    lateinit var audioBlocksProducer: AudioBlocksProducer
 
     private val audioStreamer: AudioStreamer by lazy {
         AndroidAudioStreamer()
@@ -28,11 +28,11 @@ internal class AudioServiceModule(
         BluetoothProfileHolder(appContext)
     }
 
-    private val a2dpConnector: PeripheralConnector by lazy {
+    private val a2dpConnector: PeripheralCommander by lazy {
         A2dpConnector(appContext, profileHolder)
     }
 
-    private val hspConnector: PeripheralConnector by lazy {
+    private val hspConnector: PeripheralCommander by lazy {
         HspConnector(appContext, profileHolder)
     }
 
@@ -62,7 +62,7 @@ internal class AudioServiceModule(
     }
 
     fun init(engine: Engine) {
-        audioBlockWriter = AudioBlockWriter(
+        audioBlocksProducer = AudioBlocksProducer(
             serviceRegistry = engine,
             propertyObservable = propertyObservable,
             bondsObservable = bondsObservable,

@@ -1,5 +1,7 @@
 package com.fluentbuild.pcas.async
 
+import com.fluentbuild.pcas.logs.getLog
+
 fun interface Cancellable {
     fun cancel()
 }
@@ -10,6 +12,7 @@ internal object SentinelCancellable: Cancellable {
 
 class Cancellables: Cancellable {
 
+    private val log = getLog()
     private val cancellables = mutableListOf<Cancellable>()
 
     operator fun plusAssign(cancellable: Cancellable) {
@@ -17,7 +20,14 @@ class Cancellables: Cancellable {
     }
 
     override fun cancel() {
-        cancellables.forEach { it.cancel() }
+        cancellables.forEach {
+            try {
+                it.cancel()
+            } catch (e: Exception) {
+                log.error(e) { "Error cancelling cancellable" }
+            }
+        }
+
         cancellables.clear()
     }
 }

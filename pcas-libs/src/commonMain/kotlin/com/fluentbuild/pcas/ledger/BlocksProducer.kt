@@ -4,5 +4,5 @@ import com.fluentbuild.pcas.async.Cancellable
 
 internal fun interface BlocksProducer {
 
-	fun subscribe(consumer: (Block) -> Unit): Cancellable
+	fun subscribe(consumer: (Set<Block>) -> Unit): Cancellable
 }

@@ -2,7 +2,7 @@ package com.fluentbuild.pcas.logs
 
 import kotlin.reflect.KFunction
 
-expect class Log(className: String) {
+internal expect class Log(className: String) {
 
     fun debug(function: KFunction<*>, vararg args: Any)
 

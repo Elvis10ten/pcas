@@ -5,7 +5,7 @@ import android.net.wifi.WifiManager
 import com.fluentbuild.pcas.android.wifiManager
 import java.net.MulticastSocket
 
-internal class AndroidMulticastChannel internal constructor(
+internal class AndroidMulticastChannel(
     private val context: Context,
     socketWrapper: SocketWrapper<MulticastSocket>
 ): SecuredMulticastChannel(socketWrapper) {
@@ -17,6 +17,7 @@ internal class AndroidMulticastChannel internal constructor(
             setReferenceCounted(false)
             acquire()
         }
+
         super.init(receiver)
     }
 

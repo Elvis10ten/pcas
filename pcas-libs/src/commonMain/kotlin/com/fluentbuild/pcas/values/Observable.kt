@@ -1,4 +1,6 @@
-package com.fluentbuild.pcas.async
+package com.fluentbuild.pcas.values
+
+import com.fluentbuild.pcas.async.Cancellable
 
 /**
  * A simple Observable that emits [ValueT] to an observer.

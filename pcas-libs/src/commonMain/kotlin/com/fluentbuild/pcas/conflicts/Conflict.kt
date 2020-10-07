@@ -1,4 +1,4 @@
-package com.fluentbuild.pcas.middleware
+package com.fluentbuild.pcas.conflicts
 
 import com.fluentbuild.pcas.host.HostInfo
 import com.fluentbuild.pcas.ledger.Block

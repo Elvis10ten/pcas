@@ -3,14 +3,15 @@ package com.fluentbuild.pcas.host
 import android.content.Context
 import com.fluentbuild.pcas.android.wifiManager
 import com.fluentbuild.pcas.io.Address
+import com.fluentbuild.pcas.values.Provider
 import java.net.Inet4Address
 import java.net.InetAddress
 import java.net.NetworkInterface
 import java.net.SocketException
 
-class NetworkAddressProvider(private val context: Context): HostAddressProvider {
+internal class NetworkAddressProvider(private val context: Context): Provider<Address.Ipv4> {
 
-    override fun getAddress() = Address.Ipv4(getInetAddress().hostAddress)
+    override fun get() = Address.Ipv4(getInetAddress().hostAddress)
 
     private fun getInetAddress() = getWifiAddress() ?: getPrimaryInterfaceAddress()
 
@@ -34,6 +35,6 @@ class NetworkAddressProvider(private val context: Context): HostAddressProvider 
             .asSequence()
             .map { it.inetAddresses.asSequence() }
             .flatten()
-            .single { !it.isLoopbackAddress && it is Inet4Address }
+            .first { !it.isLoopbackAddress && it is Inet4Address }
     }
 }

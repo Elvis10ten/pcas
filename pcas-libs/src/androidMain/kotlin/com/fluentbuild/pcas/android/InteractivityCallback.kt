@@ -6,7 +6,7 @@ import android.content.Intent
 import android.content.IntentFilter
 import com.fluentbuild.pcas.logs.getLog
 
-class InteractivityCallback(
+internal class InteractivityCallback(
     private val context: Context,
     private val onChanged: () -> Unit
 ): BroadcastReceiver() {

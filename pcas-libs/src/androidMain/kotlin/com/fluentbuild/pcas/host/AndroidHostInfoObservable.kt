@@ -13,48 +13,39 @@ import com.fluentbuild.pcas.logs.getLog
 internal class AndroidHostInfoObservable(
     private val context: Context,
     private val mainHandler: Handler,
-    private val hostUuid: String,
+    private val hostUuid: Uuid,
     private val hostName: String,
-    private val addressProvider: HostAddressProvider,
-    private val unicastChannel: UnicastChannel
+    private val addressProvider: NetworkAddressProvider,
+    private val unicastChannel: UnicastChannel,
+    private val audioConfig: AudioConfig
 ): HostInfoObservable {
 
     private val log = getLog()
 
     override fun subscribe(observer: (HostInfo) -> Unit): Cancellable {
-        log.debug { "Watching HostInfo" }
-        val notifyConsumer = {
-            getCurrentHostInfo().let {
-                log.debug { "Current HostInfo: $it" }
-                observer(it)
-            }
-        }
+        log.debug { "Observing self HostInfo" }
+        val notifyObserver = { observer(currentValue) }
 
-        val activeNetworkCallback = ActiveNetworkCallback(context, mainHandler, notifyConsumer)
-        val interactivityCallback = InteractivityCallback(context, notifyConsumer)
+        val activeNetworkCallback = ActiveNetworkCallback(context, mainHandler, notifyObserver)
+        val interactivityCallback = InteractivityCallback(context, notifyObserver)
 
-        notifyConsumer()
+        notifyObserver()
         activeNetworkCallback.register()
         interactivityCallback.register()
 
         return Cancellable {
-            log.debug { "Stopping HostInfo watch" }
+            log.debug { "Stopping self HostInfo observation" }
             activeNetworkCallback.unregister()
             interactivityCallback.unregister()
         }
     }
 
-    override val currentValue: HostInfo
-        get() = getCurrentHostInfo()
-
-    private fun getCurrentHostInfo(): HostInfo {
-        return HostInfo(
-            uuid = hostUuid,
-            name = hostName,
-            address = addressProvider.getAddress(),
-            port = unicastChannel.getPort(),
-            isInteractive = context.powerManager.isInteractive,
-            minBufferSizeBytes = AudioConfig.minBufferSizeBytes
-        )
-    }
+    override val currentValue: HostInfo get() = HostInfo(
+        uuid = hostUuid,
+        name = hostName,
+        address = addressProvider.get(),
+        port = unicastChannel.getPort(),
+        isInteractive = context.powerManager.isInteractive,
+        minBufferSizeBytes = audioConfig.minBufferSizeBytes
+    )
 }

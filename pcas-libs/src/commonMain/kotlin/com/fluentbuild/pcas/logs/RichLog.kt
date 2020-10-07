@@ -9,9 +9,9 @@ object RichLog {
 	var observer: ((String) -> Unit)? = null
 
 	fun append(tag: String, message: () -> String, type: Type) {
-		val text = "<font color='${type.colorHex}'>$ $tag: ${message()}</font><br/><br/>"
-		cache.push(text)
-		observer?.invoke(text)
+		val line = "<font color='${type.colorHex}'>$ $tag: ${message()}</font><br/><br/>"
+		cache.push(line)
+		observer?.invoke(line)
 	}
 
 	fun getLines() = cache.getElements().joinToString(separator = "")

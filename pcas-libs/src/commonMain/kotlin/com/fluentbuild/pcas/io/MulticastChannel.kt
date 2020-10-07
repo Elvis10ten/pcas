@@ -6,7 +6,7 @@ internal interface MulticastChannel {
     fun init(receiver: MessageReceiver)
 
     @Throws(Exception::class)
-    fun broadcast(message: ByteArray, messageSize: Int)
+    fun broadcast(message: MarshalledMessage, messageSize: MarshalledMessageSize)
 
     fun close()
 }

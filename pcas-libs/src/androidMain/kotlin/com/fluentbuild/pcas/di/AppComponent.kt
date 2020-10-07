@@ -57,7 +57,7 @@ class AppComponent(
     val pcas by lazy {
         PcasRunner(
             middlewareModule.engine,
-            audioServiceModule.audioBlockWriter
+            audioServiceModule.audioBlocksProducer
         )
     }
 

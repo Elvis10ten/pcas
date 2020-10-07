@@ -4,10 +4,14 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.protobuf.ProtoNumber
 
 @Serializable
-class Uuid(
+data class Uuid(
 	@ProtoNumber(1)
 	val bytes: ByteArray
 ) {
+
+	override fun equals(other: Any?) = bytes.contentEquals((other as? Uuid)?.bytes)
+
+	override fun hashCode() = bytes.contentHashCode()
 
 	companion object {
 

@@ -2,7 +2,7 @@ package com.fluentbuild.pcas.services.audio
 
 import com.fluentbuild.pcas.utils.filterSet
 
-data class AudioProperty(val usages: Set<Usage>) {
+data class AudioProperty(private val usages: Set<Usage>) {
 
     val unidirectionalUsages = usages.filterSet { it.direction == Direction.UNIDIRECTIONAL }
 

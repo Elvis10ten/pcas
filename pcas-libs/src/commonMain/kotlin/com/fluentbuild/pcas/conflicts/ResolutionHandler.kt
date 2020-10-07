@@ -1,4 +1,4 @@
-package com.fluentbuild.pcas.middleware
+package com.fluentbuild.pcas.conflicts
 
 internal interface ResolutionHandler {
 

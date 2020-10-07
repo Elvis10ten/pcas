@@ -1,18 +1,39 @@
-package com.fluentbuild.pcas.middleware
+package com.fluentbuild.pcas.conflicts
 
 import com.fluentbuild.pcas.ledger.Block
 import com.fluentbuild.pcas.ledger.Ledger
-import com.fluentbuild.pcas.middleware.Conflict.Resolution
+import com.fluentbuild.pcas.conflicts.Conflict.Resolution
+import com.fluentbuild.pcas.services.ServiceId
+import com.fluentbuild.pcas.services.audio.AudioResolutionHandler
+import com.fluentbuild.pcas.utils.TimeProvider
 import com.fluentbuild.pcas.utils.filterSet
 import com.fluentbuild.pcas.utils.mapSet
 
-internal class ConflictsResolver {
+internal class ConflictsResolver(
+    private val timeProvider: TimeProvider
+) {
 
     private val resolutionHandlers: Map<ServiceId, ResolutionHandler>,
     fun resolve(ledger: Ledger): Set<Resolution> {
+        if(!canAttempt(resolution)) {
+            log.warn { "Ran too often. Ignoring resolution: $resolution" }
+            return
+        }
+
+        val currentTimestamp = timeProvider.currentTimeMillis()
+        lastResolutionTimestamp = currentTimestamp
+        congruentAction.count(resolution) { currentTimestamp - lastResolutionTimestamp < AudioResolutionHandler.ADJACENT_ACTION_WINDOW_MILLIS }
+
+        private val congruentAction = SoloConsecutiveCounter<Conflict.Resolution>()
+        private var lastResolutionTimestamp = 0L
+
         val conflicts = ledger.selfBlocks.mapSet { Conflict(it, it.getOthersConflict(ledger.othersBlocks)) }
         return resolve(conflicts)
     }
+
+
+    private fun canAttempt(currentResolution: Conflict.Resolution) =
+        congruentAction[currentResolution] >= AudioResolutionHandler.MAX_NUM_CONGRUENT_ADJACENT_ACTIONS
 
     fun release() {
 
@@ -48,5 +69,11 @@ internal class ConflictsResolver {
                     this.bondId == othersBlock.bondId &&
                     (othersBlock.hasPriority || othersBlock.isConnected)
         }
+    }
+
+    companion object {
+
+        const val ADJACENT_ACTION_WINDOW_MILLIS = 20 * 1000
+        const val MAX_NUM_CONGRUENT_ADJACENT_ACTIONS = 5
     }
 }

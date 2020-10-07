@@ -2,8 +2,9 @@ package com.fluentbuild.pcas.services.audio
 
 import com.fluentbuild.pcas.host.Uuid
 import com.fluentbuild.pcas.logs.getLog
+import com.fluentbuild.pcas.stream.StreamHandler
 
-class AndroidAudioStreamHandler: AudioStreamHandler {
+class AndroidAudioStreamHandler: StreamHandler {
 
     private val log = getLog()
 

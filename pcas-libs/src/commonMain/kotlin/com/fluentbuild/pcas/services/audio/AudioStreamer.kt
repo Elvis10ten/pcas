@@ -2,7 +2,7 @@ package com.fluentbuild.pcas.services.audio
 
 import com.fluentbuild.pcas.host.HostInfo
 
-interface AudioStreamer {
+internal interface AudioStreamer {
 
     fun start(destination: HostInfo)
 

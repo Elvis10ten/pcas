@@ -4,30 +4,30 @@ import android.content.Context
 import com.fluentbuild.pcas.android.bluetoothAdapter
 import com.fluentbuild.pcas.async.Cancellable
 import com.fluentbuild.pcas.async.SentinelCancellable
-import com.fluentbuild.pcas.peripheral.PeripheralConnector
-import com.fluentbuild.pcas.peripheral.PeripheralConnector.Action
+import com.fluentbuild.pcas.peripheral.PeripheralCommander
+import com.fluentbuild.pcas.peripheral.PeripheralCommander.Command
 import com.fluentbuild.pcas.logs.getLog
 
 abstract class BluetoothProfileConnector(
     private val context: Context,
     private val profileHolder: BluetoothProfileHolder,
     private val profileId: Int
-): PeripheralConnector {
+): PeripheralCommander {
 
     private val log = getLog()
     private var cancellable: Cancellable = SentinelCancellable
 
-    override fun perform(action: Action) {
-        log.debug(::perform, action)
+    override fun perform(command: Command) {
+        log.debug(::perform, command)
         cancellable.cancel()
 
         cancellable = profileHolder.useProfile(profileId) { profile ->
-            val bluetoothDevice = context.bluetoothAdapter.toBluetoothDevice(action.peripheral)
-            log.debug { "Performing action: $action" }
+            val bluetoothDevice = context.bluetoothAdapter.toBluetoothDevice(command.peripheral)
+            log.debug { "Performing action: $command" }
 
-            val actionInitiated = when(action) {
-                is Action.Connect -> profile.connect(bluetoothDevice)
-                is Action.Disconnect -> profile.disconnect(bluetoothDevice)
+            val actionInitiated = when(command) {
+                is Command.Connect -> profile.connect(bluetoothDevice)
+                is Command.Disconnect -> profile.disconnect(bluetoothDevice)
             }
             log.info { "Action initiated: $actionInitiated" }
         }

@@ -1,7 +1,7 @@
 package com.fluentbuild.pcas.di
 
 import com.fluentbuild.pcas.services.ServiceId
-import com.fluentbuild.pcas.middleware.ResolutionHandler
+import com.fluentbuild.pcas.conflicts.ResolutionHandler
 import com.fluentbuild.pcas.services.AUDIO_SERVICE_ID
 import com.fluentbuild.pcas.stream.StreamHandler
 

@@ -1,31 +1,30 @@
 package com.fluentbuild.pcas.services.audio
 
 import com.fluentbuild.pcas.host.HostInfo
-import com.fluentbuild.pcas.peripheral.PeripheralConnector.Action
-import com.fluentbuild.pcas.middleware.ResolutionHandler
-import com.fluentbuild.pcas.middleware.Conflict
+import com.fluentbuild.pcas.peripheral.PeripheralCommander.Command
+import com.fluentbuild.pcas.conflicts.ResolutionHandler
+import com.fluentbuild.pcas.conflicts.Conflict
 import com.fluentbuild.pcas.peripheral.Peripheral
-import com.fluentbuild.pcas.peripheral.PeripheralConnector
+import com.fluentbuild.pcas.peripheral.PeripheralCommander
 import com.fluentbuild.pcas.peripheral.audio.AudioProfile
 
-class AudioResolutionHandler(
+internal class AudioResolutionHandler(
     private val audioPeripheral: Peripheral,
-    private val a2dpConnector: PeripheralConnector,
-    private val hspConnector: PeripheralConnector,
-    private val audioStreamer: AudioStreamer
+    private val a2dpCommander: PeripheralCommander,
+    private val hspCommander: PeripheralCommander,
+    private val audioStreamer: AudioStreamer,
 ): ResolutionHandler {
 
     override fun handle(resolution: Conflict.Resolution) {
-        // todo: handle throttling maybe
         val audioProfile = AudioProfile.from(resolution.selfBlock.bondId)
         when(resolution) {
             is Conflict.Resolution.Connect -> {
                 stopStreaming()
-                connect(audioProfile)
+                audioProfile.connect()
             }
             is Conflict.Resolution.Disconnect -> {
                 stopStreaming()
-                disconnect(audioProfile)
+                audioProfile.disconnect()
             }
             is Conflict.Resolution.Stream -> {
                 startStreaming(resolution.destination)
@@ -36,29 +35,29 @@ class AudioResolutionHandler(
 
     override fun release() {
         stopStreaming()
-        a2dpConnector.release()
-        hspConnector.release()
+        a2dpCommander.release()
+        hspCommander.release()
     }
 
-    private fun startStreaming(remoteSink: HostInfo) {
-        audioStreamer.start(remoteSink)
+    private fun startStreaming(destination: HostInfo) {
+        audioStreamer.start(destination)
     }
 
     private fun stopStreaming() {
         audioStreamer.stop()
     }
 
-    private fun connect(audioProfile: AudioProfile) {
-        when(audioProfile) {
-            AudioProfile.A2DP -> a2dpConnector.perform(Action.Connect(audioPeripheral))
-            AudioProfile.HSP -> hspConnector.perform(Action.Connect(audioPeripheral))
+    private fun AudioProfile.connect() {
+        when(this) {
+            AudioProfile.A2DP -> a2dpCommander.perform(Command.Connect(audioPeripheral))
+            AudioProfile.HSP -> hspCommander.perform(Command.Connect(audioPeripheral))
         }
     }
 
-    private fun disconnect(audioProfile: AudioProfile) {
-        when(audioProfile) {
-            AudioProfile.A2DP -> a2dpConnector.perform(Action.Disconnect(audioPeripheral))
-            AudioProfile.HSP -> hspConnector.perform(Action.Disconnect(audioPeripheral))
+    private fun AudioProfile.disconnect() {
+        when(this) {
+            AudioProfile.A2DP -> a2dpCommander.perform(Command.Disconnect(audioPeripheral))
+            AudioProfile.HSP -> hspCommander.perform(Command.Disconnect(audioPeripheral))
         }
     }
 }

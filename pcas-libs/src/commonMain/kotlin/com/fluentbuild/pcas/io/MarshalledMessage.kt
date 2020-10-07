@@ -1,5 +1,5 @@
 package com.fluentbuild.pcas.io
 
-typealias MarshalledMessage = ByteArray
+internal typealias MarshalledMessage = ByteArray
 
-typealias MarshalledMessageSize = Int
+internal typealias MarshalledMessageSize = Int

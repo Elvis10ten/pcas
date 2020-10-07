@@ -9,7 +9,7 @@ import com.fluentbuild.pcas.android.CallStateCallback
 import com.fluentbuild.pcas.android.audioManager
 import com.fluentbuild.pcas.android.telephonyManager
 import com.fluentbuild.pcas.async.Cancellable
-import com.fluentbuild.pcas.async.Observable
+import com.fluentbuild.pcas.values.Observable
 import com.fluentbuild.pcas.logs.getLog
 
 internal class AudioPropertyObservable(

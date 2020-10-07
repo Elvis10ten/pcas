@@ -1,6 +1,6 @@
 package com.fluentbuild.pcas.di
 
-import com.fluentbuild.pcas.middleware.ConflictsResolver
+import com.fluentbuild.pcas.conflicts.ConflictsResolver
 import com.fluentbuild.pcas.Engine
 import com.fluentbuild.pcas.stream.StreamDemux
 
