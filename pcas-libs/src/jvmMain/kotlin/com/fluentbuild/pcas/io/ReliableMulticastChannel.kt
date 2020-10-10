@@ -2,9 +2,12 @@ package com.fluentbuild.pcas.io
 
 import com.fluentbuild.pcas.logs.getLog
 import java.io.IOException
+import java.net.Inet4Address
+import java.net.InetSocketAddress
 import java.net.MulticastSocket
+import java.net.NetworkInterface
 
-internal open class SecuredMulticastChannel(
+internal open class ReliableMulticastChannel(
     private val socketWrapper: SocketWrapper<MulticastSocket>
 ): MulticastChannel {
 
@@ -12,10 +15,18 @@ internal open class SecuredMulticastChannel(
 
     @Throws(IOException::class)
     override fun init(receiver: MessageReceiver) {
+        val f = NetworkInterface.getNetworkInterfaces()
+            .asSequence()
+            .first { boom ->
+                boom.inetAddresses.asSequence().any { !it.isLoopbackAddress && it is Inet4Address }
+            }
+        log.error { "hey: $f" }
         socketWrapper.init(MulticastSocket(MULTICAST_PORT)) {
+            trafficClass = IpTos.RELIABILITY.value
             loopbackMode = true
             timeToLive = MULTICAST_TTL
-            joinGroup(MULTICAST_ADDRESS.inetAddress)
+            networkInterface = f
+            joinGroup(InetSocketAddress(MULTICAST_ADDRESS.inetAddress, MULTICAST_PORT), f)
         }
 
         socketWrapper.startReceiving(receiver)

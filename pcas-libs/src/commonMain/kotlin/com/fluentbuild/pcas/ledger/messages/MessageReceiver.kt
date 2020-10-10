@@ -1,15 +1,18 @@
-package com.fluentbuild.pcas.ledger
+package com.fluentbuild.pcas.ledger.messages
 
 import com.fluentbuild.pcas.io.MarshalledMessage
 import com.fluentbuild.pcas.io.MarshalledMessageSize
 import com.fluentbuild.pcas.io.MessageReceiver
+import com.fluentbuild.pcas.ledger.LedgerDb
+import com.fluentbuild.pcas.ledger.LedgerWatchdog
+import com.fluentbuild.pcas.ledger.getBlocksMaxTimestamp
 import com.fluentbuild.pcas.utils.decode
 import com.fluentbuild.pcas.logs.getLog
 import kotlinx.serialization.protobuf.ProtoBuf
 
-internal class LedgerMessageReceiver(
+internal class MessageReceiver(
     private val protoBuf: ProtoBuf,
-    private val messageSender: LedgerMessageSender,
+    private val messageSender: MessageSender,
     private val ledgerDb: LedgerDb,
     private val watchdog: LedgerWatchdog
 ): MessageReceiver {
@@ -22,26 +25,34 @@ internal class LedgerMessageReceiver(
     }
 
     private fun onReceived(message: LedgerMessage) {
-        log.info { "Received message: $message" }
+        log.debug { "Received: $message" }
+        log.info { "Received: ${message::class.simpleName}" }
+
+        if(message is LedgerMessage.Essential) {
+            messageSender.sendAcknowledgement(message.sender, message.sequenceNumber)
+        }
 
         when(message) {
-            is LedgerMessage.Genesis -> {
+            is LedgerMessage.Essential.Genesis -> {
                 messageSender.sendUpdate()
             }
-            is LedgerMessage.Update -> {
+            is LedgerMessage.Essential.Update -> {
                 ledgerDb.upsert(message.senderBlocks)
             }
-            is LedgerMessage.Heartbeat -> {
+            is LedgerMessage.InEssential.Heartbeat -> {
                 watchdog.onHeartbeatReceived(message.sender)
                 if(message.isSelfBlocksOnSenderStale()) {
-                    log.warn { "Self blocks stale on message sender" }
+                    log.warn { "Self blocks STALE on message sender" }
                     messageSender.sendUpdate()
                 }
+            }
+            is LedgerMessage.InEssential.Ack -> {
+                messageSender.onAcknowledgmentReceived(message)
             }
         }
     }
 
-    private fun LedgerMessage.Heartbeat.isSelfBlocksOnSenderStale(): Boolean {
+    private fun LedgerMessage.InEssential.Heartbeat.isSelfBlocksOnSenderStale(): Boolean {
         val selfBlocksOnLocalMaxTimestamp = ledger.selfBlocks.getBlocksMaxTimestamp()
         val selfBlocksOnSenderMaxTimestamp = hostBlocksMaxTimestamp[ledger.self.uuid] ?: return true
         return selfBlocksOnLocalMaxTimestamp > selfBlocksOnSenderMaxTimestamp

@@ -29,7 +29,8 @@ internal class LedgerDb {
 
     fun upsert(hostBlocks: Set<Block>) {
         log.debug(::upsert, hostBlocks)
-        update(ledger.copy(blocks = ledger.blocks.upsert(hostBlocks)))
+        val updateBlocks = ledger.blocks.upsert(hostBlocks)
+        update(ledger.copy(blocks = updateBlocks))
     }
 
     fun delete(hostUuids: Set<Uuid>) {
@@ -41,11 +42,12 @@ internal class LedgerDb {
     fun updateSelf(newSelf: HostInfo) {
         log.debug(::updateSelf, newSelf)
         val updatedSelfBlocks = ledger.selfBlocks.mapSet { it.copy(owner = newSelf) }
-        update(ledger.copy(blocks = ledger.blocks.upsert(updatedSelfBlocks)))
+        val updatedBlocks = ledger.blocks.upsert(updatedSelfBlocks)
+        update(ledger.copy(self = newSelf, blocks = updatedBlocks))
     }
 
     private fun update(newLedger: Ledger) {
-        log.debug { "Ledger updated: $newLedger" }
+        log.debug(::update, newLedger)
         ledger = newLedger
         onLedgerUpdated?.invoke(newLedger)
     }

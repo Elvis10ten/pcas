@@ -4,10 +4,14 @@ import com.fluentbuild.pcas.async.ThreadRunner
 import com.fluentbuild.pcas.host.HostInfoObservable
 import com.fluentbuild.pcas.io.MulticastChannel
 import com.fluentbuild.pcas.ledger.*
+import com.fluentbuild.pcas.ledger.messages.MessageReceiver
+import com.fluentbuild.pcas.ledger.messages.SimpleMessageSender
 import com.fluentbuild.pcas.utils.TimeProvider
 import kotlinx.serialization.protobuf.ProtoBuf
+import kotlin.random.Random
 
 internal class LedgerModule(
+    random: Random,
     timeProvider: TimeProvider,
     threadRunner: () -> ThreadRunner,
     protoBuf: ProtoBuf,
@@ -18,10 +22,12 @@ internal class LedgerModule(
 
     private val ledgerDb = LedgerDb()
 
-    private val ledgerMessageSender = LedgerMessageSender(
+    private val ledgerMessageSender = SimpleMessageSender(
         protoBuf = protoBuf,
+        ledgerDb = ledgerDb,
+        runner = threadRunner(),
         multicast = multicast,
-        ledgerDb = ledgerDb
+        random = random
     )
 
     private val ledgerWatchdog = LedgerWatchdog(
@@ -31,7 +37,7 @@ internal class LedgerModule(
         timeProvider = timeProvider,
     )
 
-    private val ledgerMessageReceiver = LedgerMessageReceiver(
+    private val ledgerMessageReceiver = MessageReceiver(
         protoBuf = protoBuf,
         messageSender = ledgerMessageSender,
         ledgerDb = ledgerDb,

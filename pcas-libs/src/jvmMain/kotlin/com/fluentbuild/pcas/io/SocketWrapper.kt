@@ -23,7 +23,6 @@ internal class SocketWrapper<SocketT: DatagramSocket>(
 		log.debug { "Initializing SocketWrapper($newSocket)" }
 
 		try {
-			newSocket.trafficClass = IpTos.LOW_DELAY.value
 			modifier(newSocket)
 			socket = newSocket
 		} catch(e: Exception) {

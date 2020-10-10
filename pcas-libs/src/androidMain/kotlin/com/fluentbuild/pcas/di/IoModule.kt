@@ -18,7 +18,7 @@ internal class IoModule(
 
     internal val multicastChannel = AndroidMulticastChannel(appContext, getSocketWrapper())
 
-    internal val unicastChannel = SecuredUnicastChannel(getSocketWrapper())
+    internal val unicastChannel = UnreliableUnicastChannel(getSocketWrapper())
 
     private fun <SocketT: DatagramSocket> getSocketWrapper() =
         SocketWrapper<SocketT>(parceler, BufferObjectPool, threadRunner())

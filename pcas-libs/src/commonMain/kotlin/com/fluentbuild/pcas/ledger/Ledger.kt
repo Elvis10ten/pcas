@@ -14,9 +14,11 @@ data class Ledger(
 
     val peersBlocks = blocks.filterSet { it.owner != self }
 
-    val conflicts = selfBlocks.mapSet { Conflict(it, it.peersApexConflictBlock) }
+    val contentions = selfBlocks.mapSet { Conflict(it, it.peersApexContentionBlock) }
 
-    private val Block.peersApexConflictBlock get() = peersBlocks
+    val allHosts = blocks.groupBy { it.owner }
+
+    private inline val Block.peersApexContentionBlock get() = peersBlocks
         .filterSet { this.hasConflict(it) }
         .maxByOrNull { it.rank }
 }

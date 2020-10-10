@@ -48,6 +48,7 @@ class AppComponent(
     )
 
     private val ledgerModule = LedgerModule(
+        utilsModule.random,
         utilsModule.timeProvider,
         { asyncModule.provideThreadExecutor() },
         utilsModule.protoBuf,

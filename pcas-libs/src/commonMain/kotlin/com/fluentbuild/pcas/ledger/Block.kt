@@ -26,22 +26,32 @@ data class Block(
     @ProtoNumber(6)
     val bondState: PeripheralBond.State,
     @ProtoNumber(7)
-    val owner: HostInfo
+    val owner: HostInfo,
+    @ProtoNumber(8)
+    val canStream: Boolean
 ) {
 
     val isConnected = bondState == PeripheralBond.State.CONNECTED
 
     val hasPriority = priority != NO_PRIORITY
 
-    internal val rank by unsafeLazy {
-        val a = 5.0.pow(priority)
-        val b = booleanToInt(isConnected)
-        val c = booleanToInt(owner.isInteractive)
-        val d = log10(timestamp.toDouble())
-        a * b * c * d
+    private val maxPossibleConnectionAndInteractiveScore = 4 + 2
+
+    // Any device with a higher priority should always rank higher.
+    private val priorityScore = (maxPossibleConnectionAndInteractiveScore + 1.0).pow(priority)
+
+    private val connectionScore: Int get() {
+        // Connection should contribute more if we can't stream
+        val trueValue = if(canStream) 2 else 4
+        return if(isConnected) trueValue else 1
     }
 
-    private fun booleanToInt(boolean: Boolean) = if(boolean) 2 else 1
+    private val interactiveScore = if(owner.isInteractive) 2 else 1
+
+
+    private val timestampScore = log10(timestamp.toDouble())
+
+    internal val rank = priorityScore + connectionScore + interactiveScore + timestampScore
 
     override fun equals(other: Any?): Boolean {
         if(other !is Block) return false
@@ -54,8 +64,7 @@ data class Block(
     fun hasConflict(other: Block): Boolean {
         return serviceId == other.serviceId &&
                 profile == other.profile &&
-                peripheral == other.peripheral &&
-                (other.hasPriority || other.isConnected)
+                peripheral == other.peripheral
     }
 
     override fun hashCode(): Int {

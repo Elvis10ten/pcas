@@ -82,7 +82,8 @@ internal class AudioBlocksBuilder(
         priority = usages.maxOfOrNull { it.priority } ?: Block.NO_PRIORITY,
         timestamp = timeProvider.currentTimeMillis(),
         bondState = bond.state,
-        owner = hostObservable.currentValue
+        owner = hostObservable.currentValue,
+        canStream = bond.profile.canStream
     )
 
     companion object {

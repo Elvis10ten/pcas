@@ -17,13 +17,14 @@ internal open class JvmThreadRunner(
         TODO("Not yet implemented")
     }
 
-    override fun runOnMainRepeating(interval: Int, action: () -> Unit) {
+    override fun runOnMainRepeating(frequencyMillis: Int, action: () -> Unit) {
         TODO("Not yet implemented")
     }
 
     override fun runOnIo(action: () -> Unit) {
         futures += threadPool.submit {
             try {
+                requireNotInterrupted()
                 action()
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -35,5 +36,4 @@ internal open class JvmThreadRunner(
         futures.forEach { it.cancel(true) }
         futures.clear()
     }
-
 }

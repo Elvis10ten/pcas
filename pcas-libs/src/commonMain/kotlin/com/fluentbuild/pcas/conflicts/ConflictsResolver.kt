@@ -17,7 +17,7 @@ internal class ConflictsResolver(
 
     fun resolve(ledger: Ledger) {
         log.info { "Resolving conflict" }
-        val resolutions = ledger.conflicts.getResolutions()
+        val resolutions = ledger.contentions.getResolutions()
         debouncer.debounce { resolutions.handle() }
     }
 

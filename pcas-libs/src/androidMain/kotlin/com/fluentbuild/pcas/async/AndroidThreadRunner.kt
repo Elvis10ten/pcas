@@ -15,8 +15,10 @@ internal class AndroidThreadRunner(
         val runnable = object: Runnable {
 
             override fun run() {
-                action()
-                mainThreadRunnables.remove(this)
+                if(canRunOnMainThread()) {
+                    action()
+                    mainThreadRunnables.remove(this)
+                }
             }
         }
 
@@ -28,8 +30,10 @@ internal class AndroidThreadRunner(
         val runnable = object: Runnable {
 
             override fun run() {
-                action()
-                mainThreadRunnables.remove(this)
+                if(canRunOnMainThread()) {
+                    action()
+                    mainThreadRunnables.remove(this)
+                }
             }
         }
 
@@ -37,13 +41,13 @@ internal class AndroidThreadRunner(
         mainThreadHandler.postDelayed(runnable, delayMillis.toLong())
     }
 
-    override fun runOnMainRepeating(interval: Int, action: () -> Unit) {
-        val intervalLong = interval.toLong()
+    override fun runOnMainRepeating(frequencyMillis: Int, action: () -> Unit) {
+        val intervalLong = frequencyMillis.toLong()
         val runnable = object: Runnable {
 
             override fun run() {
-                action()
-                if(mainThreadRunnables.contains(this)) {
+                if(canRunOnMainThread()) {
+                    action()
                     mainThreadHandler.postDelayed(this, intervalLong)
                 }
             }
@@ -52,6 +56,8 @@ internal class AndroidThreadRunner(
         mainThreadRunnables += runnable
         mainThreadHandler.postDelayed(runnable, intervalLong)
     }
+
+    private fun Runnable.canRunOnMainThread() = mainThreadRunnables.contains(this)
 
     @MainThread
     override fun cancelAll() {

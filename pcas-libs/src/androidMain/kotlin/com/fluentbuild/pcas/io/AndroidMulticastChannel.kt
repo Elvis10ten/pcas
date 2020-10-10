@@ -8,7 +8,7 @@ import java.net.MulticastSocket
 internal class AndroidMulticastChannel(
     private val context: Context,
     socketWrapper: SocketWrapper<MulticastSocket>
-): SecuredMulticastChannel(socketWrapper) {
+): ReliableMulticastChannel(socketWrapper) {
 
     private var multicastLock: WifiManager.MulticastLock? = null
 

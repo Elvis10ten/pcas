@@ -4,13 +4,15 @@ import com.fluentbuild.pcas.host.HostInfo
 import java.io.IOException
 import java.net.DatagramSocket
 
-internal open class SecuredUnicastChannel(
+internal open class UnreliableUnicastChannel(
     private val socketWrapper: SocketWrapper<DatagramSocket>
 ): UnicastChannel {
 
     @Throws(IOException::class)
     override fun init(receiver: MessageReceiver) {
-        socketWrapper.init(DatagramSocket())
+        socketWrapper.init(DatagramSocket()) {
+            trafficClass = IpTos.LOW_DELAY.value
+        }
         socketWrapper.startReceiving(receiver)
     }
 

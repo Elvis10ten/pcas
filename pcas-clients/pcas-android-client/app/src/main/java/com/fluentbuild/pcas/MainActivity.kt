@@ -1,10 +1,9 @@
 package com.fluentbuild.pcas
 
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Base64
-import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
 import com.fluentbuild.pcas.async.Cancellables
 import com.fluentbuild.pcas.di.AppComponent
 import com.fluentbuild.pcas.host.Uuid
@@ -13,10 +12,10 @@ import com.fluentbuild.pcas.peripheral.Peripheral
 import com.fluentbuild.pcas.services.ServicesProvider
 import com.fluentbuild.pcas.services.ServicesRenderer
 import kotlinx.android.synthetic.main.activity_main.*
+import java.nio.ByteBuffer
 import java.util.*
 import javax.crypto.KeyGenerator
 import javax.crypto.spec.SecretKeySpec
-import java.nio.ByteBuffer
 
 class MainActivity : AppCompatActivity() {
 
@@ -62,7 +61,6 @@ class MainActivity : AppCompatActivity() {
         )
         appComponent.init(BuildConfig.DEBUG)
         cancellables += appComponent.engine.run()
-        Log.i("akon", "onCreated")
     }
 
     override fun onDestroy() {
