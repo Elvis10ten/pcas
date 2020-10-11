@@ -33,4 +33,9 @@ class ConsoleRenderer(consoleCard: CardView) {
             }
         }
     }
+
+    fun clearConsole() {
+        RichLog.clear()
+        textView.text = ""
+    }
 }

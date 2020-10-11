@@ -56,8 +56,8 @@ internal class ContentionsResolver(
     }
 
     private fun Contention.shouldStreamToApex() =
-        selfBlock.canStream &&
-                peersApexBlock?.canStream == true &&
+        selfBlock.canStreamData &&
+                peersApexBlock?.canHandleDataStream == true &&
                 selfBlock.hasPriority &&
                 !selfBlock.isConnected &&
                 peersApexBlock.isConnected

@@ -20,6 +20,8 @@ internal class AudioPropertyObservable(
 ): Observable<AudioProperty> {
 
     private val log = getLog()
+    private val audioManager get() = context.audioManager
+    private val telephonyManager get() = context.telephonyManager
 
     override fun subscribe(observer: (AudioProperty) -> Unit): Cancellable {
         log.debug { "Observing AudioProperty" }
@@ -40,9 +42,9 @@ internal class AudioPropertyObservable(
     }
 
     private fun getCurrentAudioProperty(): AudioProperty {
-        val usages = context.audioManager.activePlaybackConfigurations.mapSetNotNullMutable { it.toAudioPropertyUsage() }
+        val usages = audioManager.activePlaybackConfigurations.mapSetNotNullMutable { it.toAudioPropertyUsage() }
 
-        if(context.telephonyManager.callState != TelephonyManager.CALL_STATE_IDLE) {
+        if(telephonyManager.callState != TelephonyManager.CALL_STATE_IDLE) {
             usages += AudioProperty.Usage.TELEPHONY_CALL
         }
 

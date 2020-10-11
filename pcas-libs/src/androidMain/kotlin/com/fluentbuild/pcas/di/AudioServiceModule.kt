@@ -2,6 +2,7 @@ package com.fluentbuild.pcas.di
 
 import android.content.Context
 import android.os.Handler
+import com.fluentbuild.pcas.bluetooth.BluetoothProfileHolder
 import com.fluentbuild.pcas.HostInfoObservable
 import com.fluentbuild.pcas.async.Debouncer
 import com.fluentbuild.pcas.peripheral.Peripheral

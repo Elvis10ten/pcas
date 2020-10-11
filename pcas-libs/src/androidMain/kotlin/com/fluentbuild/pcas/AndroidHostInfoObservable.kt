@@ -41,13 +41,13 @@ internal class AndroidHostInfoObservable(
         }
     }
 
-    override val currentValue: HostInfo
+	override val currentValue: HostInfo
 		get() = HostInfo(
-        uuid = hostUuid,
-        name = hostName,
-        address = addressProvider.get(),
-        port = unicastChannel.getPort(),
-        isInteractive = context.powerManager.isInteractive,
-        minBufferSizeBytes = audioConfig.minBufferSizeBytes
-    )
+			uuid = hostUuid,
+			name = hostName,
+			address = addressProvider.get(),
+			port = unicastChannel.getPort(),
+			isInteractive = context.powerManager.isInteractive,
+			minBufferSizeBytes = audioConfig.minBufferSizeBytes
+		)
 }

@@ -2,15 +2,18 @@ package com.fluentbuild.pcas.services.audio
 
 import android.bluetooth.BluetoothProfile
 import android.content.Context
+import com.fluentbuild.pcas.bluetooth.BluetoothProfileHolder
 import com.fluentbuild.pcas.android.BluetoothProfileStateCallback
 import com.fluentbuild.pcas.android.bluetoothAdapter
 import com.fluentbuild.pcas.async.Cancellable
-import com.fluentbuild.pcas.async.Cancellables
+import com.fluentbuild.pcas.async.SentinelCancellable
+import com.fluentbuild.pcas.bluetooth.getPeripheralBondState
+import com.fluentbuild.pcas.bluetooth.toPeripheralProfile
 import com.fluentbuild.pcas.logs.getLog
 import com.fluentbuild.pcas.peripheral.Peripheral
 import com.fluentbuild.pcas.peripheral.PeripheralBond
 import com.fluentbuild.pcas.peripheral.PeripheralProfile
-import com.fluentbuild.pcas.services.AndroidBluetoothProfileId
+import com.fluentbuild.pcas.bluetooth.toBluetoothDevice
 import com.fluentbuild.pcas.values.Observable
 
 internal class AndroidAudioBondsObservable(
@@ -23,45 +26,47 @@ internal class AndroidAudioBondsObservable(
     private val bluetoothDevice by lazy { context.bluetoothAdapter.toBluetoothDevice(audioPeripheral) }
 
     override fun subscribe(observer: (PeripheralBond) -> Unit): Cancellable {
-        val loadBondsCancellable = Cancellables()
+        log.debug { "Observing AudioBonds" }
+        val profileCancellables = mutableMapOf<PeripheralProfile, Cancellable>()
         val stateCallback = BluetoothProfileStateCallback(context) { profile ->
-            loadBonds(profile, loadBondsCancellable, observer)
+            profileCancellables[profile]?.cancel()
+            profileCancellables[profile] = loadBonds(profile, observer)
         }
 
-        loadBonds(PeripheralProfile.A2DP, loadBondsCancellable, observer)
-        loadBonds(PeripheralProfile.HSP, loadBondsCancellable, observer)
+        profileCancellables[PeripheralProfile.A2DP] = loadBonds(PeripheralProfile.A2DP, observer)
+        profileCancellables[PeripheralProfile.HSP] = loadBonds(PeripheralProfile.HSP, observer)
         stateCallback.register()
 
         return Cancellable {
-            log.debug { "Cancelling watcher" }
+            log.debug { "Cancelling AudioBonds observation" }
             stateCallback.unregister()
-            loadBondsCancellable.cancel()
+            profileCancellables.values.forEach { it.cancel() }
             profileHolder.clearCache(BluetoothProfile.A2DP)
             profileHolder.clearCache(BluetoothProfile.HEADSET)
         }
     }
 
-    private fun loadBonds(profile: PeripheralProfile, cancellables: Cancellables, observer: (PeripheralBond) -> Unit) {
-        when(profile) {
+    private fun loadBonds(profile: PeripheralProfile, observer: (PeripheralBond) -> Unit): Cancellable {
+        return when(profile) {
             PeripheralProfile.A2DP -> {
-                cancellables += profileHolder.useProfile(BluetoothProfile.A2DP) {
-                    mapToBonds(BluetoothProfile.A2DP, it)?.let(observer)
+                profileHolder.useProfile(BluetoothProfile.A2DP) {
+                    it.getPeripheralBond()?.let(observer)
                 }
             }
             PeripheralProfile.HSP -> {
-                cancellables += profileHolder.useProfile(BluetoothProfile.HEADSET) {
-                    mapToBonds(BluetoothProfile.HEADSET, it)?.let(observer)
+                profileHolder.useProfile(BluetoothProfile.HEADSET) {
+                    it.getPeripheralBond()?.let(observer)
                 }
             }
-            else -> log.error { "$profile not supported in audio service" }
+            else -> {
+                log.warn { "$profile not supported in audio service" }
+                SentinelCancellable
+            }
         }
     }
 
-    private fun mapToBonds(profileId: AndroidBluetoothProfileId, profile: BluetoothProfile): PeripheralBond? {
-        val state = profile.getConnectionState(bluetoothDevice).toPeripheralState() ?: return null
-        return PeripheralBond(
-            profile = profileId.toPeripheralProfile(),
-            state = state
-        )
+    private fun BluetoothProfile.getPeripheralBond(): PeripheralBond? {
+        val peripheralBondState = getPeripheralBondState(bluetoothDevice) ?: return null
+        return PeripheralBond(toPeripheralProfile(), peripheralBondState)
     }
 }

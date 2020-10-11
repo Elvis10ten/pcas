@@ -1,6 +1,7 @@
 package com.fluentbuild.pcas.ledger
 
 import com.fluentbuild.pcas.HostInfo
+import com.fluentbuild.pcas.Model
 import com.fluentbuild.pcas.peripheral.Peripheral
 import com.fluentbuild.pcas.services.ServiceId
 import com.fluentbuild.pcas.peripheral.PeripheralBond
@@ -12,23 +13,25 @@ import kotlin.math.pow
 
 @Serializable
 data class Block(
-	@ProtoNumber(1)
+    @ProtoNumber(1)
     val serviceId: ServiceId,
-	@ProtoNumber(2)
+    @ProtoNumber(2)
     val profile: PeripheralProfile,
-	@ProtoNumber(3)
+    @ProtoNumber(3)
     val peripheral: Peripheral,
-	@ProtoNumber(4)
+    @ProtoNumber(4)
     val priority: Int,
-	@ProtoNumber(5)
+    @ProtoNumber(5)
     val timestamp: Long,
-	@ProtoNumber(6)
+    @ProtoNumber(6)
     val bondState: PeripheralBond.State,
-	@ProtoNumber(7)
+    @ProtoNumber(7)
     val owner: HostInfo,
-	@ProtoNumber(8)
-    val canStream: Boolean
-) {
+    @ProtoNumber(8)
+    val canStreamData: Boolean,
+    @ProtoNumber(9)
+    val canHandleDataStream: Boolean
+): Model<Block> {
 
     val isConnected = bondState == PeripheralBond.State.CONNECTED
 
@@ -41,7 +44,7 @@ data class Block(
 
     private val connectionScore: Int get() {
         // Connection should contribute more if we can't stream
-        val trueValue = if(canStream) 2 else 4
+        val trueValue = if(canStreamData) 2 else 4
         return if(isConnected) trueValue else 1
     }
 
@@ -60,10 +63,22 @@ data class Block(
                 owner == other.owner
     }
 
-    fun hasConflict(other: Block): Boolean {
+    fun hasContention(other: Block): Boolean {
         return serviceId == other.serviceId &&
                 profile == other.profile &&
                 peripheral == other.peripheral
+    }
+
+    override fun isDuplicate(other: Block): Boolean {
+        return serviceId == other.serviceId &&
+                profile == other.profile &&
+                peripheral == other.peripheral &&
+                priority == other.priority &&
+                timestamp == other.timestamp &&
+                bondState == other.bondState &&
+                owner == other.owner &&
+                canStreamData == other.canStreamData &&
+                canHandleDataStream == other.canHandleDataStream
     }
 
     override fun hashCode(): Int {

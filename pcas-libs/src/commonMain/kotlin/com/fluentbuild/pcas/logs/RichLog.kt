@@ -16,6 +16,10 @@ object RichLog {
 
 	fun getLines() = cache.getElements().joinToString(separator = "")
 
+	fun clear() {
+		cache.clear()
+	}
+
 	enum class Type(val colorHex: String) {
 		INFO("#6272a4"),
 		WARN("#ffb86c"),

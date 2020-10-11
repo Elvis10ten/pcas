@@ -17,14 +17,6 @@ internal sealed class LedgerMessage {
         abstract val sequenceNumber: Int
 
         @Serializable
-        data class Genesis(
-			@ProtoNumber(1)
-            override val sender: Uuid,
-			@ProtoNumber(2)
-            override val sequenceNumber: Int
-        ): Essential()
-
-        @Serializable
         data class Update(
 			@ProtoNumber(1)
             override val sender: Uuid,
@@ -36,6 +28,12 @@ internal sealed class LedgerMessage {
     }
 
     sealed class InEssential: LedgerMessage() {
+
+		@Serializable
+		data class Genesis(
+			@ProtoNumber(1)
+			override val sender: Uuid
+		): InEssential()
 
         @Serializable
         data class Heartbeat(

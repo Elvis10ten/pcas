@@ -16,9 +16,9 @@ data class Ledger(
 
     val contentions = selfBlocks.mapSet { Contention(it, it.peersApexContentionBlock) }
 
-    val allHosts = blocks.groupBy { it.owner }
+    val allPeers = peersBlocks.groupBy { it.owner }
 
     private inline val Block.peersApexContentionBlock get() = peersBlocks
-        .filterSet { this.hasConflict(it) }
+        .filterSet { this.hasContention(it) }
         .maxByOrNull { it.rank }
 }

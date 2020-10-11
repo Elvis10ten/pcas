@@ -1,44 +1,40 @@
-package com.fluentbuild.pcas.services.audio
+package com.fluentbuild.pcas.bluetooth
 
-import android.bluetooth.BluetoothAdapter
-import android.bluetooth.BluetoothDevice
-import android.bluetooth.BluetoothProfile
+import android.bluetooth.*
 import android.os.RemoteException
 import com.fluentbuild.pcas.io.Address
 import com.fluentbuild.pcas.peripheral.Peripheral
 import com.fluentbuild.pcas.peripheral.PeripheralBond
 import com.fluentbuild.pcas.peripheral.PeripheralProfile
-import com.fluentbuild.pcas.services.AndroidBluetoothProfileId
-import com.fluentbuild.pcas.services.AndroidBluetoothProfileState
-
+import com.fluentbuild.pcas.utils.VersionUtils
 
 internal fun BluetoothAdapter.toBluetoothDevice(peripheral: Peripheral): BluetoothDevice =
     getRemoteDevice(peripheral.address.colonHex)
 
 internal fun BluetoothDevice.toPeripheral() = Peripheral(name, Address.Mac(address))
 
-internal fun AndroidBluetoothProfileId.toPeripheralProfile(): PeripheralProfile {
-    return when(this) {
-        BluetoothProfile.A2DP -> PeripheralProfile.A2DP
-        BluetoothProfile.HEADSET -> PeripheralProfile.HSP
-        BluetoothProfile.HID_DEVICE -> PeripheralProfile.HID
-        else -> error("Invalid bluetooth profile id: $this")
-    }
-}
-
-internal fun AndroidBluetoothProfileState.toPeripheralState(): PeripheralBond.State? {
-    return when(this) {
+internal fun BluetoothProfile.getPeripheralBondState(device: BluetoothDevice): PeripheralBond.State? {
+    return when(getConnectionState(device)) {
         BluetoothProfile.STATE_CONNECTED -> PeripheralBond.State.CONNECTED
         BluetoothProfile.STATE_DISCONNECTED -> PeripheralBond.State.DISCONNECTED
         else -> null
     }
 }
 
+internal fun BluetoothProfile.toPeripheralProfile(): PeripheralProfile {
+    return when {
+        this is BluetoothA2dp -> PeripheralProfile.A2DP
+        this is BluetoothHeadset -> PeripheralProfile.HSP
+        VersionUtils.isAtLeastAndroidPie() && this is BluetoothHidDevice -> PeripheralProfile.HID
+        else -> error("Unsupported bluetooth profile: $this")
+    }
+}
+
 internal fun BluetoothProfile.isConnected(device: BluetoothDevice) =
-    getConnectionState(device).toPeripheralState() == PeripheralBond.State.CONNECTED
+    getPeripheralBondState(device) == PeripheralBond.State.CONNECTED
 
 internal fun BluetoothProfile.isDisconnected(device: BluetoothDevice) =
-    getConnectionState(device).toPeripheralState() == PeripheralBond.State.DISCONNECTED
+    getPeripheralBondState(device) == PeripheralBond.State.DISCONNECTED
 
 @Throws(RemoteException::class)
 internal fun BluetoothProfile.connect(device: BluetoothDevice): Boolean {

@@ -12,7 +12,7 @@ internal abstract class MessageSender(
     private val senderUuid get() = ledger.self.uuid
 
     fun sendGenesis() {
-        send(LedgerMessage.Essential.Genesis(senderUuid, getNextSequenceNumber()))
+        send(LedgerMessage.InEssential.Genesis(senderUuid))
     }
 
     fun sendUpdate() {

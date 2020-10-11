@@ -5,4 +5,6 @@ import android.os.Build
 object VersionUtils {
 
 	fun isAtLeastAndroidTen() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q
+
+	fun isAtLeastAndroidPie() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.P
 }

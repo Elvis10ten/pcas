@@ -33,7 +33,7 @@ internal class MessageReceiver(
         }
 
         when(message) {
-            is LedgerMessage.Essential.Genesis -> {
+            is LedgerMessage.InEssential.Genesis -> {
                 messageSender.sendUpdate()
             }
             is LedgerMessage.Essential.Update -> {

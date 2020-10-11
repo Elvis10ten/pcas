@@ -59,6 +59,16 @@ class MainActivity : AppCompatActivity() {
         )
         appComponent.init(BuildConfig.DEBUG)
         cancellables += appComponent.engine.run()
+
+        bottomAppBarView.setOnMenuItemClickListener { item ->
+            when(item.itemId) {
+                R.id.actionClearConsole -> {
+                    consoleRenderer.clearConsole()
+                    true
+                }
+                else -> false
+            }
+        }
     }
 
     override fun onDestroy() {

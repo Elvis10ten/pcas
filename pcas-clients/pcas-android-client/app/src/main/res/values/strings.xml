@@ -5,10 +5,12 @@
     <string name="captionBonded">Bonded</string>
     <string name="captionUnbonded">Unbonded</string>
     <string name="captionBonding">Bonding…</string>
-    <string name="actionPair">Pair</string>
 
     <string name="serviceAudio">Audio</string>
     <string name="serviceMouse">Mouse</string>
     <string name="serviceKeypad">Keypad</string>
     <string name="serviceHealth">Health</string>
+
+    <string name="actionSetup">Setup</string>
+    <string name="actionClearConsole">Clear console</string>
 </resources>

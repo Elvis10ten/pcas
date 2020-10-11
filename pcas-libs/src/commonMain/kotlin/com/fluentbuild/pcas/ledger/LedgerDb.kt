@@ -5,7 +5,6 @@ import com.fluentbuild.pcas.Uuid
 import com.fluentbuild.pcas.utils.filterSet
 import com.fluentbuild.pcas.logs.getLog
 import com.fluentbuild.pcas.utils.mapSet
-import com.fluentbuild.pcas.utils.upsert
 
 internal class LedgerDb {
 
@@ -29,8 +28,14 @@ internal class LedgerDb {
 
     fun upsert(hostBlocks: Set<Block>) {
         log.debug(::upsert, hostBlocks)
-        val updateBlocks = ledger.blocks.upsert(hostBlocks)
-        update(ledger.copy(blocks = updateBlocks))
+        val newBlocks = ledger.blocks.getOnlyNewBlocks(hostBlocks)
+
+        if(newBlocks.isNotEmpty()) {
+            val updatedBlocks = ledger.blocks.upsert(newBlocks)
+            update(ledger.copy(blocks = updatedBlocks))
+        } else {
+            log.warn { "Ignoring duplicate blocks" }
+        }
     }
 
     fun delete(hostUuids: Set<Uuid>) {

@@ -84,7 +84,8 @@ internal class AudioBlocksBuilder(
         timestamp = timeProvider.currentTimeMillis(),
         bondState = bond.state,
         owner = hostObservable.currentValue,
-        canStream = canPlatformStream && bond.profile.canStream
+        canStreamData = canPlatformStream && bond.profile.supportsStreaming,
+        canHandleDataStream = bond.profile.supportsStreaming
     )
 
     companion object {

@@ -6,5 +6,3 @@ internal inline fun <T, R> Set<T>.mapSet(transform: (T) -> R): Set<R> = mapTo(mu
 
 internal inline fun <T, R: Any> Collection<T>.mapSetNotNullMutable(transform: (T) -> R?): MutableSet<R> =
 	mapNotNullTo(mutableSetOf(), transform)
-
-internal fun <ElementT> Set<ElementT>.upsert(elements: Set<ElementT>): Set<ElementT> = (this - elements) + elements

@@ -1,12 +1,16 @@
-package com.fluentbuild.pcas.services.audio
+package com.fluentbuild.pcas.bluetooth
 
 import android.content.Context
+import com.fluentbuild.pcas.bluetooth.BluetoothProfileHolder
 import com.fluentbuild.pcas.android.bluetoothAdapter
 import com.fluentbuild.pcas.async.Cancellable
 import com.fluentbuild.pcas.async.SentinelCancellable
+import com.fluentbuild.pcas.bluetooth.connect
+import com.fluentbuild.pcas.bluetooth.disconnect
 import com.fluentbuild.pcas.peripheral.PeripheralCommander
 import com.fluentbuild.pcas.peripheral.PeripheralCommander.Command
 import com.fluentbuild.pcas.logs.getLog
+import com.fluentbuild.pcas.bluetooth.toBluetoothDevice
 
 internal abstract class BluetoothPeripheralCommander(
     private val context: Context,
@@ -29,6 +33,7 @@ internal abstract class BluetoothPeripheralCommander(
                 is Command.Connect -> profile.connect(bluetoothDevice)
                 is Command.Disconnect -> profile.disconnect(bluetoothDevice)
             }
+
             log.info { "Action initiated: $actionInitiated" }
         }
     }

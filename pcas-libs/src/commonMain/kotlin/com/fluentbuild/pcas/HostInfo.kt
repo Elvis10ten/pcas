@@ -19,9 +19,18 @@ data class HostInfo(
     val isInteractive: Boolean,
 	@ProtoNumber(6)
     val minBufferSizeBytes: Int
-) {
+): Model<HostInfo> {
 
     override fun equals(other: Any?) = uuid == (other as? HostInfo)?.uuid
 
     override fun hashCode() = uuid.hashCode()
+
+	override fun isDuplicate(other: HostInfo): Boolean {
+		return uuid == this.uuid &&
+				name == this.name &&
+				address == this.address &&
+				port == this.port &&
+				isInteractive == this.isInteractive &&
+				minBufferSizeBytes == this.minBufferSizeBytes
+	}
 }

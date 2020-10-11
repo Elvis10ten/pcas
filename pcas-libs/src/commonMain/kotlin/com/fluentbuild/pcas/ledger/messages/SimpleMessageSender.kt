@@ -2,8 +2,6 @@ package com.fluentbuild.pcas.ledger.messages
 
 import com.fluentbuild.pcas.async.ThreadRunner
 import com.fluentbuild.pcas.Uuid
-import com.fluentbuild.pcas.io.MarshalledMessage
-import com.fluentbuild.pcas.io.MarshalledMessageSize
 import com.fluentbuild.pcas.io.SecureMulticastChannel
 import com.fluentbuild.pcas.ledger.LedgerDb
 import com.fluentbuild.pcas.logs.getLog
@@ -31,30 +29,31 @@ internal class SimpleMessageSender(
 	override fun send(message: LedgerMessage) {
 		log.debug { "Sending message: $message" }
 		log.info { "Sending message: ${message::class.simpleName}" }
-		val marshalledMessage = protoBuf.encodeToByteArray(message)
 
 		if(message is LedgerMessage.Essential) {
-			sendReliably(marshalledMessage, marshalledMessage.size, message.sequenceNumber)
+			sendReliably(message, message.sequenceNumber)
 		} else {
+			val marshalledMessage = protoBuf.encodeToByteArray(message)
 			multicast.send(marshalledMessage, marshalledMessage.size)
 		}
 	}
 
-	private fun sendReliably(message: MarshalledMessage, messageSize: MarshalledMessageSize, sequenceNumber: Int) {
+	private fun sendReliably(message: LedgerMessage, sequenceNumber: Int) {
 		clear()
 		currentSequenceNumber = sequenceNumber
-		// By design: There is usually at least one host
-		expectedNumberOfAcknowledgements = ledger.allHosts.size
+		expectedNumberOfAcknowledgements = ledger.allPeers.size
+		if(expectedNumberOfAcknowledgements == 0) expectedNumberOfAcknowledgements = 1
 		log.info { "Current SeqNum: $currentSequenceNumber, Expected ACKs: $expectedNumberOfAcknowledgements" }
 
-		multicast.send(message, messageSize)
+		val marshalledMessage = protoBuf.encodeToByteArray(message)
+		multicast.send(marshalledMessage, marshalledMessage.size)
 
 		runner.runOnMainDelayed(getRetryDelay(), object: Function0<Unit> {
 
 			override fun invoke() {
 				numRetries++
-				log.warn { "Retrying last message... (count = $numRetries)" }
-				multicast.send(message, messageSize)
+				log.warn { "Retrying last message... (count = $numRetries, seqNum: $currentSequenceNumber)" }
+				multicast.send(marshalledMessage, marshalledMessage.size)
 
 				if(!isAcknowledgementsComplete() && canRetry()) {
 					runner.runOnMainDelayed(getRetryDelay(), this)
@@ -70,6 +69,7 @@ internal class SimpleMessageSender(
 				acknowledgements.add(sender)
 
 				if(isAcknowledgementsComplete()) {
+					log.info { "ACKs complete!" }
 					clear()
 				}
 			} else {

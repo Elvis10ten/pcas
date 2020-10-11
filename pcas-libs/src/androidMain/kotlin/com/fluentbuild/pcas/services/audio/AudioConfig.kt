@@ -5,18 +5,18 @@ import android.media.AudioTrack
 
 internal object AudioConfig {
 
-    val sampleRateHz get() = 44100
+    const val SAMPLE_RATE_HZ = 44100
 
-    val channelMask get() = AudioFormat.CHANNEL_IN_STEREO
+    const val CHANNEL_MASK = AudioFormat.CHANNEL_IN_STEREO
 
-    val encoding get() = AudioFormat.ENCODING_PCM_16BIT
+    const val ENCODING = AudioFormat.ENCODING_PCM_16BIT
 
-    val minBufferSizeBytes get() = AudioTrack.getMinBufferSize(sampleRateHz, channelMask, encoding)
+    val minBufferSizeBytes get() = AudioTrack.getMinBufferSize(SAMPLE_RATE_HZ, CHANNEL_MASK, ENCODING)
 
     val audioFormat: AudioFormat
         get() = AudioFormat.Builder()
-            .setEncoding(encoding)
-            .setChannelMask(channelMask)
-            .setSampleRate(sampleRateHz)
+            .setEncoding(ENCODING)
+            .setChannelMask(CHANNEL_MASK)
+            .setSampleRate(SAMPLE_RATE_HZ)
             .build()
 }
