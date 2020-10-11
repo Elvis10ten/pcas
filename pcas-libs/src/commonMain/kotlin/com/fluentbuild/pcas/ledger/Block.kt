@@ -1,11 +1,10 @@
 package com.fluentbuild.pcas.ledger
 
-import com.fluentbuild.pcas.host.HostInfo
+import com.fluentbuild.pcas.HostInfo
 import com.fluentbuild.pcas.peripheral.Peripheral
 import com.fluentbuild.pcas.services.ServiceId
 import com.fluentbuild.pcas.peripheral.PeripheralBond
 import com.fluentbuild.pcas.peripheral.PeripheralProfile
-import com.fluentbuild.pcas.utils.unsafeLazy
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.protobuf.ProtoNumber
 import kotlin.math.log10
@@ -13,21 +12,21 @@ import kotlin.math.pow
 
 @Serializable
 data class Block(
-    @ProtoNumber(1)
+	@ProtoNumber(1)
     val serviceId: ServiceId,
-    @ProtoNumber(2)
+	@ProtoNumber(2)
     val profile: PeripheralProfile,
-    @ProtoNumber(3)
+	@ProtoNumber(3)
     val peripheral: Peripheral,
-    @ProtoNumber(4)
+	@ProtoNumber(4)
     val priority: Int,
-    @ProtoNumber(5)
+	@ProtoNumber(5)
     val timestamp: Long,
-    @ProtoNumber(6)
+	@ProtoNumber(6)
     val bondState: PeripheralBond.State,
-    @ProtoNumber(7)
+	@ProtoNumber(7)
     val owner: HostInfo,
-    @ProtoNumber(8)
+	@ProtoNumber(8)
     val canStream: Boolean
 ) {
 

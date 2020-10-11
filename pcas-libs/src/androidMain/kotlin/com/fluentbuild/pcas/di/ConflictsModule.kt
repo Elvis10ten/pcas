@@ -1,23 +1,21 @@
 package com.fluentbuild.pcas.di
 
-import com.fluentbuild.pcas.async.Debouncer
-import com.fluentbuild.pcas.conflicts.Throttle
-import com.fluentbuild.pcas.conflicts.ConflictsResolver
-import com.fluentbuild.pcas.conflicts.ResolutionHandler
+import com.fluentbuild.pcas.contention.ResolutionThrottler
+import com.fluentbuild.pcas.contention.ContentionsResolver
+import com.fluentbuild.pcas.contention.ResolutionHandler
 import com.fluentbuild.pcas.services.AUDIO_SERVICE_ID
-import com.fluentbuild.pcas.utils.TimeProvider
+import com.fluentbuild.pcas.utils.JvmTimeProvider
 
 internal class ConflictsModule(
-	timeProvider: TimeProvider,
-	audioResolutionHandler: ResolutionHandler,
-	debouncer: () -> Debouncer
+	timeProvider: JvmTimeProvider,
+	audioResolutionHandler: ResolutionHandler
 ) {
 
 	private val serviceHandlers = mapOf(
 		AUDIO_SERVICE_ID to audioResolutionHandler
 	)
 
-	private val circuitBreaker = Throttle(timeProvider)
+	private val circuitBreaker = ResolutionThrottler(timeProvider)
 
-	val conflictsResolver = ConflictsResolver(serviceHandlers, circuitBreaker, debouncer())
+	val conflictsResolver = ContentionsResolver(serviceHandlers, circuitBreaker)
 }

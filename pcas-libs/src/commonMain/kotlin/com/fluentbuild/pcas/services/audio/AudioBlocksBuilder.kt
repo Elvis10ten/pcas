@@ -1,6 +1,6 @@
 package com.fluentbuild.pcas.services.audio
 
-import com.fluentbuild.pcas.host.HostInfoObservable
+import com.fluentbuild.pcas.HostInfoObservable
 import com.fluentbuild.pcas.ledger.Block
 import com.fluentbuild.pcas.peripheral.Peripheral
 import com.fluentbuild.pcas.peripheral.PeripheralBond
@@ -10,9 +10,10 @@ import com.fluentbuild.pcas.services.AUDIO_SERVICE_ID
 import com.fluentbuild.pcas.utils.TimeProvider
 
 internal class AudioBlocksBuilder(
-    private val audioPeripheral: Peripheral,
+	private val audioPeripheral: Peripheral,
 	private val timeProvider: TimeProvider,
-    private val hostObservable: HostInfoObservable
+	private val hostObservable: HostInfoObservable,
+	private val canPlatformStream: Boolean
 ) {
 
     private var a2dpBondCache: PeripheralBond? = null
@@ -83,7 +84,7 @@ internal class AudioBlocksBuilder(
         timestamp = timeProvider.currentTimeMillis(),
         bondState = bond.state,
         owner = hostObservable.currentValue,
-        canStream = bond.profile.canStream
+        canStream = canPlatformStream && bond.profile.canStream
     )
 
     companion object {

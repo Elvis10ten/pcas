@@ -1,6 +1,6 @@
 package com.fluentbuild.pcas.services.audio
 
-import com.fluentbuild.pcas.host.HostInfo
+import com.fluentbuild.pcas.HostInfo
 
 internal interface AudioStreamer {
 

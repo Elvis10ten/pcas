@@ -1,4 +1,4 @@
-package com.fluentbuild.pcas.host
+package com.fluentbuild.pcas
 
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.protobuf.ProtoNumber

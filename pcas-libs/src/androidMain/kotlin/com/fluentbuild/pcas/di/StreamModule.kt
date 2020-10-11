@@ -1,13 +1,12 @@
 package com.fluentbuild.pcas.di
 
-import com.fluentbuild.pcas.io.UnicastChannel
+import com.fluentbuild.pcas.io.SecureUnicastChannel
 import com.fluentbuild.pcas.services.AUDIO_SERVICE_ID
-import com.fluentbuild.pcas.services.ServiceId
 import com.fluentbuild.pcas.stream.StreamDemux
 import com.fluentbuild.pcas.stream.StreamHandler
 
 internal class StreamModule(
-	unicast: UnicastChannel,
+	unicast: SecureUnicastChannel,
 	audioStreamHandler: StreamHandler
 ) {
 

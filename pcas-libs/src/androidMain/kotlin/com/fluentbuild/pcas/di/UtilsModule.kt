@@ -1,6 +1,7 @@
 package com.fluentbuild.pcas.di
 
-import com.fluentbuild.pcas.utils.TimeProvider
+import com.fluentbuild.pcas.utils.AndroidTimeProvider
+import com.fluentbuild.pcas.utils.JvmTimeProvider
 import kotlinx.serialization.protobuf.ProtoBuf
 import kotlinx.datetime.Clock
 import java.security.SecureRandom
@@ -15,5 +16,5 @@ internal class UtilsModule {
 
     val random = Random
 
-    val timeProvider = TimeProvider(Clock.System)
+    val timeProvider = AndroidTimeProvider()
 }

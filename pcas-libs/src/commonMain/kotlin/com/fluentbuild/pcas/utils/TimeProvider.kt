@@ -1,8 +1,12 @@
 package com.fluentbuild.pcas.utils
 
-import kotlinx.datetime.Clock
+internal interface TimeProvider {
 
-internal class TimeProvider(private val clock: Clock) {
+    fun currentTimeMillis(): Timestamp
 
-    fun currentTimeMillis() = clock.now().toEpochMilliseconds()
+    fun getElapsedRealtime(): ElapsedRealtime
 }
+
+internal typealias Timestamp = Long
+
+internal typealias ElapsedRealtime = Long

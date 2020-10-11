@@ -2,23 +2,20 @@ package com.fluentbuild.pcas.di
 
 import android.content.Context
 import android.os.Handler
-import com.fluentbuild.pcas.values.Observable
-import com.fluentbuild.pcas.host.HostInfoObservable
-import com.fluentbuild.pcas.peripheral.PeripheralCommander
-import com.fluentbuild.pcas.Engine
+import com.fluentbuild.pcas.HostInfoObservable
 import com.fluentbuild.pcas.async.Debouncer
-import com.fluentbuild.pcas.stream.StreamHandler
 import com.fluentbuild.pcas.peripheral.Peripheral
 import com.fluentbuild.pcas.services.audio.*
-import com.fluentbuild.pcas.utils.TimeProvider
+import com.fluentbuild.pcas.utils.JvmTimeProvider
+import com.fluentbuild.pcas.utils.VersionUtils
 
 internal class AudioServiceModule(
-    appContext: Context,
-    mainHandler: Handler,
-    audioPeripheral: Peripheral,
-    hostObservable: HostInfoObservable,
-    timeProvider: TimeProvider,
-    debouncer: () -> Debouncer
+	appContext: Context,
+	mainHandler: Handler,
+	audioPeripheral: Peripheral,
+	hostObservable: HostInfoObservable,
+	timeProvider: JvmTimeProvider,
+	debouncer: () -> Debouncer
 ) {
 
     private val audioStreamer = AndroidAudioStreamer()
@@ -30,8 +27,6 @@ internal class AudioServiceModule(
     private val hspConnector = HspCommander(appContext, profileHolder)
 
     private val propertyObservable = AudioPropertyObservable(appContext, mainHandler)
-
-    private val blocksBuilder = AudioBlocksBuilder(audioPeripheral, timeProvider, hostObservable)
 
     private val bondsObservable = AndroidAudioBondsObservable(appContext, audioPeripheral, profileHolder)
 
@@ -50,6 +45,7 @@ internal class AudioServiceModule(
         bondsObservable = bondsObservable,
         timeProvider = timeProvider,
         hostObservable = hostObservable,
-        debouncer = debouncer()
+        debouncer = debouncer(),
+		canPlatformStream = VersionUtils.isAtLeastAndroidTen()
     )
 }

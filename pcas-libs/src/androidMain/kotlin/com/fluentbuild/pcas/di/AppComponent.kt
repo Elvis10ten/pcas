@@ -3,7 +3,7 @@ package com.fluentbuild.pcas.di
 import android.content.Context
 import android.os.Handler
 import com.fluentbuild.pcas.Engine
-import com.fluentbuild.pcas.host.Uuid
+import com.fluentbuild.pcas.Uuid
 import com.fluentbuild.pcas.peripheral.Peripheral
 import timber.log.LogcatTree
 import timber.log.Timber
@@ -25,24 +25,19 @@ class AppComponent(
 
     private val ioModule = IoModule(
         appContext,
-        networkKey,
-        { asyncModule.provideThreadExecutor() },
-        utilsModule.secureRandom
-    )
-
-    private val hostModule = HostModule(
-        appContext,
         mainThreadHandler,
         hostUuid,
         hostName,
-        ioModule
+        networkKey,
+        { asyncModule.provideThreadExecutor() },
+        utilsModule.secureRandom
     )
 
     private val audioServiceModule = AudioServiceModule(
         appContext,
         mainThreadHandler,
         audioPeripheral,
-        hostModule.selfHostInfoWatcher,
+        ioModule.selfHostObservable,
         utilsModule.timeProvider,
         { asyncModule.provideDebouncer() }
     )
@@ -52,7 +47,7 @@ class AppComponent(
         utilsModule.timeProvider,
         { asyncModule.provideThreadExecutor() },
         utilsModule.protoBuf,
-        hostModule.selfHostInfoWatcher,
+        ioModule.selfHostObservable,
         ioModule.multicastChannel,
         listOf(
             audioServiceModule.audioBlocksProducer
@@ -66,15 +61,14 @@ class AppComponent(
 
     private val conflictModule = ConflictsModule(
         utilsModule.timeProvider,
-        audioServiceModule.resolutionHandler,
-        { asyncModule.provideDebouncer() }
+        audioServiceModule.resolutionHandler
     )
 
     val engine: Engine by lazy {
         Engine(
             ledgerProtocol = ledgerModule.ledgerProtocol,
             streamDemux = streamModule.streamDemux,
-            conflictsResolver = conflictModule.conflictsResolver
+            contentionsResolver = conflictModule.conflictsResolver
         )
     }
 

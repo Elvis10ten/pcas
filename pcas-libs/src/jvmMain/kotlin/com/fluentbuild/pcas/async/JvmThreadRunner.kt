@@ -1,5 +1,6 @@
 package com.fluentbuild.pcas.async
 
+import com.fluentbuild.pcas.logs.getLog
 import java.util.concurrent.Future
 import java.util.concurrent.ThreadPoolExecutor
 
@@ -7,6 +8,7 @@ internal open class JvmThreadRunner(
     private val threadPool: ThreadPoolExecutor
 ): ThreadRunner {
 
+    private val log = getLog()
     private val futures = mutableSetOf<Future<*>>()
 
     override fun runOnMain(action: () -> Unit) {
@@ -27,7 +29,7 @@ internal open class JvmThreadRunner(
                 requireNotInterrupted()
                 action()
             } catch (e: Exception) {
-                e.printStackTrace()
+                log.error(e) { "Error running on IO" }
             }
         }
     }

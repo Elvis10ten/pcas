@@ -17,7 +17,7 @@ internal fun Closeable.closeQuietly(log: Log) {
     }
 }
 
-internal fun DatagramSocket?.canReceive() = isOpenAndBounded() && !Thread.interrupted()
+internal fun DatagramSocket?.canReceive() = isOpenAndBounded() && !Thread.currentThread().isInterrupted
 
 internal fun DatagramSocket?.isOpenAndBounded() = this?.isClosed == false && isBound
 

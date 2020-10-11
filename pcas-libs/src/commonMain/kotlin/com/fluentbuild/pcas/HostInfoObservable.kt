@@ -1,4 +1,4 @@
-package com.fluentbuild.pcas.host
+package com.fluentbuild.pcas
 
 import com.fluentbuild.pcas.values.Observable
 

@@ -1,4 +1,4 @@
-package com.fluentbuild.pcas.host
+package com.fluentbuild.pcas
 
 import android.content.Context
 import android.os.Handler
@@ -7,17 +7,18 @@ import com.fluentbuild.pcas.services.audio.AudioConfig
 import com.fluentbuild.pcas.android.AddressChangeCallback
 import com.fluentbuild.pcas.android.InteractivityCallback
 import com.fluentbuild.pcas.android.powerManager
-import com.fluentbuild.pcas.io.UnicastChannel
+import com.fluentbuild.pcas.io.AndroidAddressProvider
+import com.fluentbuild.pcas.io.SecureUnicastChannel
 import com.fluentbuild.pcas.logs.getLog
 
 internal class AndroidHostInfoObservable(
-    private val context: Context,
-    private val mainHandler: Handler,
-    private val hostUuid: Uuid,
-    private val hostName: String,
-    private val addressProvider: NetworkAddressProvider,
-    private val unicastChannel: UnicastChannel,
-    private val audioConfig: AudioConfig
+	private val context: Context,
+	private val mainHandler: Handler,
+	private val hostUuid: Uuid,
+	private val hostName: String,
+	private val addressProvider: AndroidAddressProvider,
+	private val unicastChannel: SecureUnicastChannel,
+	private val audioConfig: AudioConfig
 ): HostInfoObservable {
 
     private val log = getLog()
@@ -40,7 +41,8 @@ internal class AndroidHostInfoObservable(
         }
     }
 
-    override val currentValue: HostInfo get() = HostInfo(
+    override val currentValue: HostInfo
+		get() = HostInfo(
         uuid = hostUuid,
         name = hostName,
         address = addressProvider.get(),

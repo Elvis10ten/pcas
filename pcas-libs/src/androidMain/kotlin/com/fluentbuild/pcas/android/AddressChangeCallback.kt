@@ -3,15 +3,15 @@ package com.fluentbuild.pcas.android
 import android.content.Context
 import android.net.*
 import android.os.Handler
-import com.fluentbuild.pcas.host.NetworkAddressProvider
+import com.fluentbuild.pcas.io.AndroidAddressProvider
 import com.fluentbuild.pcas.io.Address
 import com.fluentbuild.pcas.logs.getLog
 
 internal class AddressChangeCallback(
-    private val context: Context,
-    private val mainHandler: Handler,
-    private val addressProvider: NetworkAddressProvider,
-    private val onChanged: () -> Unit
+	private val context: Context,
+	private val mainHandler: Handler,
+	private val addressProvider: AndroidAddressProvider,
+	private val onChanged: () -> Unit
 ): ConnectivityManager.NetworkCallback() {
 
     private val log = getLog()

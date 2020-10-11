@@ -1,9 +1,9 @@
-package com.fluentbuild.pcas.conflicts
+package com.fluentbuild.pcas.contention
 
-import com.fluentbuild.pcas.host.HostInfo
+import com.fluentbuild.pcas.HostInfo
 import com.fluentbuild.pcas.ledger.Block
 
-data class Conflict(
+data class Contention(
     val selfBlock: Block,
     val peersApexBlock: Block?
 ) {

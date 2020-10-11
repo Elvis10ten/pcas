@@ -1,10 +1,10 @@
 package com.fluentbuild.pcas.ledger.messages
 
 import com.fluentbuild.pcas.async.ThreadRunner
-import com.fluentbuild.pcas.host.Uuid
+import com.fluentbuild.pcas.Uuid
 import com.fluentbuild.pcas.io.MarshalledMessage
 import com.fluentbuild.pcas.io.MarshalledMessageSize
-import com.fluentbuild.pcas.io.MulticastChannel
+import com.fluentbuild.pcas.io.SecureMulticastChannel
 import com.fluentbuild.pcas.ledger.LedgerDb
 import com.fluentbuild.pcas.logs.getLog
 import kotlinx.serialization.encodeToByteArray
@@ -16,7 +16,7 @@ internal class SimpleMessageSender(
 	private val protoBuf: ProtoBuf,
 	private val runner: ThreadRunner,
 	private val random: Random,
-	private val multicast: MulticastChannel,
+	private val multicast: SecureMulticastChannel,
 	private val ledgerDb: LedgerDb
 ): MessageSender(ledgerDb) {
 
@@ -29,13 +29,14 @@ internal class SimpleMessageSender(
 	private var expectedNumberOfAcknowledgements = 0
 
 	override fun send(message: LedgerMessage) {
-		log.info { "Sending message: $message" }
+		log.debug { "Sending message: $message" }
+		log.info { "Sending message: ${message::class.simpleName}" }
 		val marshalledMessage = protoBuf.encodeToByteArray(message)
 
 		if(message is LedgerMessage.Essential) {
 			sendReliably(marshalledMessage, marshalledMessage.size, message.sequenceNumber)
 		} else {
-			multicast.broadcast(marshalledMessage, marshalledMessage.size)
+			multicast.send(marshalledMessage, marshalledMessage.size)
 		}
 	}
 
@@ -46,14 +47,14 @@ internal class SimpleMessageSender(
 		expectedNumberOfAcknowledgements = ledger.allHosts.size
 		log.info { "Current SeqNum: $currentSequenceNumber, Expected ACKs: $expectedNumberOfAcknowledgements" }
 
-		multicast.broadcast(message, messageSize)
+		multicast.send(message, messageSize)
 
 		runner.runOnMainDelayed(getRetryDelay(), object: Function0<Unit> {
 
 			override fun invoke() {
 				numRetries++
 				log.warn { "Retrying last message... (count = $numRetries)" }
-				multicast.broadcast(message, messageSize)
+				multicast.send(message, messageSize)
 
 				if(!isAcknowledgementsComplete() && canRetry()) {
 					runner.runOnMainDelayed(getRetryDelay(), this)

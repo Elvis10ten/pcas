@@ -1,12 +1,12 @@
 package com.fluentbuild.pcas.io
 
-internal interface MulticastChannel {
+internal interface SecureMulticastChannel {
 
     @Throws(Exception::class)
     fun init(receiver: MessageReceiver)
 
     @Throws(Exception::class)
-    fun broadcast(message: MarshalledMessage, messageSize: MarshalledMessageSize)
+    fun send(message: MarshalledMessage, messageSize: MarshalledMessageSize)
 
     fun close()
 }

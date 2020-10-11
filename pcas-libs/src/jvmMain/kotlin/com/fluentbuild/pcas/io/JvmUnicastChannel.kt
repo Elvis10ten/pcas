@@ -1,12 +1,12 @@
 package com.fluentbuild.pcas.io
 
-import com.fluentbuild.pcas.host.HostInfo
+import com.fluentbuild.pcas.HostInfo
 import java.io.IOException
 import java.net.DatagramSocket
 
-internal open class UnreliableUnicastChannel(
+internal open class JvmUnicastChannel(
     private val socketWrapper: SocketWrapper<DatagramSocket>
-): UnicastChannel {
+): SecureUnicastChannel {
 
     @Throws(IOException::class)
     override fun init(receiver: MessageReceiver) {

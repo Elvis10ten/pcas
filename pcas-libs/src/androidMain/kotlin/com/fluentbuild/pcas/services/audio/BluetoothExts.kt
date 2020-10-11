@@ -34,14 +34,22 @@ internal fun AndroidBluetoothProfileState.toPeripheralState(): PeripheralBond.St
     }
 }
 
+internal fun BluetoothProfile.isConnected(device: BluetoothDevice) =
+    getConnectionState(device).toPeripheralState() == PeripheralBond.State.CONNECTED
+
+internal fun BluetoothProfile.isDisconnected(device: BluetoothDevice) =
+    getConnectionState(device).toPeripheralState() == PeripheralBond.State.DISCONNECTED
+
 @Throws(RemoteException::class)
 internal fun BluetoothProfile.connect(device: BluetoothDevice): Boolean {
+    if(isConnected(device)) return false
     val connectMethod = javaClass.getDeclaredMethod("connect", BluetoothDevice::class.java)
     return connectMethod.invoke(this, device) as Boolean
 }
 
 @Throws(RemoteException::class)
 internal fun BluetoothProfile.disconnect(device: BluetoothDevice): Boolean {
+    if(isDisconnected(device)) return false
     val disconnectMethod = javaClass.getDeclaredMethod("disconnect", BluetoothDevice::class.java)
     return disconnectMethod.invoke(this, device) as Boolean
 }

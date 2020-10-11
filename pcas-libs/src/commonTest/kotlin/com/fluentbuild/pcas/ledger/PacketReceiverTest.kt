@@ -1,6 +1,6 @@
 package com.fluentbuild.pcas.ledger
 
-/*import com.fluentbuild.pcas.host.HostInfo
+/*import com.fluentbuild.pcas.HostInfo
 import com.fluentbuild.pcas.ledger.Ledger
 import io.mockk.mockk
 import io.mockk.verify

@@ -1,9 +1,8 @@
 package com.fluentbuild.pcas.services.audio
 
-import com.fluentbuild.pcas.host.HostInfo
 import com.fluentbuild.pcas.peripheral.PeripheralCommander.Command
-import com.fluentbuild.pcas.conflicts.ResolutionHandler
-import com.fluentbuild.pcas.conflicts.Conflict
+import com.fluentbuild.pcas.contention.ResolutionHandler
+import com.fluentbuild.pcas.contention.Contention
 import com.fluentbuild.pcas.peripheral.Peripheral
 import com.fluentbuild.pcas.peripheral.PeripheralCommander
 import com.fluentbuild.pcas.peripheral.PeripheralProfile
@@ -15,35 +14,27 @@ internal class AudioResolutionHandler(
     private val audioStreamer: AudioStreamer,
 ): ResolutionHandler {
 
-    override fun handle(resolution: Conflict.Resolution) {
+    override fun handle(resolution: Contention.Resolution) {
         when(resolution) {
-            is Conflict.Resolution.Connect -> {
-                stopStreaming()
+            is Contention.Resolution.Connect -> {
+                audioStreamer.stop()
                 resolution.selfBlock.profile.connect()
             }
-            is Conflict.Resolution.Disconnect -> {
-                stopStreaming()
+            is Contention.Resolution.Disconnect -> {
+                audioStreamer.stop()
                 resolution.selfBlock.profile.disconnect()
             }
-            is Conflict.Resolution.Stream -> {
-                startStreaming(resolution.destination)
+            is Contention.Resolution.Stream -> {
+                audioStreamer.start(resolution.destination)
             }
-            is Conflict.Resolution.Ambiguous -> {}
+            is Contention.Resolution.Ambiguous -> {}
         }
     }
 
     override fun release() {
-        stopStreaming()
+        audioStreamer.stop()
         a2dpCommander.release()
         hspCommander.release()
-    }
-
-    private fun startStreaming(destination: HostInfo) {
-        audioStreamer.start(destination)
-    }
-
-    private fun stopStreaming() {
-        audioStreamer.stop()
     }
 
     private fun PeripheralProfile.connect() {

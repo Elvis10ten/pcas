@@ -15,7 +15,6 @@ internal class Debouncer(
 
 	companion object {
 
-		// todo: this should be half the roundtrip time
 		private const val DELAY = 100
 	}
 }

@@ -1,7 +1,7 @@
 package com.fluentbuild.pcas.ledger
 
-import com.fluentbuild.pcas.host.HostInfo
-import com.fluentbuild.pcas.host.Uuid
+import com.fluentbuild.pcas.HostInfo
+import com.fluentbuild.pcas.Uuid
 import com.fluentbuild.pcas.utils.filterSet
 import com.fluentbuild.pcas.logs.getLog
 import com.fluentbuild.pcas.utils.mapSet

@@ -1,6 +1,6 @@
 package com.fluentbuild.pcas.ledger.models
 
-/*import com.fluentbuild.pcas.host.HostInfo
+/*import com.fluentbuild.pcas.HostInfo
 import com.fluentbuild.pcas.io.Address
 import com.fluentbuild.pcas.ledger.utils.assertContentEquals
 import kotlin.test.Test

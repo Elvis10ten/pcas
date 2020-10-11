@@ -11,7 +11,6 @@ import com.fluentbuild.pcas.peripheral.Peripheral
 import com.fluentbuild.pcas.peripheral.PeripheralBond
 import com.fluentbuild.pcas.peripheral.PeripheralProfile
 import com.fluentbuild.pcas.services.AndroidBluetoothProfileId
-import com.fluentbuild.pcas.utils.unsafeLazy
 import com.fluentbuild.pcas.values.Observable
 
 internal class AndroidAudioBondsObservable(
@@ -21,7 +20,7 @@ internal class AndroidAudioBondsObservable(
 ): Observable<PeripheralBond> {
 
     private val log = getLog()
-    private val bluetoothDevice by unsafeLazy { context.bluetoothAdapter.toBluetoothDevice(audioPeripheral) }
+    private val bluetoothDevice by lazy { context.bluetoothAdapter.toBluetoothDevice(audioPeripheral) }
 
     override fun subscribe(observer: (PeripheralBond) -> Unit): Cancellable {
         val loadBondsCancellable = Cancellables()

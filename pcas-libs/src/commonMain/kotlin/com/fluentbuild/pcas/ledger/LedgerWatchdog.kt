@@ -2,7 +2,7 @@ package com.fluentbuild.pcas.ledger
 
 import com.fluentbuild.pcas.async.Cancellable
 import com.fluentbuild.pcas.async.ThreadRunner
-import com.fluentbuild.pcas.host.Uuid
+import com.fluentbuild.pcas.Uuid
 import com.fluentbuild.pcas.ledger.messages.MessageSender
 import com.fluentbuild.pcas.utils.TimeProvider
 import com.fluentbuild.pcas.logs.getLog
