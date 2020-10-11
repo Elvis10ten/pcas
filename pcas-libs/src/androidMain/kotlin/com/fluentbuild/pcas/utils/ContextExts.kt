@@ -1,4 +1,4 @@
-package com.fluentbuild.pcas.android
+package com.fluentbuild.pcas.utils
 
 import android.app.NotificationManager
 import android.bluetooth.BluetoothAdapter

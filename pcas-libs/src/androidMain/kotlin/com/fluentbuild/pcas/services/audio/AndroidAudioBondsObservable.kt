@@ -3,8 +3,8 @@ package com.fluentbuild.pcas.services.audio
 import android.bluetooth.BluetoothProfile
 import android.content.Context
 import com.fluentbuild.pcas.bluetooth.BluetoothProfileHolder
-import com.fluentbuild.pcas.android.BluetoothProfileStateCallback
-import com.fluentbuild.pcas.android.bluetoothAdapter
+import com.fluentbuild.pcas.watchers.BluetoothProfileStateWatcher
+import com.fluentbuild.pcas.utils.bluetoothAdapter
 import com.fluentbuild.pcas.async.Cancellable
 import com.fluentbuild.pcas.async.SentinelCancellable
 import com.fluentbuild.pcas.bluetooth.getPeripheralBondState
@@ -25,10 +25,14 @@ internal class AndroidAudioBondsObservable(
     private val log = getLog()
     private val bluetoothDevice by lazy { context.bluetoothAdapter.toBluetoothDevice(audioPeripheral) }
 
+    it.addAction(BluetoothA2dp.ACTION_CONNECTION_STATE_CHANGED)
+    it.addAction(BluetoothHeadset.ACTION_CONNECTION_STATE_CHANGED)
+    it.addAction(BluetoothHidDevice.ACTION_CONNECTION_STATE_CHANGED)
+
     override fun subscribe(observer: (PeripheralBond) -> Unit): Cancellable {
         log.debug { "Observing AudioBonds" }
         val profileCancellables = mutableMapOf<PeripheralProfile, Cancellable>()
-        val stateCallback = BluetoothProfileStateCallback(context) { profile ->
+        val stateCallback = BluetoothProfileStateWatcher(context) { profile ->
             profileCancellables[profile]?.cancel()
             profileCancellables[profile] = loadBonds(profile, observer)
         }

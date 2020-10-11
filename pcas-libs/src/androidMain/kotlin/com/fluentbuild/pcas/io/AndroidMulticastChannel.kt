@@ -2,7 +2,7 @@ package com.fluentbuild.pcas.io
 
 import android.content.Context
 import android.net.wifi.WifiManager
-import com.fluentbuild.pcas.android.wifiManager
+import com.fluentbuild.pcas.utils.wifiManager
 import com.fluentbuild.pcas.values.Provider
 import java.net.MulticastSocket
 

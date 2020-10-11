@@ -2,7 +2,7 @@ package com.fluentbuild.pcas.bluetooth
 
 import android.bluetooth.BluetoothProfile
 import android.content.Context
-import com.fluentbuild.pcas.android.bluetoothAdapter
+import com.fluentbuild.pcas.utils.bluetoothAdapter
 import com.fluentbuild.pcas.async.Cancellable
 import com.fluentbuild.pcas.async.SentinelCancellable
 import com.fluentbuild.pcas.logs.getLog

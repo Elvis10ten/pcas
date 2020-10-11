@@ -5,10 +5,10 @@ import android.media.AudioAttributes
 import android.media.AudioPlaybackConfiguration
 import android.os.Handler
 import android.telephony.TelephonyManager
-import com.fluentbuild.pcas.android.AudioPlaybackCallback
-import com.fluentbuild.pcas.android.CallStateCallback
-import com.fluentbuild.pcas.android.audioManager
-import com.fluentbuild.pcas.android.telephonyManager
+import com.fluentbuild.pcas.watchers.AudioPlaybackWatcher
+import com.fluentbuild.pcas.watchers.CallStateWatcher
+import com.fluentbuild.pcas.utils.audioManager
+import com.fluentbuild.pcas.utils.telephonyManager
 import com.fluentbuild.pcas.async.Cancellable
 import com.fluentbuild.pcas.values.Observable
 import com.fluentbuild.pcas.logs.getLog
@@ -27,8 +27,8 @@ internal class AudioPropertyObservable(
         log.debug { "Observing AudioProperty" }
         val notifyObserver = { observer(getCurrentAudioProperty()) }
 
-        val callStateCallback = CallStateCallback(context, notifyObserver)
-        val playbackCallback = AudioPlaybackCallback(context, mainHandler, notifyObserver)
+        val callStateCallback = CallStateWatcher(context, notifyObserver)
+        val playbackCallback = AudioPlaybackWatcher(context, mainHandler, notifyObserver)
 
         playbackCallback.register()
         callStateCallback.register()

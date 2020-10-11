@@ -2,7 +2,7 @@ package com.fluentbuild.pcas.di
 
 import android.content.Context
 import android.os.Handler
-import com.fluentbuild.pcas.AndroidHostInfoObservable
+import com.fluentbuild.pcas.HostInfoObservableAndroid
 import com.fluentbuild.pcas.Engine
 import com.fluentbuild.pcas.HostConfig
 import com.fluentbuild.pcas.io.AndroidAddressProvider
@@ -41,13 +41,20 @@ class AppContainer(
         hostAddressProvider = hostAddressProvider
     )
 
-    private val hostObservable = AndroidHostInfoObservable(
+    private val watchersModule = WatchersModule(
+        appContext = appContext,
+        mainThreadHandler = mainThreadHandler,
+        hostAddressProvider = hostAddressProvider
+    )
+
+    private val hostObservable = HostInfoObservableAndroid(
         context = appContext,
-        mainHandler = mainThreadHandler,
         hostConfig = hostConfig,
         hostAddressProvider = hostAddressProvider,
         unicastChannel = ioModule.unicastChannel,
-        audioConfig = AudioConfig
+        audioConfig = AudioConfig,
+        networkAddressWatcher = watchersModule.networkAddressWatcher,
+        interactivityWatcher = watchersModule.interactivityWatcher
     )
 
     private val audioServiceModule = AudioServiceModule(
