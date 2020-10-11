@@ -17,7 +17,7 @@ internal class BluetoothProfileStateWatcher(
 
 		override fun onReceive(context: Context, intent: Intent) {
 			log.debug(::onReceive, intent)
-			onUpdated(intent.getIntExtra(BluetoothProfile.EXTRA_STATE, INVALID_BLUETOOTH_PROFILE_STATE))
+			onUpdated(intent.getIntExtra(BluetoothProfile.EXTRA_STATE, NO_PROFILE_STATE))
 		}
 	}
 
@@ -33,6 +33,6 @@ internal class BluetoothProfileStateWatcher(
 
 	companion object {
 
-		private const val INVALID_BLUETOOTH_PROFILE_STATE = -1
+		const val NO_PROFILE_STATE = -1
 	}
 }

@@ -1,6 +1,6 @@
 package com.fluentbuild.pcas.watchers
 
-abstract class Watcher<ValueT> {
+internal abstract class Watcher<ValueT> {
 
 	private var lastValue: ValueT? = null
 	private var onChanged: (() -> Unit)? = null

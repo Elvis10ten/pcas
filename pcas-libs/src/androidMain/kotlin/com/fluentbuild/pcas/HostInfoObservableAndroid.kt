@@ -25,12 +25,12 @@ internal class HostInfoObservableAndroid(
 
     override fun subscribe(observer: (HostInfo) -> Unit): Cancellable {
         log.debug { "Observing HostInfo" }
-		val currentHost = currentValue
-		observer(currentHost)
+		val initialHost = currentValue
+		observer(initialHost)
 
         val notifyObserver = { observer(currentValue) }
-		networkAddressWatcher.register(currentHost.address, notifyObserver)
-		interactivityWatcher.register(currentHost.isInteractive, notifyObserver)
+		networkAddressWatcher.register(initialHost.address, notifyObserver)
+		interactivityWatcher.register(initialHost.isInteractive, notifyObserver)
 
         return Cancellable {
             log.debug { "Stop observing HostInfo" }

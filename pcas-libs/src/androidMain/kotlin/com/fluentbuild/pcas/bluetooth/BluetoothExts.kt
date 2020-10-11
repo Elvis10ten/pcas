@@ -14,7 +14,11 @@ internal fun BluetoothAdapter.toBluetoothDevice(peripheral: Peripheral): Bluetoo
 internal fun BluetoothDevice.toPeripheral() = Peripheral(name, Address.Mac(address))
 
 internal fun BluetoothProfile.getPeripheralBondState(device: BluetoothDevice): PeripheralBond.State? {
-    return when(getConnectionState(device)) {
+    return profileStateToPeripheralBondState(getConnectionState(device))
+}
+
+internal fun profileStateToPeripheralBondState(androidProfileState: Int): PeripheralBond.State? {
+    return when(androidProfileState) {
         BluetoothProfile.STATE_CONNECTED -> PeripheralBond.State.CONNECTED
         BluetoothProfile.STATE_DISCONNECTED -> PeripheralBond.State.DISCONNECTED
         else -> null

@@ -59,11 +59,14 @@ class AppContainer(
 
     private val audioServiceModule = AudioServiceModule(
         appContext = appContext,
-        mainHandler = mainThreadHandler,
         hostConfig = hostConfig,
         hostObservable = hostObservable,
         timeProvider = utilsModule.timeProvider,
-        debouncerProvider = asyncModule.debouncerProvider
+        debouncerProvider = asyncModule.debouncerProvider,
+        callStateWatcher = watchersModule.callStateWatcher,
+        audioPlaybackWatcher = watchersModule.audioPlaybackWatcher,
+        a2dpProfileStateWatcher = watchersModule.a2dpProfileStateWatcher,
+        hspProfileStateWatcher = watchersModule.hspProfileStateWatcher
     )
 
     private val ledgerModule = LedgerModule(
