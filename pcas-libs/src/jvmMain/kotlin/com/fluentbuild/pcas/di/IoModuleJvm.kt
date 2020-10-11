@@ -16,9 +16,9 @@ internal open class IoModuleJvm(
 
 	private val parceler = Parceler(config, secureRandom, BufferObjectPool)
 
-	val unicastChannel = JvmUnicastChannel(getSocketWrapper())
+	val unicastChannel = UnicastChannelJvm(getSocketWrapper())
 
-	open val multicastChannel = JvmMulticastChannel(
+	open val multicastChannel = MulticastChannelJvm(
 		socketWrapper = getSocketWrapper(),
 		hostAddressProvider = hostAddressProvider
 	)

@@ -1,6 +1,6 @@
 package com.fluentbuild.pcas.utils
 
-internal open class JvmTimeProvider: TimeProvider {
+internal open class TimeProviderJvm: TimeProvider {
 
 	override fun currentTimeMillis() = System.currentTimeMillis()
 

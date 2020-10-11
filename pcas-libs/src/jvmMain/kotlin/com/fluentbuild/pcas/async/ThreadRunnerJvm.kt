@@ -4,7 +4,7 @@ import com.fluentbuild.pcas.logs.getLog
 import java.util.concurrent.Future
 import java.util.concurrent.ThreadPoolExecutor
 
-internal open class JvmThreadRunner(
+internal open class ThreadRunnerJvm(
     private val threadPool: ThreadPoolExecutor
 ): ThreadRunner {
 

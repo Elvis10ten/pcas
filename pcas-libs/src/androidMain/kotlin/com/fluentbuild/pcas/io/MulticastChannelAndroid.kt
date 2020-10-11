@@ -6,11 +6,11 @@ import com.fluentbuild.pcas.utils.wifiManager
 import com.fluentbuild.pcas.values.Provider
 import java.net.MulticastSocket
 
-internal class AndroidMulticastChannel(
+internal class MulticastChannelAndroid(
     private val context: Context,
     hostAddressProvider: Provider<Address.Ipv4>,
     socketWrapper: SocketWrapper<MulticastSocket>
-): JvmMulticastChannel(hostAddressProvider, socketWrapper) {
+): MulticastChannelJvm(hostAddressProvider, socketWrapper) {
 
     private var multicastLock: WifiManager.MulticastLock? = null
 

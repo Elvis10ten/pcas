@@ -5,7 +5,7 @@ import com.fluentbuild.pcas.utils.wifiManager
 import com.fluentbuild.pcas.values.Provider
 import java.net.InetAddress
 
-internal class AndroidAddressProvider(private val context: Context): Provider<Address.Ipv4> {
+internal class AddressProviderAndroid(private val context: Context): Provider<Address.Ipv4> {
 
     override fun get() = Address.Ipv4(getInetAddress().hostAddress)
 

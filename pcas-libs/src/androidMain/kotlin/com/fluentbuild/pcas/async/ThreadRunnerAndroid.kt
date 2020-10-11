@@ -4,10 +4,10 @@ import android.os.Handler
 import androidx.annotation.MainThread
 import java.util.concurrent.ThreadPoolExecutor
 
-internal class AndroidThreadRunner(
+internal class ThreadRunnerAndroid(
     private val mainThreadHandler: Handler,
     threadPool: ThreadPoolExecutor
-): JvmThreadRunner(threadPool) {
+): ThreadRunnerJvm(threadPool) {
 
     private val mainThreadRunnables = mutableSetOf<Runnable>()
 

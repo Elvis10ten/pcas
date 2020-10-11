@@ -5,7 +5,7 @@ import android.os.Handler
 import com.fluentbuild.pcas.HostInfoObservableAndroid
 import com.fluentbuild.pcas.Engine
 import com.fluentbuild.pcas.HostConfig
-import com.fluentbuild.pcas.io.AndroidAddressProvider
+import com.fluentbuild.pcas.io.AddressProviderAndroid
 import com.fluentbuild.pcas.logs.getLog
 import com.fluentbuild.pcas.services.audio.AudioConfig
 import timber.log.LogcatTree
@@ -27,7 +27,7 @@ class AppContainer(
 
     private val mainThreadHandler = Handler(appContext.mainLooper)
 
-    private val hostAddressProvider = AndroidAddressProvider(appContext)
+    private val hostAddressProvider = AddressProviderAndroid(appContext)
 
     private val asyncModule = AsyncModuleAndroid(mainThreadHandler)
 

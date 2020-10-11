@@ -15,7 +15,7 @@ import com.fluentbuild.pcas.utils.bluetoothAdapter
 import com.fluentbuild.pcas.values.Observable
 import com.fluentbuild.pcas.watchers.BluetoothProfileStateWatcher
 
-internal class AndroidAudioBondsObservable(
+internal class AudioBondsObservableAndroid(
     private val context: Context,
     private val audioPeripheral: Peripheral,
     private val profileHolder: BluetoothProfileHolder,

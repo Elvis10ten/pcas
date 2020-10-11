@@ -4,7 +4,7 @@ import com.fluentbuild.pcas.HostInfo
 import java.io.IOException
 import java.net.DatagramSocket
 
-internal open class JvmUnicastChannel(
+internal open class UnicastChannelJvm(
     private val socketWrapper: SocketWrapper<DatagramSocket>
 ): SecureUnicastChannel {
 

@@ -7,7 +7,7 @@ import java.net.InetSocketAddress
 import java.net.MulticastSocket
 import java.net.SocketException
 
-internal open class JvmMulticastChannel(
+internal open class MulticastChannelJvm(
     private val hostAddressProvider: Provider<Address.Ipv4>,
     private val socketWrapper: SocketWrapper<MulticastSocket>
 ): SecureMulticastChannel {

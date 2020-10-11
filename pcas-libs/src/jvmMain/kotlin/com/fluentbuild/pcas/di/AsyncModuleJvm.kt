@@ -1,7 +1,7 @@
 package com.fluentbuild.pcas.di
 
 import com.fluentbuild.pcas.async.Debouncer
-import com.fluentbuild.pcas.async.JvmThreadRunner
+import com.fluentbuild.pcas.async.ThreadRunnerJvm
 import java.util.concurrent.LinkedBlockingQueue
 import java.util.concurrent.ThreadPoolExecutor
 import java.util.concurrent.TimeUnit
@@ -16,7 +16,7 @@ internal open class AsyncModuleJvm {
         LinkedBlockingQueue(WORK_QUEUE_CAPACITY)
     )
 
-    open val threadRunnerProvider = { JvmThreadRunner(threadPool) }
+    open val threadRunnerProvider = { ThreadRunnerJvm(threadPool) }
 
     val debouncerProvider = { Debouncer(threadRunnerProvider()) }
 

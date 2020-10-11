@@ -8,7 +8,7 @@ import com.fluentbuild.pcas.HostInfoObservable
 import com.fluentbuild.pcas.async.Debouncer
 import com.fluentbuild.pcas.bluetooth.BluetoothPeripheralCommander
 import com.fluentbuild.pcas.services.audio.*
-import com.fluentbuild.pcas.utils.JvmTimeProvider
+import com.fluentbuild.pcas.utils.TimeProviderJvm
 import com.fluentbuild.pcas.watchers.AudioPlaybackWatcher
 import com.fluentbuild.pcas.watchers.BluetoothProfileStateWatcher
 import com.fluentbuild.pcas.watchers.CallStateWatcher
@@ -17,7 +17,7 @@ internal class AudioServiceModule(
 	appContext: Context,
 	hostConfig: HostConfig,
 	hostObservable: HostInfoObservable,
-	timeProvider: JvmTimeProvider,
+	timeProvider: TimeProviderJvm,
 	debouncerProvider: () -> Debouncer,
 	callStateWatcher: CallStateWatcher,
 	audioPlaybackWatcher: AudioPlaybackWatcher,
@@ -25,7 +25,7 @@ internal class AudioServiceModule(
 	hspProfileStateWatcher: BluetoothProfileStateWatcher
 ) {
 
-    private val audioStreamer = AndroidAudioStreamer()
+    private val audioStreamer = AudioStreamerAndroid()
 
     private val audioProfileHolder = BluetoothProfileHolder(appContext)
 
@@ -35,7 +35,7 @@ internal class AudioServiceModule(
 
     private val propertyObservable = AudioPropertyObservable(appContext, callStateWatcher, audioPlaybackWatcher)
 
-    private val bondsObservable = AndroidAudioBondsObservable(
+    private val bondsObservable = AudioBondsObservableAndroid(
 		context = appContext,
 		audioPeripheral = hostConfig.audioPeripheral,
 		profileHolder = audioProfileHolder,
@@ -45,7 +45,7 @@ internal class AudioServiceModule(
 
 	private val audioBlocksBuilderProvider = { AudioBlocksBuilder(hostConfig, timeProvider, hostObservable) }
 
-	val streamHandler = AndroidAudioStreamHandler()
+	val streamHandler = AudioStreamHandlerAndroid()
 
 	val resolutionHandler = AudioResolutionHandler(
         audioPeripheral = hostConfig.audioPeripheral,
