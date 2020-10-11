@@ -4,18 +4,18 @@ import com.fluentbuild.pcas.contention.ResolutionThrottler
 import com.fluentbuild.pcas.contention.ContentionsResolver
 import com.fluentbuild.pcas.contention.ResolutionHandler
 import com.fluentbuild.pcas.services.AUDIO_SERVICE_ID
-import com.fluentbuild.pcas.utils.JvmTimeProvider
+import com.fluentbuild.pcas.utils.TimeProvider
 
-internal class ConflictsModule(
-	timeProvider: JvmTimeProvider,
+internal class ContentionModule(
+	timeProvider: TimeProvider,
 	audioResolutionHandler: ResolutionHandler
 ) {
 
-	private val serviceHandlers = mapOf(
+	private val serviceResolutionHandlers = mapOf(
 		AUDIO_SERVICE_ID to audioResolutionHandler
 	)
 
-	private val circuitBreaker = ResolutionThrottler(timeProvider)
+	private val resolutionThrottle = ResolutionThrottler(timeProvider)
 
-	val conflictsResolver = ContentionsResolver(serviceHandlers, circuitBreaker)
+	val contentionsResolver = ContentionsResolver(serviceResolutionHandlers, resolutionThrottle)
 }

@@ -6,50 +6,54 @@ import com.fluentbuild.pcas.io.SecureMulticastChannel
 import com.fluentbuild.pcas.ledger.*
 import com.fluentbuild.pcas.ledger.messages.MessageReceiver
 import com.fluentbuild.pcas.ledger.messages.SimpleMessageSender
-import com.fluentbuild.pcas.utils.JvmTimeProvider
+import com.fluentbuild.pcas.utils.TimeProvider
 import kotlinx.serialization.protobuf.ProtoBuf
 import kotlin.random.Random
 
 internal class LedgerModule(
-	random: Random,
-	timeProvider: JvmTimeProvider,
-	threadRunner: () -> ThreadRunner,
-	protoBuf: ProtoBuf,
-	hostObservable: HostInfoObservable,
-	multicast: SecureMulticastChannel,
-	serviceBlocksProducers: List<BlocksProducer>
+    random: Random,
+    timeProvider: TimeProvider,
+    threadRunnerProvider: () -> ThreadRunner,
+    protoBuf: ProtoBuf,
+    hostObservable: HostInfoObservable,
+    multicastChannel: SecureMulticastChannel,
+    audioBlocksProducer: BlocksProducer
 ) {
 
     private val ledgerDb = LedgerDb()
 
-    private val ledgerMessageSender = SimpleMessageSender(
+    private val serviceBlocksProducers = listOf(
+        audioBlocksProducer
+    )
+
+    private val messageSender = SimpleMessageSender(
         protoBuf = protoBuf,
         ledgerDb = ledgerDb,
-        runner = threadRunner(),
-        multicast = multicast,
+        runner = threadRunnerProvider(),
+        multicast = multicastChannel,
         random = random
     )
 
     private val ledgerWatchdog = LedgerWatchdog(
-        runner = threadRunner(),
+        runner = threadRunnerProvider(),
         ledgerDb = ledgerDb,
-        messageSender = ledgerMessageSender,
+        messageSender = messageSender,
         timeProvider = timeProvider,
     )
 
-    private val ledgerMessageReceiver = MessageReceiver(
+    private val messageReceiver = MessageReceiver(
         protoBuf = protoBuf,
-        messageSender = ledgerMessageSender,
+        messageSender = messageSender,
         ledgerDb = ledgerDb,
         watchdog = ledgerWatchdog
     )
 
     internal val ledgerProtocol = LedgerProtocol(
         ledgerWatchdog = ledgerWatchdog,
-        multicast = multicast,
+        multicast = multicastChannel,
         hostObservable = hostObservable,
-        messageSender = ledgerMessageSender,
-        messageReceiver = ledgerMessageReceiver,
+        messageSender = messageSender,
+        messageReceiver = messageReceiver,
         ledgerDb = ledgerDb,
         serviceBlocksProducers = serviceBlocksProducers
     )

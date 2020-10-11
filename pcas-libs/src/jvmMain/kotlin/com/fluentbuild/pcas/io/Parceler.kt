@@ -1,16 +1,18 @@
 package com.fluentbuild.pcas.io
 
+import com.fluentbuild.pcas.HostConfig
 import java.security.SecureRandom
 import javax.crypto.Cipher
-import javax.crypto.SecretKey
 import javax.crypto.spec.GCMParameterSpec
+import javax.crypto.spec.SecretKeySpec
 
 internal class Parceler(
-    private val networkKey: SecretKey,
+    config: HostConfig,
     private val random: SecureRandom,
     private val bufferPool: BufferObjectPool
 ) {
 
+    private val secretKey = SecretKeySpec(config.networkKey, OFFSET_ZERO, config.networkKey.size, KEY_ALGORITHM)
     private val cipherCache = ThreadLocal.withInitial { Cipher.getInstance(CIPHER_TRANSFORMATION) }
     private val cipher get() = cipherCache.get()!!
 
@@ -40,13 +42,14 @@ internal class Parceler(
     private inline fun init(cipherMode: Int, setupIv: (ByteArray) -> Unit): ByteArray {
         return iv.also {
             setupIv(it)
-            cipher.init(cipherMode, networkKey, GCMParameterSpec(AUTH_TAG_SIZE, it))
+            cipher.init(cipherMode, secretKey, GCMParameterSpec(AUTH_TAG_SIZE, it))
         }
     }
 
     companion object {
 
         private const val CIPHER_TRANSFORMATION = "AES/GCM/NoPadding"
+        private const val KEY_ALGORITHM = "AES"
         private const val IV_SIZE = 12
         private const val AUTH_TAG_SIZE = 128
     }

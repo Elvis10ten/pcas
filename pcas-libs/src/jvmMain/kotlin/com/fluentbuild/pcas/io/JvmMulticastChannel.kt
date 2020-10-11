@@ -1,12 +1,14 @@
 package com.fluentbuild.pcas.io
 
-import com.fluentbuild.pcas.HostInfoObservable
 import com.fluentbuild.pcas.logs.getLog
+import com.fluentbuild.pcas.values.Provider
 import java.io.IOException
-import java.net.*
+import java.net.InetSocketAddress
+import java.net.MulticastSocket
+import java.net.SocketException
 
 internal open class JvmMulticastChannel(
-    private val hostObservable: HostInfoObservable,
+    private val hostAddressProvider: Provider<Address.Ipv4>,
     private val socketWrapper: SocketWrapper<MulticastSocket>
 ): SecureMulticastChannel {
 
@@ -23,8 +25,8 @@ internal open class JvmMulticastChannel(
                 joinGroup(MULTICAST_ADDRESS.inetAddress)
             } catch (e: SocketException) {
                 log.error(e) { "Error joining group with default interface" }
-                val hostInterface = hostObservable.currentValue.address.getPrimaryInterfaceWithAddress()
-                setNetworkInterface(hostInterface)
+                val hostInterface = hostAddressProvider.get().getPrimaryInterfaceWithAddress()
+                networkInterface = hostInterface
                 joinGroup(InetSocketAddress(MULTICAST_ADDRESS.inetAddress, MULTICAST_PORT), hostInterface)
             }
         }

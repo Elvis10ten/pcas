@@ -9,23 +9,22 @@ import com.fluentbuild.pcas.ledger.BlocksProducer
 import com.fluentbuild.pcas.peripheral.Peripheral
 import com.fluentbuild.pcas.peripheral.PeripheralBond
 import com.fluentbuild.pcas.async.Debouncer
+import com.fluentbuild.pcas.async.SentinelCancellable
 import com.fluentbuild.pcas.utils.TimeProvider
 
 internal class AudioBlocksProducer(
-	private val audioPeripheral: Peripheral,
 	private val propObservable: Observable<AudioProperty>,
 	private val bondsObservable: Observable<PeripheralBond>,
-	private val timeProvider: TimeProvider,
-	private val hostObservable: HostInfoObservable,
 	private val debouncer: Debouncer,
-	private val canPlatformStream: Boolean
+	private val audioBlocksBuilderProvider: () -> AudioBlocksBuilder
 ): BlocksProducer {
 
     override fun subscribe(consumer: (Set<Block>) -> Unit): Cancellable {
-        val builder = AudioBlocksBuilder(audioPeripheral, timeProvider, hostObservable, canPlatformStream)
+        val builder = audioBlocksBuilderProvider()
         val cancellables = Cancellables()
+		var debouncerCancellable: Cancellable = SentinelCancellable
         val updateConsumer = {
-            debouncer.debounce { builder.buildNovel()?.let(consumer) }
+			debouncerCancellable = debouncer.debounce(debouncerCancellable) { builder.buildNovel()?.let(consumer) }
         }
 
         cancellables += propObservable.subscribe {
@@ -39,7 +38,7 @@ internal class AudioBlocksProducer(
         }
 
         return Cancellable {
-			debouncer.cancel()
+			debouncerCancellable.cancel()
 			cancellables.cancel()
 		}
     }

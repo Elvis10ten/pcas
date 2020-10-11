@@ -4,13 +4,13 @@ internal class Debouncer(
 	private val runner: ThreadRunner
 ) {
 
-	fun debounce(action: () -> Unit) {
-		runner.cancelAll()
+	fun debounce(cancellable: Cancellable, action: () -> Unit): Cancellable {
+		cancellable.cancel()
 		runner.runOnMainDelayed(DELAY, action)
-	}
 
-	fun cancel() {
-		runner.cancelAll()
+		return Cancellable {
+			runner.cancelAll()
+		}
 	}
 
 	companion object {

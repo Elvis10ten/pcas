@@ -2,15 +2,15 @@ package com.fluentbuild.pcas.io
 
 import android.content.Context
 import android.net.wifi.WifiManager
-import com.fluentbuild.pcas.HostInfoObservable
 import com.fluentbuild.pcas.android.wifiManager
+import com.fluentbuild.pcas.values.Provider
 import java.net.MulticastSocket
 
 internal class AndroidMulticastChannel(
     private val context: Context,
-    hostObservable: HostInfoObservable,
+    hostAddressProvider: Provider<Address.Ipv4>,
     socketWrapper: SocketWrapper<MulticastSocket>
-): JvmMulticastChannel(hostObservable, socketWrapper) {
+): JvmMulticastChannel(hostAddressProvider, socketWrapper) {
 
     private var multicastLock: WifiManager.MulticastLock? = null
 

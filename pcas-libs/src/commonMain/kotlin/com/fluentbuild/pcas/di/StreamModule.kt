@@ -6,16 +6,16 @@ import com.fluentbuild.pcas.stream.StreamDemux
 import com.fluentbuild.pcas.stream.StreamHandler
 
 internal class StreamModule(
-	unicast: SecureUnicastChannel,
+	unicastChannel: SecureUnicastChannel,
 	audioStreamHandler: StreamHandler
 ) {
 
-	private val streamHandlers = mapOf(
+	private val serviceStreamHandlers = mapOf(
 		AUDIO_SERVICE_ID to audioStreamHandler
 	)
 
 	val streamDemux = StreamDemux(
-		unicast = unicast,
-		handlers = streamHandlers
+		unicast = unicastChannel,
+		handlers = serviceStreamHandlers
 	)
 }
