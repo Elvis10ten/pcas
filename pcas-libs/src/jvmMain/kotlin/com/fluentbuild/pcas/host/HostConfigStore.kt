@@ -1,10 +1,8 @@
-package com.fluentbuild.pcas
+package com.fluentbuild.pcas.host
 
-import com.fluentbuild.pcas.host.HostConfig
 import com.fluentbuild.pcas.peripheral.Peripheral
 import com.fluentbuild.pcas.utils.AtomicFile
 import com.fluentbuild.pcas.utils.createRandomUuid
-import com.fluentbuild.pcas.utils.decode
 import kotlinx.serialization.decodeFromByteArray
 import kotlinx.serialization.encodeToByteArray
 import kotlinx.serialization.protobuf.ProtoBuf
@@ -16,10 +14,11 @@ class HostConfigStore(
 	private val nameProvider: () -> String
 ) {
 
+	// have memory cache
 	private val atomicFile = AtomicFile(File(privateFilesDir, HOST_CONFIG_FILE_NAME))
 
 	fun upsert(audioPeripheral: Peripheral, networkKey: ByteArray) {
-		val hostConfig = get()
+		val hostConfig = getInternal()
 		val uuid = hostConfig?.uuid ?: createRandomUuid()
 		val name = hostConfig?.name ?: nameProvider()
 		val newConfig = HostConfig(uuid, name, networkKey, audioPeripheral)
@@ -30,7 +29,13 @@ class HostConfigStore(
 		}
 	}
 
-	fun get(): HostConfig? {
+	fun get(): HostConfig {
+		return protoBuf.decodeFromByteArray(atomicFile.openRead().readAllBytes())
+	}
+
+	fun hasConfig() = getInternal() != null
+
+	private fun getInternal(): HostConfig? {
 		return try {
 			protoBuf.decodeFromByteArray<HostConfig>(atomicFile.openRead().readAllBytes())
 		} catch (e: Exception) {

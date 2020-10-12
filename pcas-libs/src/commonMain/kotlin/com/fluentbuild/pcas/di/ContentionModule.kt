@@ -12,7 +12,7 @@ internal class ContentionModule(
 ) {
 
 	private val serviceResolutionHandlers = mapOf(
-		ServiceClass.AUDIO.classId to audioResolutionHandler
+		ServiceClass.AUDIO to audioResolutionHandler
 	)
 
 	private val resolutionThrottle = ResolutionThrottler(timeProvider)

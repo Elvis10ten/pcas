@@ -10,7 +10,7 @@ import com.fluentbuild.pcas.utils.Delegates.observable
  * The root class to [run] and [stop] PCAS.
  */
 class Engine internal constructor(
-	private val dependenciesProvider: () -> EngineDependencies
+	private val componentProvider: () -> EngineComponent
 ) {
 
     private val log = getLog()
@@ -27,7 +27,7 @@ class Engine internal constructor(
 		if(currentEngineState == State.RUNNING) return
         log.info { "Running engine!" }
 
-		val dependencies = dependenciesProvider()
+		val dependencies = componentProvider()
 		currentCancellable = dependencies.run().apply {
 			this += Cancellable {
 				log.info { "Stopping engine!" }
@@ -42,11 +42,10 @@ class Engine internal constructor(
 		currentCancellable?.cancel()
 	}
 
-	private fun EngineDependencies.run(): Cancellables {
+	private fun EngineComponent.run(): Cancellables {
 		val cancellables = Cancellables()
 
 		try {
-			init()
 			cancellables += streamDemuxer.run()
 			cancellables += ledgerProtocol.run { ledger ->
 				log.info { "Ledger updated" }
