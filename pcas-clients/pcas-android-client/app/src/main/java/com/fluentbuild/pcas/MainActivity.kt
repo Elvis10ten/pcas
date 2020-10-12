@@ -1,72 +1,64 @@
 package com.fluentbuild.pcas
 
-import android.os.Build
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
-import android.util.Base64
 import androidx.appcompat.app.AppCompatActivity
 import com.fluentbuild.pcas.async.Cancellables
-import com.fluentbuild.pcas.di.AppComponent
-import com.fluentbuild.pcas.io.Address
-import com.fluentbuild.pcas.peripheral.Peripheral
-import com.fluentbuild.pcas.services.ServicesProvider
+import com.fluentbuild.pcas.models.MainAction
+import com.fluentbuild.pcas.models.getBackgroundColor
+import com.fluentbuild.pcas.models.getIconDrawable
+import com.fluentbuild.pcas.services.PeripheralService
+import com.fluentbuild.pcas.services.ServiceUiModel
 import com.fluentbuild.pcas.services.ServicesRenderer
-import com.fluentbuild.pcas.utils.UuidCreator
+import com.fluentbuild.pcas.ui.ConsoleRenderer
 import kotlinx.android.synthetic.main.activity_main.*
-import javax.crypto.KeyGenerator
-import javax.crypto.spec.SecretKeySpec
 
 class MainActivity : AppCompatActivity() {
 
-    private val secretKey = "ZbSJbpGCFi54VqzRvzDLqw=="
-    lateinit var appComponent: AppComponent
-    private var cancellables = Cancellables()
-    private lateinit var servicesProvider: ServicesProvider
-    private lateinit var consoleRenderer: ConsoleRenderer
-    private lateinit var servicesRenderer: ServicesRenderer
+    private val cancellables = Cancellables()
+    private val consoleRenderer by lazy { ConsoleRenderer(consoleCardView) }
+    private val servicesRenderer by lazy { ServicesRenderer(servicesContainer, ::onServiceClicked) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        servicesProvider = ServicesProvider(
-            audioServiceId = 1,
-            mouseServiceId = 2,
-            keypadServiceId = 3,
-            healthServiceId = 4
-        )
+        getApp().engineController.setRunCallback { engineState ->
+            engineButtonView.setImageDrawable(engineState.getIconDrawable(this))
+            engineButtonView.backgroundTintList = engineState.getBackgroundColor(this)
+        }
 
-        servicesRenderer = ServicesRenderer(
-            servicesProvider,
-            servicesContainer
-        ) {}
-        servicesRenderer.init()
-        servicesRenderer.update()
+        bottomAppBarView.setOnMenuItemClickListener {
+            onActionClicked(MainAction.from(it.itemId))
+            true
+        }
 
-        consoleRenderer = ConsoleRenderer(consoleCardView)
+        cancellables += servicesRenderer.render()
         cancellables += consoleRenderer.render()
+    }
 
-        val audioPeripheral = Peripheral("sony", Address.Mac("38:18:4C:3E:AB:47"))
+    private fun onServiceClicked(service: ServiceUiModel) {
+        when(service.service) {
+            PeripheralService.AUDIO -> {
 
-        val encodedKey: ByteArray = Base64.decode(secretKey, Base64.DEFAULT)
-        val originalKey = SecretKeySpec(encodedKey, 0, encodedKey.size, "AES")
+            }
+            PeripheralService.KEYPAD -> {
 
-        appComponent = AppComponent(
-            applicationContext,
-            audioPeripheral,
-            UuidCreator.create(),
-            Build.MODEL,
-            originalKey
-        )
-        appComponent.init(BuildConfig.DEBUG)
-        cancellables += appComponent.engine.run()
+            }
+            PeripheralService.MOUSE -> {
 
-        bottomAppBarView.setOnMenuItemClickListener { item ->
-            when(item.itemId) {
-                R.id.actionClearConsole -> {
-                    consoleRenderer.clearConsole()
-                    true
-                }
-                else -> false
+            }
+        }
+    }
+
+    private fun onActionClicked(action: MainAction) {
+        when(action) {
+            MainAction.CLEAR_CONSOLE -> {
+                consoleRenderer.clearConsole()
+            }
+            MainAction.SETUP -> {
+                // TODO
             }
         }
     }
@@ -74,11 +66,11 @@ class MainActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         cancellables.cancel()
-        appComponent.release()
     }
 
-    private fun ss(): String {
-        val secretKey = KeyGenerator.getInstance("AES").generateKey()
-        return Base64.encodeToString(secretKey.encoded, Base64.DEFAULT)
+    companion object {
+
+        fun getIntent(context: Context) =
+            Intent(context, MainActivity::class.java)
     }
 }

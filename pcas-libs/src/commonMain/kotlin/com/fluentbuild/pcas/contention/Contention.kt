@@ -1,6 +1,6 @@
 package com.fluentbuild.pcas.contention
 
-import com.fluentbuild.pcas.HostInfo
+import com.fluentbuild.pcas.host.HostInfo
 import com.fluentbuild.pcas.ledger.Block
 
 data class Contention(

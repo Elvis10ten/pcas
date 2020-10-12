@@ -1,11 +1,11 @@
-package com.fluentbuild.pcas
+package com.fluentbuild.pcas.ui
 
 import androidx.cardview.widget.CardView
 import androidx.core.text.parseAsHtml
 import com.fluentbuild.pcas.async.Cancellable
 import com.fluentbuild.pcas.logs.RichLog
-import com.fluentbuild.pcas.views.isScrolledToBottom
-import com.fluentbuild.pcas.views.scrollToBottom
+import com.fluentbuild.pcas.utils.isScrolledToBottom
+import com.fluentbuild.pcas.utils.scrollToBottom
 import kotlinx.android.synthetic.main.activity_main.view.*
 
 class ConsoleRenderer(consoleCard: CardView) {

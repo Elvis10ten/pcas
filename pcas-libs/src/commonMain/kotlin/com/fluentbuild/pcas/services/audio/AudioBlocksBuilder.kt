@@ -1,13 +1,12 @@
 package com.fluentbuild.pcas.services.audio
 
-import com.fluentbuild.pcas.HostConfig
-import com.fluentbuild.pcas.HostInfoObservable
+import com.fluentbuild.pcas.host.HostConfig
+import com.fluentbuild.pcas.host.HostInfoObservable
 import com.fluentbuild.pcas.ledger.Block
-import com.fluentbuild.pcas.peripheral.Peripheral
 import com.fluentbuild.pcas.peripheral.PeripheralBond
 import com.fluentbuild.pcas.peripheral.PeripheralProfile
+import com.fluentbuild.pcas.services.ServiceClass
 import com.fluentbuild.pcas.services.audio.AudioProperty.Usage
-import com.fluentbuild.pcas.services.AUDIO_SERVICE_ID
 import com.fluentbuild.pcas.utils.TimeProvider
 
 internal class AudioBlocksBuilder(
@@ -77,7 +76,7 @@ internal class AudioBlocksBuilder(
     }
 
     private fun createBlock(usages: Set<Usage>, bond: PeripheralBond) = Block(
-        serviceId = AUDIO_SERVICE_ID,
+        serviceClassId = ServiceClass.AUDIO.classId,
         profile = bond.profile,
         peripheral = hostConfig.audioPeripheral,
         priority = usages.maxOfOrNull { it.priority } ?: Block.NO_PRIORITY,

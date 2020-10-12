@@ -3,11 +3,11 @@ package com.fluentbuild.pcas.stream
 import com.fluentbuild.pcas.async.Cancellable
 import com.fluentbuild.pcas.io.SecureUnicastChannel
 import com.fluentbuild.pcas.logs.getLog
-import com.fluentbuild.pcas.services.ServiceId
+import com.fluentbuild.pcas.services.ServiceClassId
 
 internal class StreamDemux(
     private val unicast: SecureUnicastChannel,
-    private val handlers: Map<ServiceId, StreamHandler>
+    private val handlers: Map<ServiceClassId, StreamHandler>
 ) {
 
     private val log = getLog()

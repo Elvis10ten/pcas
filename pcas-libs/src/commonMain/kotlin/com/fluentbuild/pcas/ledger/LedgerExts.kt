@@ -6,7 +6,7 @@ internal fun Set<Block>.getOnlyNewBlocks(hostBlocks: Set<Block>): Set<Block> {
 	val newBlocks = mutableSetOf<Block>()
 
 	for(hostBlock in hostBlocks) {
-		if(this.none { it.isDuplicate(hostBlock) }) {
+		if(this.none { it.isAllFieldsEqual(hostBlock) }) {
 			newBlocks += hostBlock
 		}
 	}

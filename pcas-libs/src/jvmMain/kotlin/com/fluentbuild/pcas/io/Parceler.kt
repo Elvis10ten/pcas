@@ -1,15 +1,15 @@
 package com.fluentbuild.pcas.io
 
-import com.fluentbuild.pcas.HostConfig
+import com.fluentbuild.pcas.host.HostConfig
 import java.security.SecureRandom
 import javax.crypto.Cipher
 import javax.crypto.spec.GCMParameterSpec
 import javax.crypto.spec.SecretKeySpec
 
 internal class Parceler(
-    config: HostConfig,
-    private val random: SecureRandom,
-    private val bufferPool: BufferObjectPool
+	config: HostConfig,
+	private val random: SecureRandom,
+	private val bufferPool: BufferObjectPool
 ) {
 
     private val secretKey = SecretKeySpec(config.networkKey, OFFSET_ZERO, config.networkKey.size, KEY_ALGORITHM)

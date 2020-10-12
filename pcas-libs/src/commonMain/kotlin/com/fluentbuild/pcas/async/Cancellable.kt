@@ -6,7 +6,7 @@ fun interface Cancellable {
     fun cancel()
 }
 
-internal object SentinelCancellable: Cancellable {
+object SentinelCancellable: Cancellable {
     override fun cancel() {}
 }
 

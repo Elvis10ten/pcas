@@ -1,7 +1,7 @@
 package com.fluentbuild.pcas.di
 
 import com.fluentbuild.pcas.io.SecureUnicastChannel
-import com.fluentbuild.pcas.services.AUDIO_SERVICE_ID
+import com.fluentbuild.pcas.services.ServiceClass
 import com.fluentbuild.pcas.stream.StreamDemux
 import com.fluentbuild.pcas.stream.StreamHandler
 
@@ -11,7 +11,7 @@ internal class StreamModule(
 ) {
 
 	private val serviceStreamHandlers = mapOf(
-		AUDIO_SERVICE_ID to audioStreamHandler
+		ServiceClass.AUDIO.classId to audioStreamHandler
 	)
 
 	val streamDemux = StreamDemux(

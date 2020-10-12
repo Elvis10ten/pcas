@@ -1,6 +1,6 @@
 package com.fluentbuild.pcas.di
 
-import com.fluentbuild.pcas.HostConfig
+import com.fluentbuild.pcas.host.HostConfig
 import com.fluentbuild.pcas.async.ThreadRunner
 import com.fluentbuild.pcas.io.*
 import com.fluentbuild.pcas.values.Provider

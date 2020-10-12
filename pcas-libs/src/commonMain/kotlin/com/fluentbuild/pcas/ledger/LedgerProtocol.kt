@@ -1,7 +1,7 @@
 package com.fluentbuild.pcas.ledger
 
 import com.fluentbuild.pcas.async.Cancellable
-import com.fluentbuild.pcas.HostInfoObservable
+import com.fluentbuild.pcas.host.HostInfoObservable
 import com.fluentbuild.pcas.async.Cancellables
 import com.fluentbuild.pcas.io.SecureMulticastChannel
 import com.fluentbuild.pcas.ledger.messages.MessageReceiver

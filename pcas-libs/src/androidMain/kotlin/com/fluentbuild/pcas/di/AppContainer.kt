@@ -4,7 +4,7 @@ import android.content.Context
 import android.os.Handler
 import com.fluentbuild.pcas.HostInfoObservableAndroid
 import com.fluentbuild.pcas.Engine
-import com.fluentbuild.pcas.HostConfig
+import com.fluentbuild.pcas.host.HostConfig
 import com.fluentbuild.pcas.io.AddressProviderAndroid
 import com.fluentbuild.pcas.logs.getLog
 import com.fluentbuild.pcas.services.audio.AudioConfig
@@ -18,10 +18,7 @@ import timber.log.Timber
  *
  * This should be revisited when a better KMP DI tool is found.
  */
-class AppContainer(
-    appContext: Context,
-    hostConfig: HostConfig
-) {
+class AppContainer(appContext: Context, hostConfig: HostConfig) {
 
     private val log = getLog()
 

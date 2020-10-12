@@ -1,6 +1,8 @@
 package com.fluentbuild.pcas
 
 import com.fluentbuild.pcas.async.Cancellable
+import com.fluentbuild.pcas.host.HostInfo
+import com.fluentbuild.pcas.host.HostInfoObservable
 
 class HostInfoObservableJvm: HostInfoObservable {
 

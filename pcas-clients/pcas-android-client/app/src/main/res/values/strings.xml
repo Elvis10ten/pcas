@@ -13,4 +13,10 @@
 
     <string name="actionSetup">Setup</string>
     <string name="actionClearConsole">Clear console</string>
+
+    <string name="generalNotificationName">General Alerts</string>
+    <string name="generalNotificationDesc">General alerts about the system.</string>
+    <string name="notificationDefaultMsg">Running…</string>
+    <string name="notificationErrorMsg">Error: %s</string>
+    <string name="notificationErrorShutdownMsg">System shutdown after consecutive errors.</string>
 </resources>

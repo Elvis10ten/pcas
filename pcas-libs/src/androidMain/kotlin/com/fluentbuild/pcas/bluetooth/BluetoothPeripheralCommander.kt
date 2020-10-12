@@ -23,7 +23,7 @@ internal class BluetoothPeripheralCommander(
 
         cancellable = profileHolder.useProfile(profileId) { profile ->
             val bluetoothDevice = context.bluetoothAdapter.toBluetoothDevice(command.peripheral)
-            log.debug { "Performing comman: $command" }
+            log.debug { "Performing command: $command" }
 
             val commandInitiated = when(command) {
                 is Command.Connect -> profile.connect(bluetoothDevice)

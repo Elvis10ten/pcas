@@ -20,7 +20,7 @@ internal class ResolutionThrottler(
 				currentElapsedRealtime - lastTimeForResolution > INTERVAL_MILLIS
 
 		if(hasSatisfiedInterval) {
-			log.info { "Handling resolution: ${resolution::class.simpleName}" }
+			log.info { "Handling resolution: $resolution" }
 			lastResolutionsTimes[resolution] = currentElapsedRealtime
 			action(resolution)
 		} else {

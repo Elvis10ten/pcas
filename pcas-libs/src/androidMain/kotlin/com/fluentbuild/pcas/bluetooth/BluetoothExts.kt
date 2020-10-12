@@ -11,8 +11,6 @@ import com.fluentbuild.pcas.utils.VersionUtils
 internal fun BluetoothAdapter.toBluetoothDevice(peripheral: Peripheral): BluetoothDevice =
     getRemoteDevice(peripheral.address.colonHex)
 
-internal fun BluetoothDevice.toPeripheral() = Peripheral(name, Address.Mac(address))
-
 internal fun BluetoothProfile.getPeripheralBondState(device: BluetoothDevice): PeripheralBond.State? {
     return profileStateToPeripheralBondState(getConnectionState(device))
 }

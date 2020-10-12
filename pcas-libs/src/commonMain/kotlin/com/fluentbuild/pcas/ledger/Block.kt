@@ -1,9 +1,9 @@
 package com.fluentbuild.pcas.ledger
 
-import com.fluentbuild.pcas.HostInfo
-import com.fluentbuild.pcas.Model
+import com.fluentbuild.pcas.host.HostInfo
+import com.fluentbuild.pcas.values.Model
 import com.fluentbuild.pcas.peripheral.Peripheral
-import com.fluentbuild.pcas.services.ServiceId
+import com.fluentbuild.pcas.services.ServiceClassId
 import com.fluentbuild.pcas.peripheral.PeripheralBond
 import com.fluentbuild.pcas.peripheral.PeripheralProfile
 import kotlinx.serialization.Serializable
@@ -13,23 +13,23 @@ import kotlin.math.pow
 
 @Serializable
 data class Block(
-    @ProtoNumber(1)
-    val serviceId: ServiceId,
-    @ProtoNumber(2)
+	@ProtoNumber(1)
+    val serviceClassId: ServiceClassId,
+	@ProtoNumber(2)
     val profile: PeripheralProfile,
-    @ProtoNumber(3)
+	@ProtoNumber(3)
     val peripheral: Peripheral,
-    @ProtoNumber(4)
+	@ProtoNumber(4)
     val priority: Int,
-    @ProtoNumber(5)
+	@ProtoNumber(5)
     val timestamp: Long,
-    @ProtoNumber(6)
+	@ProtoNumber(6)
     val bondState: PeripheralBond.State,
-    @ProtoNumber(7)
+	@ProtoNumber(7)
     val owner: HostInfo,
-    @ProtoNumber(8)
+	@ProtoNumber(8)
     val canStreamData: Boolean,
-    @ProtoNumber(9)
+	@ProtoNumber(9)
     val canHandleDataStream: Boolean
 ): Model<Block> {
 
@@ -57,20 +57,20 @@ data class Block(
 
     override fun equals(other: Any?): Boolean {
         if(other !is Block) return false
-        return serviceId == other.serviceId &&
+        return serviceClassId == other.serviceClassId &&
                 profile == other.profile &&
                 peripheral == other.peripheral &&
                 owner == other.owner
     }
 
     fun hasContention(other: Block): Boolean {
-        return serviceId == other.serviceId &&
+        return serviceClassId == other.serviceClassId &&
                 profile == other.profile &&
                 peripheral == other.peripheral
     }
 
-    override fun isDuplicate(other: Block): Boolean {
-        return serviceId == other.serviceId &&
+    override fun isAllFieldsEqual(other: Block): Boolean {
+        return serviceClassId == other.serviceClassId &&
                 profile == other.profile &&
                 peripheral == other.peripheral &&
                 priority == other.priority &&
@@ -82,7 +82,7 @@ data class Block(
     }
 
     override fun hashCode(): Int {
-        var result = serviceId
+        var result = serviceClassId
         result = 31 * result + profile.hashCode()
         result = 31 * result + peripheral.hashCode()
         result = 31 * result + owner.hashCode()

@@ -1,6 +1,6 @@
 package com.fluentbuild.pcas.io
 
-import com.fluentbuild.pcas.HostInfo
+import com.fluentbuild.pcas.host.HostInfo
 
 internal interface SecureUnicastChannel {
 

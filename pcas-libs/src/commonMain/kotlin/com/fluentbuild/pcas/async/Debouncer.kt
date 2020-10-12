@@ -15,6 +15,6 @@ internal class Debouncer(
 
 	companion object {
 
-		private const val DELAY = 100
+		private const val DELAY = 200
 	}
 }

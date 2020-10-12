@@ -1,7 +1,7 @@
 package com.fluentbuild.pcas.ledger
 
 import com.fluentbuild.pcas.contention.Contention
-import com.fluentbuild.pcas.HostInfo
+import com.fluentbuild.pcas.host.HostInfo
 import com.fluentbuild.pcas.utils.filterSet
 import com.fluentbuild.pcas.utils.mapSet
 

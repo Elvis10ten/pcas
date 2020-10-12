@@ -6,11 +6,11 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.annotation.LayoutRes
 import com.fluentbuild.pcas.R
-import com.fluentbuild.pcas.views.inflate
+import com.fluentbuild.pcas.async.Cancellable
+import com.fluentbuild.pcas.utils.inflate
 import kotlinx.android.synthetic.main.item_service.view.*
 
 internal class ServicesRenderer(
-    private val provider: ServicesProvider,
     private val container: LinearLayout,
     private val onClick: (ServiceUiModel) -> Unit
 ) {
@@ -27,7 +27,7 @@ internal class ServicesRenderer(
         healthServiceView = container.inflateInto(R.layout.item_service)
     }
 
-    fun update() {
+    fun render(): Cancellable {
         provider.getAudioService().bind(audioServiceView)
         provider.getMouseService().bind(mouseServiceView)
         provider.getKeypadService().bind(keypadServiceView)

@@ -1,6 +1,6 @@
 package com.fluentbuild.pcas.ledger.messages
 
-import com.fluentbuild.pcas.Uuid
+import com.fluentbuild.pcas.host.Uuid
 import com.fluentbuild.pcas.ledger.Block
 import com.fluentbuild.pcas.utils.Timestamp
 import kotlinx.serialization.Serializable

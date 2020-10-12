@@ -1,6 +1,6 @@
 package com.fluentbuild.pcas.stream
 
-import com.fluentbuild.pcas.Uuid
+import com.fluentbuild.pcas.host.Uuid
 import com.fluentbuild.pcas.io.MarshalledMessageSize
 
 internal interface StreamHandler {

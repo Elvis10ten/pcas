@@ -5,7 +5,7 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 
 data class ServiceUiModel(
-    val id: Int,
+    val service: PeripheralService,
     @StringRes
     val name: Int,
     @DrawableRes

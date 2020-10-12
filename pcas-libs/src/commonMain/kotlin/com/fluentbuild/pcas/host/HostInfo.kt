@@ -1,5 +1,6 @@
-package com.fluentbuild.pcas
+package com.fluentbuild.pcas.host
 
+import com.fluentbuild.pcas.values.Model
 import com.fluentbuild.pcas.io.Address
 import com.fluentbuild.pcas.io.Port
 import kotlinx.serialization.Serializable
@@ -25,7 +26,7 @@ data class HostInfo(
 
     override fun hashCode() = uuid.hashCode()
 
-	override fun isDuplicate(other: HostInfo): Boolean {
+	override fun isAllFieldsEqual(other: HostInfo): Boolean {
 		return uuid == this.uuid &&
 				name == this.name &&
 				address == this.address &&

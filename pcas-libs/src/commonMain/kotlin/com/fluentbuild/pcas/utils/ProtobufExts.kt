@@ -7,9 +7,9 @@ import kotlinx.serialization.BinaryFormat
 import kotlinx.serialization.serializer
 
 internal inline fun <reified T> BinaryFormat.decode(message: MarshalledMessage, size: MarshalledMessageSize): T {
-	return if(message.size == size) {
-		decodeFromByteArray(serializersModule.serializer(), message)
-	} else {
-		decodeFromByteArray(serializersModule.serializer(), message.copyOfRange(OFFSET_ZERO, size))
-	}
+	return decodeFromByteArray(serializersModule.serializer(), message.copyOfRange(OFFSET_ZERO, size))
+}
+
+internal inline fun <reified T> BinaryFormat.decode(message: MarshalledMessage): T {
+	return decodeFromByteArray(serializersModule.serializer(), message)
 }
