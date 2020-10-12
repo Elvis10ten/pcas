@@ -3,12 +3,12 @@ package com.fluentbuild.pcas.contention
 import com.fluentbuild.pcas.contention.Contention.Resolution
 import com.fluentbuild.pcas.ledger.Ledger
 import com.fluentbuild.pcas.logs.getLog
-import com.fluentbuild.pcas.services.ServiceClassId
+import com.fluentbuild.pcas.services.ServiceClass
 import com.fluentbuild.pcas.utils.mapSet
 
 internal class ContentionsResolver(
-	private val resolutionHandlers: Map<ServiceClassId, ResolutionHandler>,
-	private val throttler: ResolutionThrottler
+    private val resolutionHandlers: Map<ServiceClass, ResolutionHandler>,
+    private val throttler: ResolutionThrottler
 ) {
 
     private val log = getLog()
@@ -47,7 +47,7 @@ internal class ContentionsResolver(
     }
 
     private fun handle(resolution: Resolution) {
-        resolutionHandlers.getValue(resolution.selfBlock.serviceClassId).handle(resolution)
+        resolutionHandlers.getValue(resolution.selfBlock.serviceClass).handle(resolution)
     }
 
     fun release() {

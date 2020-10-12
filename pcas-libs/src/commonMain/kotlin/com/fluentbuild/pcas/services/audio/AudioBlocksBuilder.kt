@@ -76,7 +76,7 @@ internal class AudioBlocksBuilder(
     }
 
     private fun createBlock(usages: Set<Usage>, bond: PeripheralBond) = Block(
-        serviceClassId = ServiceClass.AUDIO.classId,
+        serviceClass = ServiceClass.AUDIO,
         profile = bond.profile,
         peripheral = hostConfig.audioPeripheral,
         priority = usages.maxOfOrNull { it.priority } ?: Block.NO_PRIORITY,

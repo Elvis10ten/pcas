@@ -5,6 +5,7 @@ import com.fluentbuild.pcas.peripheral.Peripheral
 import com.fluentbuild.pcas.utils.AtomicFile
 import com.fluentbuild.pcas.utils.createRandomUuid
 import com.fluentbuild.pcas.utils.decode
+import kotlinx.serialization.decodeFromByteArray
 import kotlinx.serialization.encodeToByteArray
 import kotlinx.serialization.protobuf.ProtoBuf
 import java.io.File
@@ -31,7 +32,7 @@ class HostConfigStore(
 
 	fun get(): HostConfig? {
 		return try {
-			protoBuf.decode<HostConfig>(atomicFile.openRead().readAllBytes())
+			protoBuf.decodeFromByteArray<HostConfig>(atomicFile.openRead().readAllBytes())
 		} catch (e: Exception) {
 			null
 		}

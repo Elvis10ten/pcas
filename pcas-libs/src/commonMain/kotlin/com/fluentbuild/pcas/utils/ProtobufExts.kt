@@ -6,10 +6,5 @@ import com.fluentbuild.pcas.io.OFFSET_ZERO
 import kotlinx.serialization.BinaryFormat
 import kotlinx.serialization.serializer
 
-internal inline fun <reified T> BinaryFormat.decode(message: MarshalledMessage, size: MarshalledMessageSize): T {
-	return decodeFromByteArray(serializersModule.serializer(), message.copyOfRange(OFFSET_ZERO, size))
-}
-
-internal inline fun <reified T> BinaryFormat.decode(message: MarshalledMessage): T {
-	return decodeFromByteArray(serializersModule.serializer(), message)
-}
+internal inline fun <reified T> BinaryFormat.decode(message: MarshalledMessage, size: MarshalledMessageSize): T =
+	decodeFromByteArray(serializersModule.serializer(), message.copyOfRange(OFFSET_ZERO, size))
