@@ -4,9 +4,12 @@ import com.fluentbuild.pcas.async.Cancellable
 import com.fluentbuild.pcas.io.SecureUnicastChannel
 import com.fluentbuild.pcas.logs.getLog
 import com.fluentbuild.pcas.services.ServiceClass
+import com.fluentbuild.pcas.utils.decode
+import kotlinx.serialization.protobuf.ProtoBuf
 
-internal class StreamDemux(
-    private val unicast: SecureUnicastChannel,
+internal class StreamDemuxer(
+    private val unicastChannel: SecureUnicastChannel,
+    private val protoBuf: ProtoBuf,
     private val handlers: Map<ServiceClass, StreamHandler>
 ) {
 
@@ -15,19 +18,15 @@ internal class StreamDemux(
     fun run(): Cancellable {
         log.debug { "Running StreamDemux" }
 
-        unicast.init { message, size ->
-            handlers.getValue(message.service).handle(
-                sender = message.sender,
-                payload = message,
-                offset = PAYLOAD_OFFSET,
-                size = size.payloadSize
-            )
+        unicastChannel.init { message, messageSize ->
+            val streamMessage = protoBuf.decode<StreamMessage>(message, messageSize)
+            handlers.getValue(streamMessage.serviceClass).handle(streamMessage)
         }
 
         return Cancellable {
             log.debug { "Stopping StreamDemux" }
             handlers.values.forEach { it.release() }
-            unicast.close()
+            unicastChannel.close()
         }
     }
 }

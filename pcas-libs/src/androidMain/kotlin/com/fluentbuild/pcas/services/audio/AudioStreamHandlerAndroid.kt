@@ -1,14 +1,14 @@
 package com.fluentbuild.pcas.services.audio
 
-import com.fluentbuild.pcas.host.Uuid
 import com.fluentbuild.pcas.logs.getLog
 import com.fluentbuild.pcas.stream.StreamHandler
+import com.fluentbuild.pcas.stream.StreamMessage
 
 class AudioStreamHandlerAndroid: StreamHandler {
 
     private val log = getLog()
 
-    override fun handle(sender: Uuid, payload: ByteArray, offset: Int, size: Int) {
+    override fun handle(message: StreamMessage) {
         log.debug(::handle)
     }
 

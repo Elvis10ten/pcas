@@ -88,7 +88,7 @@ class AppContainer(appContext: Context, hostConfig: HostConfig) {
 
     val engine = Engine(
         ledgerProtocol = ledgerModule.ledgerProtocol,
-        streamDemux = streamModule.streamDemux,
+        streamDemux = streamModule.streamDemuxer,
         contentionsResolver = contentionModule.contentionsResolver
     )
 

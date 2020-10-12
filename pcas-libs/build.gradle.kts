@@ -9,12 +9,12 @@ plugins {
 
 group = "com.fluentbuild"
 version = "1.0-SNAPSHOT"
-val serializationVersion = "1.0.0-RC"
+val serializationVersion = "1.0.0"
 
 repositories {
     gradlePluginPortal()
     google()
-    maven(url = "https://kotlin.bintray.com/kotlinx/") // For kotlinx.datetime: soon will be just jcenter()
+    maven(url = "https://kotlin.bintray.com/kotlinx/")
     jcenter()
     mavenCentral()
     maven(url = "https://oss.sonatype.org/content/repositories/snapshots/")
@@ -48,7 +48,6 @@ kotlin {
             dependencies {
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-core:${serializationVersion}")
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-protobuf:${serializationVersion}")
-                implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.1.0")
             }
         }
 
@@ -66,7 +65,6 @@ kotlin {
                 implementation(kotlin("test-common"))
                 implementation(kotlin("test-annotations-common"))
                 api("com.jakewharton.timber:timber-jdk:5.0.0-SNAPSHOT")
-                implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.1.0")
             }
         }
 

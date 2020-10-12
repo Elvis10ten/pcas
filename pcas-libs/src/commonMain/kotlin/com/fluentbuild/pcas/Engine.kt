@@ -47,7 +47,7 @@ class Engine internal constructor(
 
 		try {
 			init()
-			cancellables += streamDemux.run()
+			cancellables += streamDemuxer.run()
 			cancellables += ledgerProtocol.run { ledger ->
 				log.info { "Ledger updated" }
 				currentLedger = ledger
