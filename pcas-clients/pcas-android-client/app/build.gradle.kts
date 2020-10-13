@@ -43,9 +43,10 @@ dependencies {
     implementation("androidx.core:core-ktx:1.3.2")
     implementation("androidx.appcompat:appcompat:1.2.0")
     implementation("com.google.android.material:material:1.3.0-alpha03")
-    implementation("com.github.ybq:Android-SpinKit:1.4.0")
 
-    api("com.fluentbuild:pcas-libs-android-debug:1.0-SNAPSHOT")
+    implementation("com.journeyapps:zxing-android-embedded:4.1.0")
+
+    implementation("com.fluentbuild:pcas-libs-android-debug:1.0-SNAPSHOT")
 
     testImplementation("junit:junit:4.13")
     androidTestImplementation("com.android.support.test.espresso:espresso-core:3.0.2")

@@ -1,5 +1,6 @@
-package com.fluentbuild.pcas.ui
+package com.fluentbuild.pcas.helpers
 
+import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -9,26 +10,28 @@ import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import com.fluentbuild.pcas.MainActivity
 import com.fluentbuild.pcas.R
-import com.fluentbuild.pcas.utils.notificationManager
 
 class GeneralNotifications(private val context: Context) {
-    
-    val builder: NotificationCompat.Builder
+
+    private val Context.notificationManager
+        get() = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+    private val builder: NotificationCompat.Builder
     
     init {
-        val nameText = context.getString(R.string.generalNotificationName)
-        val descriptionText = context.getString(R.string.generalNotificationDesc)
+        val channelName = context.getString(R.string.generalNotificationName)
+        val channelDescription = context.getString(R.string.generalNotificationDesc)
         val importance = NotificationManager.IMPORTANCE_LOW
 
-        NotificationChannel(CHANNEL_ID, nameText, importance).apply {
-            description = descriptionText
+        NotificationChannel(CHANNEL_ID, channelName, importance).apply {
+            description = channelDescription
             context.notificationManager.createNotificationChannel(this)
         }
 
         builder = NotificationCompat.Builder(context, CHANNEL_ID)
             .setContentTitle(context.getString(R.string.appName))
             .setSmallIcon(R.mipmap.ic_launcher_round)
-            .setContentText(context.getString(R.string.notificationDefaultMsg))
+            .setContentText(context.getString(R.string.notificationIdleMsg))
             .setColor(ContextCompat.getColor(context, R.color.colorPrimary))
             .setPriority(NotificationCompat.PRIORITY_MIN)
             .setContentIntent(
@@ -41,9 +44,11 @@ class GeneralNotifications(private val context: Context) {
     }
 
     fun notify(@StringRes stringId: Int, vararg formatArgs: String?) {
-        val notification = builder.setContentText(context.getString(stringId, formatArgs)).build()
+        val notification = builder.setContentText(context.getString(stringId, *formatArgs)).build()
         context.notificationManager.notify(ID, notification)
     }
+
+    fun getNotification(): Notification = builder.build()
 
     companion object {
 

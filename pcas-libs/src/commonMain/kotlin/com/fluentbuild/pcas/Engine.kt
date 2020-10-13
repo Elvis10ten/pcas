@@ -2,37 +2,32 @@ package com.fluentbuild.pcas
 
 import com.fluentbuild.pcas.async.Cancellable
 import com.fluentbuild.pcas.async.Cancellables
-import com.fluentbuild.pcas.ledger.Ledger
 import com.fluentbuild.pcas.logs.getLog
-import com.fluentbuild.pcas.utils.Delegates.observable
 
 /**
  * The root class to [run] and [stop] PCAS.
  */
 class Engine internal constructor(
+	private val appStateObservable: AppStateObservable,
 	private val componentProvider: () -> EngineComponent
 ) {
 
     private val log = getLog()
 
-	val currentEngineState get() = if(currentCancellable == null) State.IDLE else State.RUNNING
-
-	var ledgerCallback: ((Ledger?) -> Unit)? by observable { it?.invoke(currentLedger) }
-	var stateCallback: ((State) -> Unit)? by observable { it?.invoke(currentEngineState) }
-
-	private var currentCancellable: Cancellable? by observable { stateCallback?.invoke(currentEngineState) }
-	private var currentLedger: Ledger? by observable { ledgerCallback?.invoke(it) }
+	private var currentCancellable: Cancellable? = null
 
 	fun run() {
-		if(currentEngineState == State.RUNNING) return
+		if(currentCancellable != null) return
         log.info { "Running engine!" }
 
 		val dependencies = componentProvider()
 		currentCancellable = dependencies.run().apply {
+			appStateObservable.update(Status.RUNNING)
 			this += Cancellable {
 				log.info { "Stopping engine!" }
 				dependencies.release()
-				currentLedger = null
+				appStateObservable.update(null)
+				appStateObservable.update(Status.IDLE)
 				currentCancellable = null
 			}
 		}
@@ -49,7 +44,7 @@ class Engine internal constructor(
 			cancellables += streamDemuxer.run()
 			cancellables += ledgerProtocol.run { ledger ->
 				log.info { "Ledger updated" }
-				currentLedger = ledger
+				appStateObservable.update(ledger)
 				contentionsResolver.resolve(ledger)
 			}
 		} catch (e: Exception) {
@@ -61,7 +56,7 @@ class Engine internal constructor(
 		return cancellables
 	}
 
-	enum class State {
+	enum class Status {
 		RUNNING,
 		IDLE
 	}

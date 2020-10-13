@@ -18,4 +18,6 @@
     <dimen name="size5">16dp</dimen>
     <dimen name="size6">24dp</dimen>
     <dimen name="size7">32dp</dimen>
+
+    <dimen name="qrCodeSize">160dp</dimen>
 </resources>

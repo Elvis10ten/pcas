@@ -27,8 +27,8 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Title"
             />
 
-        <LinearLayout
-            android:id="@+id/servicesContainer"
+        <com.fluentbuild.pcas.views.ServicesContainerView
+            android:id="@+id/servicesContainerView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -43,29 +43,11 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Title"
             />
 
-        <androidx.cardview.widget.CardView
-            android:id="@+id/consoleCardView"
+        <com.fluentbuild.pcas.widgets.ConsoleWidget
+            android:id="@+id/consoleWidget"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"
-            app:cardBackgroundColor="#282a36">
-
-            <ScrollView
-                android:id="@+id/consoleScrollView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:padding="@dimen/size5"
-                android:clipToPadding="false">
-
-                <TextView
-                    android:id="@+id/consoleTextView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:alpha="@dimen/alphaEmphasisHigh"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                    />
-            </ScrollView>
-        </androidx.cardview.widget.CardView>
+            android:layout_weight="1" />
 
     </LinearLayout>
 
@@ -77,11 +59,10 @@
         app:menu="@menu/main_menu"
         />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/engineButtonView"
+    <com.fluentbuild.pcas.widgets.EngineButtonWidget
+        android:id="@+id/engineButtonWidget"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_play_arrow"
         app:layout_anchor="@id/bottomAppBarView"
         />
 

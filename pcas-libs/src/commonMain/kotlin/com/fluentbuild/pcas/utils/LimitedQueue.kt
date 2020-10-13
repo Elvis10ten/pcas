@@ -11,7 +11,7 @@ class LimitedQueue<ElementT>(private val limit: Int) {
 		}
 	}
 
-	fun getElements(): Collection<ElementT> = elements
+	fun getElements(): List<ElementT> = elements
 
 	fun clear() {
 		elements.clear()

@@ -1,23 +1,14 @@
 package com.fluentbuild.pcas.logs
 
-import com.fluentbuild.pcas.utils.LimitedQueue
+import com.fluentbuild.pcas.AppStateObservable
 
 object RichLog {
 
-	private const val MAX_CACHE_SIZE = 100
-	private val cache = LimitedQueue<String>(MAX_CACHE_SIZE)
-	var observer: ((String) -> Unit)? = null
+	var appStateObservable: AppStateObservable? = null
 
 	fun append(tag: String, message: () -> String, type: Type) {
 		val line = "<font color='${type.colorHex}'>$ $tag: ${message()}</font><br/><br/>"
-		cache.push(line)
-		observer?.invoke(line)
-	}
-
-	fun getLines() = cache.getElements().joinToString(separator = "")
-
-	fun clear() {
-		cache.clear()
+		appStateObservable?.update(line)
 	}
 
 	enum class Type(val colorHex: String) {

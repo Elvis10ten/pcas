@@ -49,7 +49,7 @@ internal class Parceler(
     companion object {
 
         private const val CIPHER_TRANSFORMATION = "AES/GCM/NoPadding"
-        private const val KEY_ALGORITHM = "AES"
+        const val KEY_ALGORITHM = "AES"
         private const val IV_SIZE = 12
         private const val AUTH_TAG_SIZE = 128
     }

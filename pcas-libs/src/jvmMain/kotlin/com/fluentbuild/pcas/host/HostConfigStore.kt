@@ -1,5 +1,6 @@
 package com.fluentbuild.pcas.host
 
+import com.fluentbuild.pcas.io.KeyTool
 import com.fluentbuild.pcas.peripheral.Peripheral
 import com.fluentbuild.pcas.utils.AtomicFile
 import com.fluentbuild.pcas.utils.createRandomUuid
@@ -7,6 +8,9 @@ import kotlinx.serialization.decodeFromByteArray
 import kotlinx.serialization.encodeToByteArray
 import kotlinx.serialization.protobuf.ProtoBuf
 import java.io.File
+import java.security.spec.KeySpec
+import javax.crypto.KeyGenerator
+import javax.crypto.SecretKey
 
 class HostConfigStore(
 	private val protoBuf: ProtoBuf,
@@ -17,29 +21,40 @@ class HostConfigStore(
 	// have memory cache
 	private val atomicFile = AtomicFile(File(privateFilesDir, HOST_CONFIG_FILE_NAME))
 
-	fun upsert(audioPeripheral: Peripheral, networkKey: ByteArray) {
-		val hostConfig = getInternal()
-		val uuid = hostConfig?.uuid ?: createRandomUuid()
-		val name = hostConfig?.name ?: nameProvider()
-		val newConfig = HostConfig(uuid, name, networkKey, audioPeripheral)
+	fun setNetworkKey(networkKey: ByteArray) {
+		val hostConfig = getInternal().copy(networkKey = networkKey)
+		update(hostConfig)
+	}
 
+	fun setAudioPeripheral(audioPeripheral: Peripheral) {
+		val hostConfig = getInternal().copy(audioPeripheral = audioPeripheral)
+		update(hostConfig)
+	}
+
+	private fun update(hostConfig: HostConfigPartial) {
 		atomicFile.startWrite().apply {
-			write(protoBuf.encodeToByteArray(newConfig))
+			write(protoBuf.encodeToByteArray(hostConfig))
 			atomicFile.finishWrite(this)
 		}
 	}
 
 	fun get(): HostConfig {
-		return protoBuf.decodeFromByteArray(atomicFile.openRead().readAllBytes())
+		return getInternal().createFull()
 	}
 
-	fun hasConfig() = getInternal() != null
+	fun isPeripheralsSetup(): Boolean {
+		return  getPartial().audioPeripheral != null
+	}
 
-	private fun getInternal(): HostConfig? {
+	fun getPartial(): HostConfigPartial {
+		return getInternal()
+	}
+
+	private fun getInternal(): HostConfigPartial {
 		return try {
-			protoBuf.decodeFromByteArray<HostConfig>(atomicFile.openRead().readAllBytes())
+			protoBuf.decodeFromByteArray(atomicFile.openRead().readBytes())
 		} catch (e: Exception) {
-			null
+			HostConfigPartial(createRandomUuid(), nameProvider(), KeyTool.generate().encoded)
 		}
 	}
 

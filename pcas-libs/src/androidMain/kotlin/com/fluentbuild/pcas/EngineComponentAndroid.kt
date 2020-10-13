@@ -18,11 +18,10 @@ import kotlinx.serialization.protobuf.ProtoBuf
 
 internal class EngineComponentAndroid(
 	appContext: Context,
+	mainThreadHandler: Handler,
 	hostConfig: HostConfig,
 	protoBuf: ProtoBuf
 ): EngineComponent {
-
-	private val mainThreadHandler = Handler(appContext.mainLooper)
 
 	private val hostAddressProvider = AddressProviderAndroid(appContext)
 

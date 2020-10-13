@@ -4,73 +4,50 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.fluentbuild.pcas.async.Cancellables
-import com.fluentbuild.pcas.models.MainAction
-import com.fluentbuild.pcas.models.getBackgroundColor
-import com.fluentbuild.pcas.models.getIconDrawable
-import com.fluentbuild.pcas.services.PeripheralService
-import com.fluentbuild.pcas.services.ServiceUiModel
-import com.fluentbuild.pcas.services.ServicesRenderer
-import com.fluentbuild.pcas.ui.ConsoleRenderer
+import com.fluentbuild.pcas.actions.ClearLogAction
+import com.fluentbuild.pcas.actions.DryRunEngineAction
+import com.fluentbuild.pcas.actions.SetupNetworkAction
+import com.fluentbuild.pcas.actions.SoftStopEngineAction
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
-    private val cancellables = Cancellables()
-    private val consoleRenderer by lazy { ConsoleRenderer(consoleCardView) }
-    private val servicesRenderer by lazy { ServicesRenderer(servicesContainer, ::onServiceClicked) }
+    private val hostConfig get() = appComponent.hostConfigStore.getPartial()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        getApp().engineController.setRunCallback { engineState ->
-            engineButtonView.setImageDrawable(engineState.getIconDrawable(this))
-            engineButtonView.backgroundTintList = engineState.getBackgroundColor(this)
-        }
-
         bottomAppBarView.setOnMenuItemClickListener {
-            onActionClicked(MainAction.from(it.itemId))
+            onActionClicked(it.itemId)
             true
         }
 
-        cancellables += servicesRenderer.render()
-        cancellables += consoleRenderer.render()
-    }
+        DryRunEngineAction.perform(this)
 
-    private fun onServiceClicked(service: ServiceUiModel) {
-        when(service.service) {
-            PeripheralService.AUDIO -> {
-
-            }
-            PeripheralService.KEYPAD -> {
-
-            }
-            PeripheralService.MOUSE -> {
-
-            }
+        if(hostConfig.audioPeripheral == null) {
+            SetupNetworkAction.perform(this)
         }
     }
 
-    private fun onActionClicked(action: MainAction) {
-        when(action) {
-            MainAction.CLEAR_CONSOLE -> {
-                consoleRenderer.clearConsole()
+    private fun onActionClicked(itemId: Int) {
+        when(itemId) {
+            R.id.actionClearConsole -> {
+                ClearLogAction.perform(this)
             }
-            MainAction.SETUP -> {
-                // TODO
+            R.id.actionSetup -> {
+                SetupNetworkAction.perform(this)
             }
         }
     }
 
     override fun onDestroy() {
+        SoftStopEngineAction.perform(this)
         super.onDestroy()
-        cancellables.cancel()
     }
 
     companion object {
 
-        fun getIntent(context: Context) =
-            Intent(context, MainActivity::class.java)
+        fun getIntent(context: Context) = Intent(context, MainActivity::class.java)
     }
 }

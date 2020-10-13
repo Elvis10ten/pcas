@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/size5"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/setupTitle"
+        android:gravity="center_horizontal"
+        android:textAppearance="@style/TextAppearance.AppCompat.Title"
+        />
+
+    <ImageView
+        android:id="@+id/setupImageView"
+        android:layout_width="@dimen/qrCodeSize"
+        android:layout_height="@dimen/qrCodeSize"
+        android:contentDescription="@string/setupQrCodeContentDesc"
+        />
+
+    <TextView
+        android:id="@+id/setupInstructionTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:padding="@dimen/size2"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingTop="@dimen/size5"
+        android:paddingBottom="@dimen/size5">
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1"
+            android:layout_marginTop="@dimen/size3"
+            android:background="@color/colorDivider"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/setupOr"
+            android:paddingStart="@dimen/size3"
+            android:paddingEnd="@dimen/size3"
+            android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+            android:layout_marginTop="@dimen/size3"
+            />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1"
+            android:background="@color/colorDivider"
+            android:layout_marginTop="@dimen/size3"
+            />
+
+    </LinearLayout>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/setupScanButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="56dp"
+        android:layout_marginTop="@dimen/size5"
+        android:text="@string/setupActionScanCode"
+        style="@style/Widget.MaterialComponents.Button"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/setupActionScanCodeCaption"
+        android:gravity="center_horizontal"
+        android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+        android:layout_marginTop="@dimen/size3"
+        />
+</LinearLayout>

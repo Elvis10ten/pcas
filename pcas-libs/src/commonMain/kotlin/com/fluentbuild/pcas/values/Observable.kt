@@ -11,7 +11,7 @@ import com.fluentbuild.pcas.async.Cancellable
  *
  * Observables are required to emit the current value immediately after they are subscribed to.
  */
-internal fun interface Observable<ValueT> {
+fun interface Observable<ValueT> {
 
     fun subscribe(observer: (ValueT) -> Unit): Cancellable
 }

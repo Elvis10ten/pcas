@@ -1,17 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.fluentbuild.pcas">
 
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+
     <application
-        android:name=".App"
+        android:name=".ClientApp"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/appName"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:allowBackup="false"
         android:supportsRtl="true"
+        android:hardwareAccelerated="true"
         android:theme="@style/AppTheme">
 
-        <activity android:name=".MainActivity">
+        <activity
+            android:name=".MainActivity"
+            android:screenOrientation="portrait">
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -23,6 +29,11 @@
             android:name=".MainService"
             android:foregroundServiceType="mediaProjection"
             />
+
+        <activity
+            android:name="com.journeyapps.barcodescanner.CaptureActivity"
+            android:screenOrientation="portrait"
+            tools:replace="screenOrientation" />
     </application>
 
 </manifest>

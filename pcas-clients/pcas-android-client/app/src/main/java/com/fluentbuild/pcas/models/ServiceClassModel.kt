@@ -1,11 +1,13 @@
-package com.fluentbuild.pcas.services
+package com.fluentbuild.pcas.models
 
 import androidx.annotation.ColorInt
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
+import com.fluentbuild.pcas.services.ServiceClass
 
-data class ServiceUiModel(
-    val service: PeripheralService,
+data class ServiceClassModel(
+    val serviceClass: ServiceClass,
+    val isEnabled: Boolean,
     @StringRes
     val name: Int,
     @DrawableRes
@@ -14,12 +16,5 @@ data class ServiceUiModel(
     val iconBackgroundColor: Int,
     @ColorInt
     val iconColor: Int,
-    val state: BondState
-) {
-
-    enum class BondState {
-        HAS_A_BOND,
-        IN_PROGRESS,
-        NO_BONDS
-    }
-}
+    val connectionCount: Int = 0
+): Model
