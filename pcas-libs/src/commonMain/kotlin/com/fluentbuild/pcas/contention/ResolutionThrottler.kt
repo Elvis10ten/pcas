@@ -4,9 +4,10 @@ import com.fluentbuild.pcas.logs.getLog
 import com.fluentbuild.pcas.utils.ElapsedRealtime
 import com.fluentbuild.pcas.utils.TimeProvider
 
-internal class ResolutionThrottler(
-	private val timeProvider: TimeProvider
-) {
+/**
+ * Throttles resolutions so handlers are only called at most once per [MIN_INTERVAL_MILLIS]
+ */
+internal class ResolutionThrottler(private val timeProvider: TimeProvider) {
 
 	private val log = getLog()
 	private val lastResolutionsTimes = mutableMapOf<Contention.Resolution, ElapsedRealtime>()
@@ -17,10 +18,10 @@ internal class ResolutionThrottler(
 		val lastTimeForResolution = lastResolutionsTimes[resolution]
 
 		val hasSatisfiedInterval = lastTimeForResolution == null ||
-				currentElapsedRealtime - lastTimeForResolution > INTERVAL_MILLIS
+				currentElapsedRealtime - lastTimeForResolution > MIN_INTERVAL_MILLIS
 
 		if(hasSatisfiedInterval) {
-			log.info { "Handling resolution: $resolution" }
+			log.info { "Handling resolution: ${resolution::class.simpleName} for: ${resolution.selfBlock.profile}" }
 			lastResolutionsTimes[resolution] = currentElapsedRealtime
 			action(resolution)
 		} else {
@@ -34,6 +35,6 @@ internal class ResolutionThrottler(
 
 	companion object {
 
-		private const val INTERVAL_MILLIS = 2000
+		private const val MIN_INTERVAL_MILLIS = 2000
 	}
 }
