@@ -2,6 +2,7 @@ package com.fluentbuild.pcas.host
 
 import com.fluentbuild.pcas.peripheral.Peripheral
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 import kotlinx.serialization.protobuf.ProtoNumber
 
 @Serializable
@@ -11,9 +12,11 @@ class HostConfig(
 	@ProtoNumber(2)
 	val name: String,
 	@ProtoNumber(3)
-	val networkKey: ByteArray,
+	val networkKey: ByteArray?,
 	@ProtoNumber(4)
-	val audioPeripheral: Peripheral,
-	@ProtoNumber(5)
-	val canCaptureAudio: Boolean
-)
+	val audioPeripheral: Peripheral?
+) {
+
+	@Transient
+	val canCaptureAudio: Boolean = false
+}

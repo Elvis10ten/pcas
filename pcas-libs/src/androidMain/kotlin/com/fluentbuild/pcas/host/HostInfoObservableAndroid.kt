@@ -46,6 +46,6 @@ internal class HostInfoObservableAndroid(
 			address = hostAddressProvider.get(),
 			port = unicastChannel.getPort(),
 			isInteractive = context.powerManager.isInteractive,
-			minBufferSizeBytes = audioConfig.minBufferSizeBytes
+			minAudioBufferSizeBytes = audioConfig.minBufferSizeBytes
 		)
 }
