@@ -18,7 +18,7 @@ internal class AudioServiceModule(
 	hostConfig: HostConfig,
 	hostObservable: HostInfoObservable,
 	timeProvider: TimeProviderJvm,
-	debouncerProvider: () -> Debouncer,
+	blockBuilderDebouncer: (Int) -> Debouncer,
 	callStateWatcher: CallStateWatcher,
 	audioPlaybackWatcher: AudioPlaybackWatcher,
 	a2dpProfileStateWatcher: BluetoothProfileStateWatcher,
@@ -57,7 +57,12 @@ internal class AudioServiceModule(
     val audioBlocksProducer = AudioBlocksProducer(
         propObservable = propertyObservable,
         bondsObservable = bondsObservable,
-        debouncer = debouncerProvider(),
+        debouncer = blockBuilderDebouncer(AUDIO_BLOCK_DEBOUNCE_DELAY_MILLIS),
 		audioBlocksBuilderProvider = audioBlocksBuilderProvider
     )
+
+	companion object {
+
+		private const val AUDIO_BLOCK_DEBOUNCE_DELAY_MILLIS = 100
+	}
 }

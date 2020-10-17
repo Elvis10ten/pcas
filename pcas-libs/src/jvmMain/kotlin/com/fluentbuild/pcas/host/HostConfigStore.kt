@@ -8,9 +8,6 @@ import kotlinx.serialization.decodeFromByteArray
 import kotlinx.serialization.encodeToByteArray
 import kotlinx.serialization.protobuf.ProtoBuf
 import java.io.File
-import java.security.spec.KeySpec
-import javax.crypto.KeyGenerator
-import javax.crypto.SecretKey
 
 class HostConfigStore(
 	private val protoBuf: ProtoBuf,

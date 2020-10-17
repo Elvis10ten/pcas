@@ -48,7 +48,7 @@ class GeneralNotifications(private val context: Context) {
         context.notificationManager.notify(ID, notification)
     }
 
-    fun getNotification(): Notification = builder.build()
+    fun buildNotification(): Notification = builder.build()
 
     companion object {
 

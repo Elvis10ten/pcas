@@ -19,9 +19,8 @@ internal class AudioBlocksProducer(
     override fun subscribe(consumer: (Set<Block>) -> Unit): Cancellable {
         val builder = audioBlocksBuilderProvider()
         val cancellables = Cancellables()
-		var debouncerCancellable: Cancellable = SentinelCancellable
         val updateConsumer = {
-			debouncerCancellable = debouncer.debounce(debouncerCancellable) { builder.buildNovel()?.let(consumer) }
+			debouncer.debounce { builder.buildNovel()?.let(consumer) }
         }
 
         cancellables += propObservable.subscribe {
@@ -35,7 +34,7 @@ internal class AudioBlocksProducer(
         }
 
         return Cancellable {
-			debouncerCancellable.cancel()
+			debouncer.cancel()
 			cancellables.cancel()
 		}
     }

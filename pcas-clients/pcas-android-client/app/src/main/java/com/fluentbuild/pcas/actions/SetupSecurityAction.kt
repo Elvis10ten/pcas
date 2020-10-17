@@ -6,7 +6,7 @@ import com.fluentbuild.pcas.PeripheralListFragment
 import com.fluentbuild.pcas.SetupFragment
 import com.fluentbuild.pcas.services.ServiceClass
 
-object SetupNetworkAction: Action {
+object SetupSecurityAction: Action {
 
     override fun perform(context: Context) {
         SetupFragment().show(

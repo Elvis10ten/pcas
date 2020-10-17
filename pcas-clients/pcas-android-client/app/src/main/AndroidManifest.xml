@@ -4,6 +4,7 @@
     package="com.fluentbuild.pcas">
 
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
 
     <application
         android:name=".ClientApp"

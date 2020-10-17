@@ -4,15 +4,14 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.fluentbuild.pcas.actions.ClearLogAction
-import com.fluentbuild.pcas.actions.DryRunEngineAction
-import com.fluentbuild.pcas.actions.SetupNetworkAction
-import com.fluentbuild.pcas.actions.SoftStopEngineAction
+import com.fluentbuild.pcas.actions.*
+import com.fluentbuild.pcas.services.ServiceClass
 import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : AppCompatActivity() {
+class MainActivity: AppCompatActivity() {
 
-    private val hostConfig get() = appComponent.hostConfigStore.getPartial()
+    private val appStateObservable = appComponent.appStateObservable
+    private val currentHostConfig get() = appStateObservable.currentAppState.hostConfig
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,19 +24,15 @@ class MainActivity : AppCompatActivity() {
 
         DryRunEngineAction.perform(this)
 
-        if(hostConfig.audioPeripheral == null) {
-            SetupNetworkAction.perform(this)
+        if(currentHostConfig.audioPeripheral == null) {
+            SelectPeripheralAction(ServiceClass.AUDIO).perform(this)
         }
     }
 
     private fun onActionClicked(itemId: Int) {
         when(itemId) {
-            R.id.actionClearConsole -> {
-                ClearLogAction.perform(this)
-            }
-            R.id.actionSetup -> {
-                SetupNetworkAction.perform(this)
-            }
+            R.id.actionClearConsole -> ClearLogAction.perform(this)
+            R.id.actionSetupSecurity -> SetupSecurityAction.perform(this)
         }
     }
 

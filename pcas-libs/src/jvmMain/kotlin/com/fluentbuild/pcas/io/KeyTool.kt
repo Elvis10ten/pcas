@@ -15,4 +15,8 @@ object KeyTool {
 	fun generate(): SecretKey {
 		return KeyGenerator.getInstance(Parceler.KEY_ALGORITHM).generateKey()
 	}
+
+	fun toString(key: ByteArray): String {
+		return Base64.getEncoder().encodeToString(key)
+	}
 }

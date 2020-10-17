@@ -11,15 +11,14 @@
     <string name="serviceKeypad">Keypad</string>
     <string name="serviceHealth">Health</string>
 
-    <string name="actionSetup">Setup</string>
+    <string name="actionSetupSecurity">Setup security</string>
     <string name="actionClearConsole">Clear console</string>
 
     <string name="generalNotificationName">General Alerts</string>
     <string name="generalNotificationDesc">General alerts about the system.</string>
     <string name="notificationIdleMsg">Idle</string>
     <string name="notificationRunningMsg">Running…</string>
-    <string name="notificationErrorMsg">Error: %s</string>
-    <string name="notificationErrorShutdownMsg">System shutdown after consecutive errors.</string>
+    <string name="notificationErrorMsg">An error occurred while running. Please restart app.</string>
 
     <string name="setupTitle">Network setup</string>
     <string name="setupInstruction">Scan this QR code on another device to get <![CDATA[<b>%s</b>]]> network key.</string>

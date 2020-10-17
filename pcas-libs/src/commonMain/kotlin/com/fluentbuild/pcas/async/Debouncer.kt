@@ -1,20 +1,16 @@
 package com.fluentbuild.pcas.async
 
-internal class Debouncer(
-	private val runner: ThreadRunner
+internal class Debouncer constructor(
+	private val runner: ThreadRunner,
+	private val delayMillis: Int
 ) {
 
-	fun debounce(cancellable: Cancellable, action: () -> Unit): Cancellable {
-		cancellable.cancel()
-		runner.runOnMainDelayed(DELAY, action)
-
-		return Cancellable {
-			runner.cancelAll()
-		}
+	fun debounce(action: () -> Unit) {
+		runner.cancelAll()
+		runner.runOnMainDelayed(delayMillis, action)
 	}
 
-	companion object {
-
-		private const val DELAY = 200
+	fun cancel() {
+		runner.cancelAll()
 	}
 }

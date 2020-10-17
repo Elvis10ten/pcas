@@ -1,6 +1,5 @@
 package com.fluentbuild.pcas
 
-import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,9 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.text.parseAsHtml
-import com.fluentbuild.pcas.actions.SelectPeripheralAction
 import com.fluentbuild.pcas.helpers.NetworkSetup
-import com.fluentbuild.pcas.services.ServiceClass
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.zxing.integration.android.IntentIntegrator
 import kotlinx.android.synthetic.main.setup_fragment.*
@@ -18,7 +15,6 @@ import kotlinx.android.synthetic.main.setup_fragment.*
 class SetupFragment: BottomSheetDialogFragment() {
 
     private val networkSetup by lazy { NetworkSetup(requireContext()) }
-    private val hostConfigStore get() = requireContext().appComponent.hostConfigStore
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -56,16 +52,10 @@ class SetupFragment: BottomSheetDialogFragment() {
 
         try {
             networkSetup.setup(result.contents)
+            dismiss()
         } catch (e: Exception) {
             e.printStackTrace()
             Toast.makeText(requireContext(), R.string.setupInvalidQrCodeError, Toast.LENGTH_LONG).show()
-        }
-    }
-
-    override fun onDismiss(dialog: DialogInterface) {
-        super.onDismiss(dialog)
-        if(!hostConfigStore.isPeripheralsSetup()) {
-            SelectPeripheralAction(ServiceClass.AUDIO).perform(requireContext())
         }
     }
 }

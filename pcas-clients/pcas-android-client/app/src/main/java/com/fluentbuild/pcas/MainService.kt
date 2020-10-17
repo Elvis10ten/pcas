@@ -8,14 +8,12 @@ import com.fluentbuild.pcas.helpers.GeneralNotifications
 
 class MainService: Service() {
 
-    private var numRetries = 0
-    private val retryRunnable = Runnable { startEngine() }
     private lateinit var notifications: GeneralNotifications
     
     override fun onCreate() {
         super.onCreate()
         notifications = GeneralNotifications(this)
-        startForeground(GeneralNotifications.ID, notifications.getNotification())
+        startForeground(GeneralNotifications.ID, notifications.buildNotification())
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -37,37 +35,27 @@ class MainService: Service() {
             notifications.notify(R.string.notificationRunningMsg)
             appComponent.engine.run()
         } catch (t: Throwable) {
-            t.printStackTrace()
-            notifications.notify(R.string.notificationErrorMsg, t.message)
-            appComponent.engine.stop()
-
-            if(numRetries < MAX_RETRIES) {
-                numRetries++
-                appComponent.mainHandler.postDelayed(retryRunnable, RETRY_DELAY_MILLIS)
-            } else {
-                notifications.notify(R.string.notificationErrorShutdownMsg)
-                stopSelf()
-            }
+            notifications.notify(R.string.notificationErrorMsg)
+            stopEngine()
+            stopSelf()
         }
     }
     
     private fun stopEngine() {
         appComponent.engine.stop()
-        appComponent.mainHandler.removeCallbacks(retryRunnable)
     }
 
     override fun onBind(intent: Intent): IBinder? = null
     
     companion object {
 
-        private const val MAX_RETRIES = 10
-        private const val RETRY_DELAY_MILLIS = 2000L
         private const val EXTRA_DRY_START = "EXTRA_DRY_START"
 
         fun start(context: Context, dryStart: Boolean) {
-            val intent = getBaseIntent(context)
-            intent.putExtra(EXTRA_DRY_START, dryStart)
-            context.startForegroundService(intent)
+            getBaseIntent(context).apply {
+                putExtra(EXTRA_DRY_START, dryStart)
+                context.startForegroundService(this)
+            }
         }
 
         fun stop(context: Context, interrupt: Boolean) {

@@ -4,15 +4,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/actionSetup"
-        android:icon="@drawable/ic_settings"
-        android:title="@string/actionSetup"
+        android:id="@+id/actionSetupSecurity"
+        android:icon="@drawable/ic_security"
+        android:title="@string/actionSetupSecurity"
         app:showAsAction="always"
         />
 
     <item
         android:id="@+id/actionClearConsole"
-        android:icon="@drawable/ic_delete_forever"
         android:title="@string/actionClearConsole"
         app:showAsAction="never"
         />

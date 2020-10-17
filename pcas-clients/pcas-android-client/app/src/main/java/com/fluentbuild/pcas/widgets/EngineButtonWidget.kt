@@ -20,17 +20,17 @@ class EngineButtonWidget @JvmOverloads constructor(
         WidgetDelegate(this)
     }
 
+    override val adapter = EngineStatusAdapter(context)
+
     override fun update(model: EngineStatusModel) {
         setImageDrawable(model.icon)
         backgroundTintList = model.background
-        setOnClickListener { model.action.perform(context) }
+        setOnClickListener { model.clickAction.perform(context) }
 
-        if(model.animate) {
+        if(model.shouldAnimate) {
             startAnimation(buttonAnimation)
         } else {
             clearAnimation()
         }
     }
-
-    override val adapter = EngineStatusAdapter(context)
 }

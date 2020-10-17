@@ -11,7 +11,8 @@ class AppStateObservable: Observable<AppState> {
 
 	private val observers = mutableSetOf<Function1<AppState, Unit>>()
 	private val richLogLines = LimitedQueue<String>(MAX_RICH_LOG_SIZE)
-	var currentAppState by observable(AppState()) { notifyObservers() }
+	//TODO
+	var currentAppState by observable(AppState(hostConfig = null!!)) { notifyObservers() }
 		private set
 
 	init {

@@ -18,7 +18,7 @@ internal open class AsyncModuleJvm {
 
     open val threadRunnerProvider = { ThreadRunnerJvm(threadPool) }
 
-    val debouncerProvider = { Debouncer(threadRunnerProvider()) }
+    val debouncerProvider = { delayMillis: Int -> Debouncer(threadRunnerProvider(), delayMillis) }
 
     companion object {
 

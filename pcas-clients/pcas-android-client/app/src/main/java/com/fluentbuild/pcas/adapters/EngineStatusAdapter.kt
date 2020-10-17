@@ -20,16 +20,16 @@ class EngineStatusAdapter(private val context: Context): Adapter<EngineStatusMod
                 EngineStatusModel(
                     icon = context.getDrawableCompat(R.drawable.ic_stop),
                     background = context.createColorStateList(R.color.colorDanger),
-                    animate = true,
-                    action = HardStopEngineAction
+                    shouldAnimate = true,
+                    clickAction = HardStopEngineAction
                 )
             }
             Engine.Status.IDLE -> {
                 EngineStatusModel(
                     icon = context.getDrawableCompat(R.drawable.ic_play_arrow),
                     background = context.createColorStateList(R.color.colorSecondary),
-                    animate = false,
-                    action = RunEngineAction
+                    shouldAnimate = false,
+                    clickAction = RunEngineAction
                 )
             }
         }

@@ -58,7 +58,7 @@ internal class EngineComponentAndroid(
 		hostConfig = hostConfig,
 		hostObservable = hostObservable,
 		timeProvider = utilsModule.timeProvider,
-		debouncerProvider = asyncModule.debouncerProvider,
+		blockBuilderDebouncer = asyncModule.debouncerProvider,
 		callStateWatcher = watchersModule.callStateWatcher,
 		audioPlaybackWatcher = watchersModule.audioPlaybackWatcher,
 		a2dpProfileStateWatcher = watchersModule.a2dpProfileStateWatcher,
