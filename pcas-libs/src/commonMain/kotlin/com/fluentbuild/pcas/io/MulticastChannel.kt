@@ -1,6 +1,6 @@
 package com.fluentbuild.pcas.io
 
-internal interface SecureMulticastChannel {
+internal interface MulticastChannel {
 
     @Throws(Exception::class)
     fun init(receiver: MessageReceiver)

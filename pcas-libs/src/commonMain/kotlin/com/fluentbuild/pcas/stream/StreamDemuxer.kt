@@ -1,16 +1,16 @@
 package com.fluentbuild.pcas.stream
 
 import com.fluentbuild.pcas.async.Cancellable
-import com.fluentbuild.pcas.io.SecureUnicastChannel
+import com.fluentbuild.pcas.io.UnicastChannel
 import com.fluentbuild.pcas.logs.getLog
 import com.fluentbuild.pcas.services.ServiceClass
 import com.fluentbuild.pcas.utils.decode
 import kotlinx.serialization.protobuf.ProtoBuf
 
 internal class StreamDemuxer(
-    private val unicastChannel: SecureUnicastChannel,
-    private val protoBuf: ProtoBuf,
-    private val handlers: Map<ServiceClass, StreamHandler>
+	private val unicastChannel: UnicastChannel,
+	private val protoBuf: ProtoBuf,
+	private val handlers: Map<ServiceClass, StreamHandler>
 ) {
 
     private val log = getLog()

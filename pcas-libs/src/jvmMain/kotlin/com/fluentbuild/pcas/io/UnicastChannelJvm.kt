@@ -6,7 +6,7 @@ import java.net.DatagramSocket
 
 internal open class UnicastChannelJvm(
     private val socketWrapper: SocketWrapper<DatagramSocket>
-): SecureUnicastChannel {
+): UnicastChannel {
 
     @Throws(IOException::class)
     override fun init(receiver: MessageReceiver) {

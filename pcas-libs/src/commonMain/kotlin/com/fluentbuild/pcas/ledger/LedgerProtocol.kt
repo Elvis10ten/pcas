@@ -3,12 +3,12 @@ package com.fluentbuild.pcas.ledger
 import com.fluentbuild.pcas.async.Cancellable
 import com.fluentbuild.pcas.host.HostInfoObservable
 import com.fluentbuild.pcas.async.Cancellables
-import com.fluentbuild.pcas.io.SecureMulticastChannel
+import com.fluentbuild.pcas.io.MulticastChannel
 import com.fluentbuild.pcas.ledger.messages.MessageReceiver
 import com.fluentbuild.pcas.ledger.messages.MessageSender
 
 internal class LedgerProtocol(
-	private val multicast: SecureMulticastChannel,
+	private val multicastChannel: MulticastChannel,
 	private val hostObservable: HostInfoObservable,
 	private val messageSender: MessageSender,
 	private val messageReceiver: MessageReceiver,
@@ -19,14 +19,14 @@ internal class LedgerProtocol(
 
     fun run(onLedgerUpdated: (Ledger) -> Unit): Cancellable {
         ledgerDb.create(hostObservable.currentValue, onLedgerUpdated)
-        multicast.init(messageReceiver::onReceived)
+        multicastChannel.init(messageReceiver::onReceived)
         messageSender.sendGenesis()
 		val cancellables = startCancellables()
 
         return Cancellable {
             cancellables.cancel()
 			messageSender.cancel()
-            multicast.close()
+            multicastChannel.close()
             ledgerDb.destroy()
         }
     }

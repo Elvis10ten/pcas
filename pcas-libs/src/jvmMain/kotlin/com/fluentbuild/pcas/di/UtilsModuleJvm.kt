@@ -2,14 +2,10 @@ package com.fluentbuild.pcas.di
 
 import com.fluentbuild.pcas.utils.TimeProviderJvm
 import java.security.SecureRandom
-import kotlin.random.Random
 
-internal open class UtilsModuleJvm {
+internal open class UtilsModuleJvm: UtilsModule() {
 
 	val secureRandom = SecureRandom()
 
-	val random = Random
-
 	open val timeProvider = TimeProviderJvm()
-
 }

@@ -2,7 +2,7 @@ package com.fluentbuild.pcas.io
 
 import com.fluentbuild.pcas.host.HostInfo
 
-internal interface SecureUnicastChannel {
+internal interface UnicastChannel {
 
     @Throws(Exception::class)
     fun init(receiver: MessageReceiver)

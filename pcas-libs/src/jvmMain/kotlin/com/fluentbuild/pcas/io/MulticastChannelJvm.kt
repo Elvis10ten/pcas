@@ -10,7 +10,7 @@ import java.net.SocketException
 internal open class MulticastChannelJvm(
     private val hostAddressProvider: Provider<Address.Ipv4>,
     private val socketWrapper: SocketWrapper<MulticastSocket>
-): SecureMulticastChannel {
+): MulticastChannel {
 
     private val log = getLog()
 

@@ -94,6 +94,6 @@ internal class EngineComponentAndroid(
 
 	override fun release() {
 		contentionsResolver.release()
-		asyncModule.threadPool.shutdownNow()
+		asyncModule.release()
 	}
 }

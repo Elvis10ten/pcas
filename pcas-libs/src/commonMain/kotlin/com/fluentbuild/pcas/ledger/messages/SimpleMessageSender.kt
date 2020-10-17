@@ -2,7 +2,7 @@ package com.fluentbuild.pcas.ledger.messages
 
 import com.fluentbuild.pcas.async.ThreadRunner
 import com.fluentbuild.pcas.host.Uuid
-import com.fluentbuild.pcas.io.SecureMulticastChannel
+import com.fluentbuild.pcas.io.MulticastChannel
 import com.fluentbuild.pcas.ledger.LedgerDb
 import com.fluentbuild.pcas.logs.getLog
 import kotlinx.serialization.encodeToByteArray
@@ -14,7 +14,7 @@ internal class SimpleMessageSender(
 	private val protoBuf: ProtoBuf,
 	private val runner: ThreadRunner,
 	private val random: Random,
-	private val multicast: SecureMulticastChannel,
+	private val multicast: MulticastChannel,
 	private val ledgerDb: LedgerDb
 ): MessageSender(ledgerDb) {
 

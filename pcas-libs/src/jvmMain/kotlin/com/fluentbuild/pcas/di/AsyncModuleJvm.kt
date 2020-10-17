@@ -1,14 +1,13 @@
 package com.fluentbuild.pcas.di
 
-import com.fluentbuild.pcas.async.Debouncer
 import com.fluentbuild.pcas.async.ThreadRunnerJvm
 import java.util.concurrent.LinkedBlockingQueue
 import java.util.concurrent.ThreadPoolExecutor
 import java.util.concurrent.TimeUnit
 
-internal open class AsyncModuleJvm {
+internal open class AsyncModuleJvm: AsyncModule() {
 
-    val threadPool = ThreadPoolExecutor(
+    protected val threadPool = ThreadPoolExecutor(
         CORE_POOL_SIZE,
         MAX_POOL_SIZE,
         KEEP_ALIVE_TIME_SECONDS,
@@ -16,9 +15,11 @@ internal open class AsyncModuleJvm {
         LinkedBlockingQueue(WORK_QUEUE_CAPACITY)
     )
 
-    open val threadRunnerProvider = { ThreadRunnerJvm(threadPool) }
+    override val threadRunnerProvider = { ThreadRunnerJvm(threadPool) }
 
-    val debouncerProvider = { delayMillis: Int -> Debouncer(threadRunnerProvider(), delayMillis) }
+    override fun release() {
+        threadPool.shutdownNow()
+    }
 
     companion object {
 
@@ -36,7 +37,7 @@ internal open class AsyncModuleJvm {
         private const val MINIMUM_REQUIRED_THREAD_SIZE = 6 + 2
 
         // The amount of time an idle thread waits before terminating
-        private const val KEEP_ALIVE_TIME_SECONDS = 8L
+        private const val KEEP_ALIVE_TIME_SECONDS = 4L
         private const val CORE_POOL_SIZE = MINIMUM_REQUIRED_THREAD_SIZE
         private const val MAX_POOL_SIZE = CORE_POOL_SIZE * 2
         private const val WORK_QUEUE_CAPACITY = 128

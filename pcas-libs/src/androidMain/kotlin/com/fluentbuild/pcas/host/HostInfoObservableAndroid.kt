@@ -2,14 +2,11 @@ package com.fluentbuild.pcas.host
 
 import android.content.Context
 import com.fluentbuild.pcas.async.Cancellable
-import com.fluentbuild.pcas.host.HostConfig
-import com.fluentbuild.pcas.host.HostInfo
-import com.fluentbuild.pcas.host.HostInfoObservable
 import com.fluentbuild.pcas.services.audio.AudioConfig
 import com.fluentbuild.pcas.watchers.NetworkAddressWatcher
 import com.fluentbuild.pcas.watchers.InteractivityWatcher
 import com.fluentbuild.pcas.io.Address
-import com.fluentbuild.pcas.io.SecureUnicastChannel
+import com.fluentbuild.pcas.io.UnicastChannel
 import com.fluentbuild.pcas.logs.getLog
 import com.fluentbuild.pcas.utils.powerManager
 import com.fluentbuild.pcas.values.Provider
@@ -18,7 +15,7 @@ internal class HostInfoObservableAndroid(
 	private val context: Context,
 	private val hostConfig: HostConfig,
 	private val hostAddressProvider: Provider<Address.Ipv4>,
-	private val unicastChannel: SecureUnicastChannel,
+	private val unicastChannel: UnicastChannel,
 	private val audioConfig: AudioConfig,
 	private val networkAddressWatcher: NetworkAddressWatcher,
 	private val interactivityWatcher: InteractivityWatcher

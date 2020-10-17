@@ -15,7 +15,7 @@ internal class ContentionModule(
 		ServiceClass.AUDIO to audioResolutionHandler
 	)
 
-	private val resolutionThrottle = ResolutionThrottler(timeProvider)
+	private val resolutionThrottler = ResolutionThrottler(timeProvider)
 
-	val contentionsResolver = ContentionsResolver(serviceResolutionHandlers, resolutionThrottle)
+	val contentionsResolver = ContentionsResolver(serviceResolutionHandlers, resolutionThrottler)
 }

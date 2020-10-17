@@ -12,7 +12,7 @@ internal open class IoModuleJvm(
 	private val threadRunnerProvider: () -> ThreadRunner,
 	secureRandom: SecureRandom,
 	hostAddressProvider: Provider<Address.Ipv4>
-) {
+): IoModule() {
 
 	private val parceler = Parceler(config, secureRandom, BufferObjectPool)
 

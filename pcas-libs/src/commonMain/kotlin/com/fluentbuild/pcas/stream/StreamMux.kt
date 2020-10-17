@@ -1,12 +1,12 @@
 package com.fluentbuild.pcas.stream
 
 import com.fluentbuild.pcas.host.HostInfo
-import com.fluentbuild.pcas.io.SecureUnicastChannel
+import com.fluentbuild.pcas.io.UnicastChannel
 import kotlinx.serialization.encodeToByteArray
 import kotlinx.serialization.protobuf.ProtoBuf
 
 internal class StreamMux(
-	private val unicastChannel: SecureUnicastChannel,
+	private val unicastChannel: UnicastChannel,
 	private val protoBuf: ProtoBuf
 ) {
 

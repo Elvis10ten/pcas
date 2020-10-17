@@ -2,7 +2,7 @@ package com.fluentbuild.pcas.di
 
 import com.fluentbuild.pcas.async.ThreadRunner
 import com.fluentbuild.pcas.host.HostInfoObservable
-import com.fluentbuild.pcas.io.SecureMulticastChannel
+import com.fluentbuild.pcas.io.MulticastChannel
 import com.fluentbuild.pcas.ledger.*
 import com.fluentbuild.pcas.ledger.messages.MessageReceiver
 import com.fluentbuild.pcas.ledger.messages.SimpleMessageSender
@@ -11,13 +11,13 @@ import kotlinx.serialization.protobuf.ProtoBuf
 import kotlin.random.Random
 
 internal class LedgerModule(
-	random: Random,
-	timeProvider: TimeProvider,
-	threadRunnerProvider: () -> ThreadRunner,
-	protoBuf: ProtoBuf,
-	hostObservable: HostInfoObservable,
-	multicastChannel: SecureMulticastChannel,
-	audioBlocksProducer: BlocksProducer
+    random: Random,
+    timeProvider: TimeProvider,
+    threadRunnerProvider: () -> ThreadRunner,
+    protoBuf: ProtoBuf,
+    hostObservable: HostInfoObservable,
+    multicastChannel: MulticastChannel,
+    audioBlocksProducer: BlocksProducer
 ) {
 
     private val ledgerDb = LedgerDb()
@@ -34,7 +34,7 @@ internal class LedgerModule(
         random = random
     )
 
-    private val ledgerWatchdog = LedgerWatchdog(
+    private val watchdog = LedgerWatchdog(
         runner = threadRunnerProvider(),
         ledgerDb = ledgerDb,
         messageSender = messageSender,
@@ -45,12 +45,12 @@ internal class LedgerModule(
         protoBuf = protoBuf,
         messageSender = messageSender,
         ledgerDb = ledgerDb,
-        watchdog = ledgerWatchdog
+        watchdog = watchdog
     )
 
     internal val ledgerProtocol = LedgerProtocol(
-        ledgerWatchdog = ledgerWatchdog,
-        multicast = multicastChannel,
+        ledgerWatchdog = watchdog,
+        multicastChannel = multicastChannel,
         hostObservable = hostObservable,
         messageSender = messageSender,
         messageReceiver = messageReceiver,
