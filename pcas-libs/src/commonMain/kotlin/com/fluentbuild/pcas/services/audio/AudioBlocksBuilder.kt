@@ -1,94 +1,75 @@
 package com.fluentbuild.pcas.services.audio
 
-import com.fluentbuild.pcas.host.HostConfig
 import com.fluentbuild.pcas.host.HostInfoObservable
 import com.fluentbuild.pcas.ledger.Block
+import com.fluentbuild.pcas.peripheral.Peripheral
 import com.fluentbuild.pcas.peripheral.PeripheralBond
 import com.fluentbuild.pcas.peripheral.PeripheralProfile
 import com.fluentbuild.pcas.services.ServiceClass
 import com.fluentbuild.pcas.services.audio.AudioProperty.Usage
+import com.fluentbuild.pcas.utils.*
+import com.fluentbuild.pcas.utils.Delegates.observable
 import com.fluentbuild.pcas.utils.TimeProvider
+import com.fluentbuild.pcas.utils.mapSetNotNullMutable
 
 internal class AudioBlocksBuilder(
-	private val hostConfig: HostConfig,
+	private val audioPeripheral: Peripheral,
+    private val canCaptureAudio: Boolean,
 	private val timeProvider: TimeProvider,
 	private val hostObservable: HostInfoObservable
 ) {
 
-    private var a2dpBondCache: PeripheralBond? = null
-    private var hspBondCache: PeripheralBond? = null
-
-    private var a2dpUsagesCache: Set<Usage>? = null
-    private var hspUsagesCache: Set<Usage>? = null
-
-    private var hasA2dpChanged = false
-    private var hasHspChanged = false
+    private val profileCaches = mapOf(
+        PeripheralProfile.A2DP to Cache(),
+        PeripheralProfile.HEADSET to Cache()
+    )
 
     fun setBond(bond: PeripheralBond) {
-        when (bond.profile) {
-            PeripheralProfile.A2DP -> {
-                if(a2dpBondCache != bond) {
-                    hasA2dpChanged = true
-                    a2dpBondCache = bond
-                }
-            }
-            PeripheralProfile.HSP -> {
-                if(hspBondCache != bond) {
-                    hasHspChanged = true
-                    hspBondCache = bond
-                }
-            }
-            PeripheralProfile.HID -> error("HID profile not supported in audio service")
+        val cache = profileCaches.getValue(bond.profile)
+        if(cache.bond != bond) {
+            cache.bond = bond
         }
     }
 
     fun setProperty(property: AudioProperty) {
-        if(a2dpUsagesCache != property.unidirectionalUsages) {
-            hasA2dpChanged = true
-            a2dpUsagesCache = property.unidirectionalUsages
-        }
-
-        if(hspUsagesCache != property.bidirectionalUsages) {
-            hasHspChanged = true
-            hspUsagesCache = property.bidirectionalUsages
-        }
-    }
-
-    fun buildNovel(): Set<Block>? {
-        val a2dpBond = a2dpBondCache ?: return null
-        val hspBond = hspBondCache ?: return null
-        val a2dpUsages = a2dpUsagesCache ?: return null
-        val hspUsages = hspUsagesCache ?: return null
-
-        if(!hasA2dpChanged && !hasHspChanged) return null
-
-        return LinkedHashSet<Block>(NUM_BONDS).apply {
-            if(hasA2dpChanged) {
-                this += createBlock(a2dpUsages, a2dpBond)
-                hasA2dpChanged = false
-            }
-
-            if(hasHspChanged) {
-                this += createBlock(hspUsages, hspBond)
-                hasHspChanged = false
+        profileCaches.forEach { (profile, cache) ->
+            val profileUsages = property.usages.filterSet { profile == it.profile }
+            if(cache.usages != profileUsages) {
+                cache.usages = profileUsages
             }
         }
     }
 
-    private fun createBlock(usages: Set<Usage>, bond: PeripheralBond) = Block(
-        serviceClass = ServiceClass.AUDIO,
-        profile = bond.profile,
-        peripheral = hostConfig.audioPeripheral,
-        priority = usages.maxOfOrNull { it.priority } ?: Block.NO_PRIORITY,
-        timestamp = timeProvider.currentTimeMillis(),
-        bondState = bond.state,
-        owner = hostObservable.currentValue,
-        canStreamData = hostConfig.canCaptureAudio && bond.profile.supportsStreaming,
-        canHandleDataStream = bond.profile.supportsStreaming
-    )
+    fun buildNovel(consumer: (Set<Block>) -> Unit) {
+        val blocks = profileCaches.values.mapSetNotNullMutable { it.build() }
+        if(blocks.isNotEmpty()) {
+            consumer(blocks)
+        }
+    }
 
-    companion object {
+    private inner class Cache {
 
-        private const val NUM_BONDS = 2
+        var bond: PeripheralBond? by observable { _, _ -> isDirty = true }
+        var usages: Set<Usage>? by observable { _, _ -> isDirty = true }
+        private var isDirty: Boolean = false
+
+        fun build(): Block? {
+            val blockBond = bond ?: return null
+            val blockUsages = usages ?: return null
+            if(!isDirty) return null
+
+            isDirty = false
+            return Block(
+                serviceClass = ServiceClass.AUDIO,
+                profile = blockBond.profile,
+                peripheral = audioPeripheral,
+                priority = blockUsages.maxOfOrNull { it.priority } ?: Block.NO_PRIORITY,
+                timestamp = timeProvider.currentTimeMillis,
+                bondState = blockBond.state,
+                owner = hostObservable.currentValue,
+                canStreamData = canCaptureAudio && blockBond.profile.supportsStreaming,
+                canHandleDataStream = blockBond.profile.supportsStreaming
+            )
+        }
     }
 }

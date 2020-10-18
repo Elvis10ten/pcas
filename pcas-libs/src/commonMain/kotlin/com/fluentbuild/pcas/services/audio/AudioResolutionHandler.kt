@@ -38,17 +38,19 @@ internal class AudioResolutionHandler(
     }
 
     private fun PeripheralProfile.connect() {
+        val command = Command.Connect(audioPeripheral)
         when(this) {
-            PeripheralProfile.A2DP -> a2dpCommander.perform(Command.Connect(audioPeripheral))
-            PeripheralProfile.HSP -> hspCommander.perform(Command.Connect(audioPeripheral))
+            PeripheralProfile.A2DP -> a2dpCommander.perform(command)
+            PeripheralProfile.HEADSET -> hspCommander.perform(command)
             PeripheralProfile.HID -> error("HID profile not supported in audio service")
         }
     }
 
     private fun PeripheralProfile.disconnect() {
+        val command = Command.Disconnect(audioPeripheral)
         when(this) {
-            PeripheralProfile.A2DP -> a2dpCommander.perform(Command.Disconnect(audioPeripheral))
-            PeripheralProfile.HSP -> hspCommander.perform(Command.Disconnect(audioPeripheral))
+            PeripheralProfile.A2DP -> a2dpCommander.perform(command)
+            PeripheralProfile.HEADSET -> hspCommander.perform(command)
             PeripheralProfile.HID -> error("HID profile not supported in audio service")
         }
     }

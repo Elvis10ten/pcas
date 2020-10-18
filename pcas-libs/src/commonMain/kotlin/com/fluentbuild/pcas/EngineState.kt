@@ -1,11 +1,10 @@
 package com.fluentbuild.pcas
 
-import com.fluentbuild.pcas.host.HostConfigPartial
+import com.fluentbuild.pcas.host.HostConfig
 import com.fluentbuild.pcas.ledger.Ledger
 
-data class AppState(
+data class EngineState(
 	val engineStatus: Engine.Status = Engine.Status.IDLE,
 	val ledger: Ledger? = null,
-	val richLogLines: List<String> = emptyList(),
-	val hostConfig: HostConfigPartial
+	val hostConfig: HostConfig
 )

@@ -4,38 +4,36 @@ import com.fluentbuild.pcas.async.Cancellable
 import com.fluentbuild.pcas.async.Cancellables
 import com.fluentbuild.pcas.values.Observable
 import com.fluentbuild.pcas.ledger.Block
-import com.fluentbuild.pcas.ledger.BlocksProducer
 import com.fluentbuild.pcas.peripheral.PeripheralBond
 import com.fluentbuild.pcas.async.Debouncer
-import com.fluentbuild.pcas.async.SentinelCancellable
 
-internal class AudioBlocksProducer(
+internal class AudioBlocksObservable(
 	private val propObservable: Observable<AudioProperty>,
 	private val bondsObservable: Observable<PeripheralBond>,
 	private val debouncer: Debouncer,
-	private val audioBlocksBuilderProvider: () -> AudioBlocksBuilder
-): BlocksProducer {
+	private val blocksBuilderProvider: () -> AudioBlocksBuilder
+): Observable<Set<Block>> {
 
-    override fun subscribe(consumer: (Set<Block>) -> Unit): Cancellable {
-        val builder = audioBlocksBuilderProvider()
+    override fun subscribe(observer: (Set<Block>) -> Unit): Cancellable {
+        val builder = blocksBuilderProvider()
         val cancellables = Cancellables()
-        val updateConsumer = {
-			debouncer.debounce { builder.buildNovel()?.let(consumer) }
-        }
+        val updateObserver = {
+			debouncer.debounce { builder.buildNovel(observer) }
+		}
 
         cancellables += propObservable.subscribe {
             builder.setProperty(it)
-            updateConsumer()
+            updateObserver()
         }
 
         cancellables += bondsObservable.subscribe {
             builder.setBond(it)
-            updateConsumer()
+            updateObserver()
         }
 
         return Cancellable {
-			debouncer.cancel()
 			cancellables.cancel()
+			debouncer.cancel()
 		}
     }
 }

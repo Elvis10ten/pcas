@@ -6,6 +6,7 @@ import com.fluentbuild.pcas.async.Cancellables
 import com.fluentbuild.pcas.io.MulticastChannel
 import com.fluentbuild.pcas.ledger.messages.MessageReceiver
 import com.fluentbuild.pcas.ledger.messages.MessageSender
+import com.fluentbuild.pcas.values.Observable
 
 internal class LedgerProtocol(
 	private val multicastChannel: MulticastChannel,
@@ -14,7 +15,7 @@ internal class LedgerProtocol(
 	private val messageReceiver: MessageReceiver,
 	private val ledgerWatchdog: LedgerWatchdog,
 	private val ledgerDb: LedgerDb,
-	private val serviceBlocksProducers: List<BlocksProducer>
+	private val serviceBlocksObservables: List<Observable<Set<Block>>>
 ) {
 
     fun run(onLedgerUpdated: (Ledger) -> Unit): Cancellable {
@@ -42,7 +43,7 @@ internal class LedgerProtocol(
 			ledgerDb.upsert(blocks)
 			messageSender.sendUpdate()
 		}
-		cancellables += serviceBlocksProducers.map { it.subscribe(consumer) }
+		cancellables += serviceBlocksObservables.map { it.subscribe(consumer) }
 
 		cancellables += ledgerWatchdog.run()
 		return cancellables

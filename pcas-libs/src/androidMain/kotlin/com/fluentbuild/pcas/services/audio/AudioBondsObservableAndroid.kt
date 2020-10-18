@@ -35,10 +35,10 @@ internal class AudioBondsObservableAndroid(
             a2dpCancellable = loadBonds(PeripheralProfile.A2DP, observer)
         }
 
-        var hspCancellable = loadBonds(PeripheralProfile.HSP, observer)
+        var hspCancellable = loadBonds(PeripheralProfile.HEADSET, observer)
         hspProfileStateWatcher.register(BluetoothProfileStateWatcher.NO_PROFILE_STATE) {
             hspCancellable.cancel()
-            hspCancellable = loadBonds(PeripheralProfile.HSP, observer)
+            hspCancellable = loadBonds(PeripheralProfile.HEADSET, observer)
         }
 
         return Cancellable {
@@ -60,7 +60,7 @@ internal class AudioBondsObservableAndroid(
                     profile.getPeripheralBond()?.let(observer)
                 }
             }
-            PeripheralProfile.HSP -> {
+            PeripheralProfile.HEADSET -> {
                 profileHolder.useProfile(BluetoothProfile.HEADSET) { profile ->
                     profile.getPeripheralBond()?.let(observer)
                 }

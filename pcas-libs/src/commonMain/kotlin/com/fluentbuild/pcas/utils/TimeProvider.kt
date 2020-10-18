@@ -2,9 +2,9 @@ package com.fluentbuild.pcas.utils
 
 internal interface TimeProvider {
 
-    fun currentTimeMillis(): Timestamp
+    val currentTimeMillis: Timestamp
 
-    fun getElapsedRealtime(): ElapsedRealtime
+    val elapsedRealtime: ElapsedRealtime
 }
 
 internal typealias Timestamp = Long

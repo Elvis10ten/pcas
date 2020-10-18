@@ -1,8 +1,8 @@
 package com.fluentbuild.pcas.peripheral
 
+import com.fluentbuild.pcas.services.ServiceClass
+
 interface PeripheralRepository {
 
-	fun getAudioPeripherals(): Set<Peripheral>
-
-	fun getHumanInterfacePeripherals(): Set<Peripheral>
+	fun getPeripherals(serviceClass: ServiceClass): Set<Peripheral>
 }

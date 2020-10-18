@@ -7,6 +7,7 @@ import com.fluentbuild.pcas.ledger.*
 import com.fluentbuild.pcas.ledger.messages.MessageReceiver
 import com.fluentbuild.pcas.ledger.messages.SimpleMessageSender
 import com.fluentbuild.pcas.utils.TimeProvider
+import com.fluentbuild.pcas.values.Observable
 import kotlinx.serialization.protobuf.ProtoBuf
 import kotlin.random.Random
 
@@ -17,13 +18,13 @@ internal class LedgerModule(
     protoBuf: ProtoBuf,
     hostObservable: HostInfoObservable,
     multicastChannel: MulticastChannel,
-    audioBlocksProducer: BlocksProducer
+    audioBlocksObservable: Observable<Set<Block>>
 ) {
 
     private val ledgerDb = LedgerDb()
 
-    private val serviceBlocksProducers = listOf(
-        audioBlocksProducer
+    private val serviceBlocksObservables = listOf(
+        audioBlocksObservable
     )
 
     private val messageSender = SimpleMessageSender(
@@ -55,6 +56,6 @@ internal class LedgerModule(
         messageSender = messageSender,
         messageReceiver = messageReceiver,
         ledgerDb = ledgerDb,
-        serviceBlocksProducers = serviceBlocksProducers
+        serviceBlocksObservables = serviceBlocksObservables
     )
 }

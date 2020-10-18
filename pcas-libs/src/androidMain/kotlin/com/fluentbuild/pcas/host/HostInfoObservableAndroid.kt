@@ -43,7 +43,7 @@ internal class HostInfoObservableAndroid(
 		get() = HostInfo(
 			uuid = hostConfig.uuid,
 			name = hostConfig.name,
-			address = hostAddressProvider.get(),
+			address = hostAddressProvider.currentValue,
 			port = unicastChannel.getPort(),
 			isInteractive = context.powerManager.isInteractive,
 			minAudioBufferSizeBytes = audioConfig.minBufferSizeBytes

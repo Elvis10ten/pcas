@@ -1,36 +1,27 @@
 package com.fluentbuild.pcas.services.audio
 
-import com.fluentbuild.pcas.utils.filterSet
+import com.fluentbuild.pcas.peripheral.PeripheralProfile
 
-data class AudioProperty(private val usages: Set<Usage>) {
-
-    val unidirectionalUsages = usages.filterSet { it.direction == Direction.UNIDIRECTIONAL }
-
-    val bidirectionalUsages = usages.filterSet { it.direction == Direction.BIDIRECTIONAL }
+data class AudioProperty(val usages: Set<Usage>) {
 
     enum class Usage(
         val priority: Int,
-        val direction: Direction
+        val profile: PeripheralProfile
     ) {
-        UNKNOWN(1, Direction.UNIDIRECTIONAL),
+        UNKNOWN(1, PeripheralProfile.A2DP),
         // Unknown media playback. It could be music, movie soundtracks, etc.
-        MEDIA_UNKNOWN(2, Direction.UNIDIRECTIONAL),
+        MEDIA_UNKNOWN(2, PeripheralProfile.A2DP),
         // Music playback, eg: Music streaming, local audio playback, etc.
-        MUSIC(3, Direction.UNIDIRECTIONAL),
+        MUSIC(3, PeripheralProfile.A2DP),
         // Speech playback, eg: Podcasts, Audiobooks, etc
-        SPEECH(3, Direction.UNIDIRECTIONAL),
+        SPEECH(3, PeripheralProfile.A2DP),
         // Soundtrack, typically accompanying a movie or TV program.
-        MOVIE(4, Direction.UNIDIRECTIONAL),
+        MOVIE(4, PeripheralProfile.A2DP),
         // Game audio playback
-        GAME(4, Direction.UNIDIRECTIONAL),
+        GAME(4, PeripheralProfile.A2DP),
         // Such as VoIP.
-        VOICE_COMMUNICATION(5, Direction.BIDIRECTIONAL),
+        VOICE_COMMUNICATION(5, PeripheralProfile.HEADSET),
         // Telephony call
-        TELEPHONY_CALL(6, Direction.BIDIRECTIONAL)
-    }
-
-    enum class Direction {
-        UNIDIRECTIONAL,
-        BIDIRECTIONAL
+        TELEPHONY_CALL(6, PeripheralProfile.HEADSET)
     }
 }

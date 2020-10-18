@@ -8,7 +8,7 @@ import com.fluentbuild.pcas.logs.getLog
  * The root class to [run] and [stop] PCAS.
  */
 class Engine internal constructor(
-	private val appStateObservable: AppStateObservable,
+	private val stateObservable: EngineStateObservable,
 	private val componentProvider: () -> EngineComponent
 ) {
 
@@ -22,12 +22,12 @@ class Engine internal constructor(
 
 		val dependencies = componentProvider()
 		currentCancellable = dependencies.run().apply {
-			appStateObservable.update(Status.RUNNING)
+			stateObservable.update(Status.RUNNING)
 			this += Cancellable {
 				log.info { "Stopping engine!" }
 				dependencies.release()
-				appStateObservable.update(null)
-				appStateObservable.update(Status.IDLE)
+				stateObservable.update(null)
+				stateObservable.update(Status.IDLE)
 				currentCancellable = null
 			}
 		}
@@ -44,7 +44,7 @@ class Engine internal constructor(
 			cancellables += streamDemuxer.run()
 			cancellables += ledgerProtocol.run { ledger ->
 				log.info { "Ledger updated" }
-				appStateObservable.update(ledger)
+				stateObservable.update(ledger)
 				contentionsResolver.resolve(ledger)
 			}
 		} catch (e: Exception) {

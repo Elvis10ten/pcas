@@ -7,7 +7,7 @@ import java.net.InetAddress
 
 internal class AddressProviderAndroid(private val context: Context): Provider<Address.Ipv4> {
 
-    override fun get() = Address.Ipv4(getInetAddress().hostAddress)
+    override val currentValue get() = Address.Ipv4(getInetAddress().hostAddress)
 
     private fun getInetAddress() = getWifiAddress() ?: getPrimaryNetworkInterfaceAddress()
 

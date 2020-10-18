@@ -25,7 +25,7 @@ class AppComponent(
 		appContext.bluetoothAdapter.name
 	}
 
-	val appStateObservable = AppStateObservable()
+	val appStateObservable = EngineStateObservable()
 
 	val engine = Engine(appStateObservable) {
 		EngineComponentAndroid(appContext, mainHandler, hostConfigStore.get(), protoBuf)

@@ -54,7 +54,7 @@ internal class AudioServiceModule(
         audioStreamer = audioStreamer
     )
 
-    val audioBlocksProducer = AudioBlocksProducer(
+    val audioBlocksProducer = AudioBlocksObservable(
         propObservable = propertyObservable,
         bondsObservable = bondsObservable,
         debouncer = blockBuilderDebouncer(AUDIO_BLOCK_DEBOUNCE_DELAY_MILLIS),

@@ -2,7 +2,6 @@ package com.fluentbuild.pcas.bluetooth
 
 import android.bluetooth.*
 import android.os.RemoteException
-import com.fluentbuild.pcas.io.Address
 import com.fluentbuild.pcas.peripheral.Peripheral
 import com.fluentbuild.pcas.peripheral.PeripheralBond
 import com.fluentbuild.pcas.peripheral.PeripheralProfile
@@ -26,7 +25,7 @@ internal fun profileStateToPeripheralBondState(androidProfileState: Int): Periph
 internal fun BluetoothProfile.toPeripheralProfile(): PeripheralProfile {
     return when {
         this is BluetoothA2dp -> PeripheralProfile.A2DP
-        this is BluetoothHeadset -> PeripheralProfile.HSP
+        this is BluetoothHeadset -> PeripheralProfile.HEADSET
         VersionUtils.isAtLeastAndroidPie() && this is BluetoothHidDevice -> PeripheralProfile.HID
         else -> error("Unsupported bluetooth profile: $this")
     }

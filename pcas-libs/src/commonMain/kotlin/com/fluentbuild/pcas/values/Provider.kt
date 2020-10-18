@@ -1,6 +1,6 @@
 package com.fluentbuild.pcas.values
 
-internal fun interface Provider<ValueT> {
+interface Provider<ValueT> {
 
-	fun get(): ValueT
+	val currentValue: ValueT
 }
