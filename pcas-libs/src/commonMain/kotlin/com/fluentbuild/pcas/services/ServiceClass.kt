@@ -4,18 +4,20 @@ import com.fluentbuild.pcas.host.Uuid
 import kotlinx.serialization.Serializable
 
 @Serializable
-enum class ServiceClass {
+enum class ServiceClass(
+	val defaultMaxConcurrentConnections: Int
+) {
 
-	AUDIO {
+	AUDIO(2) {
 
 		override fun isPeripheralSupported(uuids: Set<Uuid>) =
 			uuids.contains(A2DP_UUID) && (uuids.contains(HSP_UUID) || uuids.contains(HFP_UUID))
 	},
-	KEYPAD {
+	KEYPAD(1) {
 
 		override fun isPeripheralSupported(uuids: Set<Uuid>) = uuids.contains(HID_UUID)
 	},
-	MOUSE {
+	MOUSE(1) {
 
 		override fun isPeripheralSupported(uuids: Set<Uuid>) = uuids.contains(HID_UUID)
 	};

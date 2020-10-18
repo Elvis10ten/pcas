@@ -12,33 +12,17 @@ internal class ThreadRunnerAndroid(
     private val mainThreadRunnables = mutableSetOf<Runnable>()
 
     override fun runOnMain(action: () -> Unit) {
-        val runnable = object: Runnable {
-
-            override fun run() {
-                if(canRunOnMainThread()) {
-                    action()
-                    mainThreadRunnables.remove(this)
-                }
-            }
+        createOneOffRunnable(action).apply {
+            mainThreadRunnables += this
+            mainThreadHandler.post(this)
         }
-
-        mainThreadRunnables += runnable
-        mainThreadHandler.post(runnable)
     }
 
     override fun runOnMainDelayed(delayMillis: Int, action: () -> Unit) {
-        val runnable = object: Runnable {
-
-            override fun run() {
-                if(canRunOnMainThread()) {
-                    action()
-                    mainThreadRunnables.remove(this)
-                }
-            }
+        createOneOffRunnable(action).apply {
+            mainThreadRunnables += this
+            mainThreadHandler.postDelayed(this, delayMillis.toLong())
         }
-
-        mainThreadRunnables += runnable
-        mainThreadHandler.postDelayed(runnable, delayMillis.toLong())
     }
 
     override fun runOnMainRepeating(frequencyMillis: Int, action: () -> Unit) {
@@ -58,6 +42,18 @@ internal class ThreadRunnerAndroid(
     }
 
     private fun Runnable.canRunOnMainThread() = mainThreadRunnables.contains(this)
+
+    private fun createOneOffRunnable(action: () -> Unit): Runnable {
+        return object: Runnable {
+
+            override fun run() {
+                if(canRunOnMainThread()) {
+                    action()
+                    mainThreadRunnables.remove(this)
+                }
+            }
+        }
+    }
 
     @MainThread
     override fun cancelAll() {
