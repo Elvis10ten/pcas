@@ -1,5 +1,6 @@
 package com.fluentbuild.pcas.host
 
+import com.fluentbuild.pcas.EngineStateObservable
 import com.fluentbuild.pcas.io.KeyTool
 import com.fluentbuild.pcas.peripheral.Peripheral
 import com.fluentbuild.pcas.utils.AtomicFile
@@ -10,6 +11,7 @@ import kotlinx.serialization.protobuf.ProtoBuf
 import java.io.File
 
 class HostConfigStore(
+	private val engineStateObservable: EngineStateObservable,
 	private val protoBuf: ProtoBuf,
 	privateFilesDir: File,
 	private val nameProvider: () -> String

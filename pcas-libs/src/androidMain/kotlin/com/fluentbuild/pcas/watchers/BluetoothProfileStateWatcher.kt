@@ -9,7 +9,7 @@ import com.fluentbuild.pcas.logs.getLog
 
 internal class BluetoothProfileStateWatcher(
 	private val context: Context,
-	private val profileConnectionStateChangedAction: String
+	private val stateChangedAction: String
 ): Watcher<Int>() {
 
 	private val log = getLog()
@@ -22,7 +22,7 @@ internal class BluetoothProfileStateWatcher(
 	}
 
 	override fun registerInternal() {
-		IntentFilter(profileConnectionStateChangedAction).apply {
+		IntentFilter(stateChangedAction).apply {
 			context.registerReceiver(broadcastReceiver, this)
 		}
 	}

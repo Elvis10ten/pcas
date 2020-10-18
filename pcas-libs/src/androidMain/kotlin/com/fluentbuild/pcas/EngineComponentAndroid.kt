@@ -5,27 +5,27 @@ import android.os.Handler
 import com.fluentbuild.pcas.di.AsyncModuleAndroid
 import com.fluentbuild.pcas.di.AudioServiceModule
 import com.fluentbuild.pcas.di.ContentionModule
+import com.fluentbuild.pcas.di.HostModule
 import com.fluentbuild.pcas.di.IoModuleAndroid
 import com.fluentbuild.pcas.di.LedgerModule
 import com.fluentbuild.pcas.di.StreamModule
 import com.fluentbuild.pcas.di.UtilsModuleAndroid
 import com.fluentbuild.pcas.di.WatchersModule
 import com.fluentbuild.pcas.host.HostConfig
-import com.fluentbuild.pcas.host.HostInfoObservableAndroid
 import com.fluentbuild.pcas.io.AddressProviderAndroid
-import com.fluentbuild.pcas.services.audio.AudioConfig
 import kotlinx.serialization.protobuf.ProtoBuf
 
 internal class EngineComponentAndroid(
 	appContext: Context,
-	mainThreadHandler: Handler,
 	hostConfig: HostConfig,
 	protoBuf: ProtoBuf
 ): EngineComponent {
 
+	private val mainHandler = Handler(appContext.mainLooper)
+
 	private val hostAddressProvider = AddressProviderAndroid(appContext)
 
-	private val asyncModule = AsyncModuleAndroid(mainThreadHandler)
+	private val asyncModule = AsyncModuleAndroid(mainHandler)
 
 	private val utilsModule = UtilsModuleAndroid()
 
@@ -39,30 +39,28 @@ internal class EngineComponentAndroid(
 
 	private val watchersModule = WatchersModule(
 		appContext = appContext,
-		mainThreadHandler = mainThreadHandler,
+		mainThreadHandler = mainHandler,
 		hostAddressProvider = hostAddressProvider
 	)
 
-	private val hostObservable = HostInfoObservableAndroid(
-		context = appContext,
+	private val hostModule = HostModule(
+		appContext = appContext,
 		hostConfig = hostConfig,
-		hostAddressProvider = hostAddressProvider,
 		unicastChannel = ioModule.unicastChannel,
-		audioConfig = AudioConfig,
 		networkAddressWatcher = watchersModule.networkAddressWatcher,
-		interactivityWatcher = watchersModule.interactivityWatcher
+		interactivityWatcher = watchersModule.interactivityWatcher,
+		hostAddressProvider = hostAddressProvider
 	)
 
 	private val audioServiceModule = AudioServiceModule(
 		appContext = appContext,
 		hostConfig = hostConfig,
-		hostObservable = hostObservable,
+		hostObservable = hostModule.hostObservable,
 		timeProvider = utilsModule.timeProvider,
-		blockBuilderDebouncer = asyncModule.debouncerProvider,
+		blockDebouncerProvider = asyncModule.debouncerProvider,
 		callStateWatcher = watchersModule.callStateWatcher,
 		audioPlaybackWatcher = watchersModule.audioPlaybackWatcher,
-		a2dpProfileStateWatcher = watchersModule.a2dpProfileStateWatcher,
-		hspProfileStateWatcher = watchersModule.hspProfileStateWatcher
+		profileStateWatcherProvider = watchersModule.profileStateWatcherProvider
 	)
 
 	private val ledgerModule = LedgerModule(
@@ -70,9 +68,9 @@ internal class EngineComponentAndroid(
 		timeProvider = utilsModule.timeProvider,
 		threadRunnerProvider = asyncModule.threadRunnerProvider,
 		protoBuf = protoBuf,
-		hostObservable = hostObservable,
+		hostObservable = hostModule.hostObservable,
 		multicastChannel = ioModule.multicastChannel,
-		audioBlocksProducer = audioServiceModule.audioBlocksProducer
+		audioBlocksObservable = audioServiceModule.audioBlocksProducer
 	)
 
 	private val streamModule = StreamModule(

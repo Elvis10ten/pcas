@@ -1,9 +1,7 @@
 package com.fluentbuild.pcas
 
 import android.content.Context
-import android.os.Handler
 import com.fluentbuild.pcas.host.HostConfigStore
-import com.fluentbuild.pcas.logs.RichLog
 import com.fluentbuild.pcas.peripheral.PeripheralRepositoryAndroid
 import com.fluentbuild.pcas.utils.bluetoothAdapter
 import kotlinx.serialization.protobuf.ProtoBuf
@@ -15,18 +13,16 @@ class AppComponent(
 	isDebug: Boolean
 ) {
 
-	val mainHandler = Handler(appContext.mainLooper)
-
 	private val protoBuf = ProtoBuf
 
-	val hostConfigStore = HostConfigStore(protoBuf, appContext.filesDir) {
+	val engineStateObservable = EngineStateObservable()
+
+	val hostConfigStore = HostConfigStore(engineStateObservable, protoBuf, appContext.filesDir) {
 		appContext.bluetoothAdapter.name
 	}
 
-	val appStateObservable = EngineStateObservable()
-
-	val engine = Engine(appStateObservable) {
-		EngineComponentAndroid(appContext, mainHandler, hostConfigStore.get(), protoBuf)
+	val engine = Engine(engineStateObservable) {
+		EngineComponentAndroid(appContext, hostConfigStore.get(), protoBuf)
 	}
 
 	val peripheralRepository = PeripheralRepositoryAndroid(appContext)

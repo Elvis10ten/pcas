@@ -27,17 +27,17 @@ internal class NetworkAddressWatcher(
 
         override fun onAvailable(network: Network) {
             log.debug(::onAvailable, network)
-            onUpdated(addressProvider.get())
+            onUpdated(addressProvider.currentValue)
         }
 
         override fun onLinkPropertiesChanged(network: Network, linkProperties: LinkProperties) {
             log.debug(::onLinkPropertiesChanged, network, linkProperties)
-            onUpdated(addressProvider.get())
+            onUpdated(addressProvider.currentValue)
         }
 
         override fun onCapabilitiesChanged(network: Network, networkCapabilities: NetworkCapabilities) {
             log.debug(::onCapabilitiesChanged, network, networkCapabilities)
-            onUpdated(addressProvider.get())
+            onUpdated(addressProvider.currentValue)
         }
     }
 
