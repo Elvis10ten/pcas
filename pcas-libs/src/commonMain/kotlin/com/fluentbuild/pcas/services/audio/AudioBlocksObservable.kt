@@ -6,12 +6,14 @@ import com.fluentbuild.pcas.values.Observable
 import com.fluentbuild.pcas.ledger.Block
 import com.fluentbuild.pcas.peripheral.PeripheralBond
 import com.fluentbuild.pcas.async.Debouncer
+import com.fluentbuild.pcas.peripheral.CommandRetrier
 
 internal class AudioBlocksObservable(
 	private val propObservable: Observable<AudioProperty>,
 	private val bondsObservable: Observable<PeripheralBond>,
 	private val debouncer: Debouncer,
-	private val blocksBuilderProvider: () -> AudioBlocksBuilder
+	private val blocksBuilderProvider: () -> AudioBlocksBuilder,
+	private val commandRetrier: CommandRetrier
 ): Observable<Set<Block>> {
 
     override fun subscribe(observer: (Set<Block>) -> Unit): Cancellable {
@@ -28,6 +30,7 @@ internal class AudioBlocksObservable(
 
         cancellables += bondsObservable.subscribe {
             builder.setBond(it)
+			commandRetrier.onBondUpdated(it)
             notifyObserver()
         }
 

@@ -24,7 +24,7 @@ data class Block(
     @ProtoNumber(5)
     val timestamp: Long,
     @ProtoNumber(6)
-    val bondState: PeripheralBond.State,
+    val bondSteadyState: PeripheralBond.State,
     @ProtoNumber(7)
     val owner: HostInfo,
     @ProtoNumber(8)
@@ -33,7 +33,7 @@ data class Block(
     val canHandleDataStream: Boolean
 ): Model<Block> {
 
-    val isConnected = bondState == PeripheralBond.State.CONNECTED
+    val isConnected = bondSteadyState == PeripheralBond.State.CONNECTED
 
     val hasPriority = priority != NO_PRIORITY
 
@@ -75,7 +75,7 @@ data class Block(
                 peripheral == other.peripheral &&
                 priority == other.priority &&
                 timestamp == other.timestamp &&
-                bondState == other.bondState &&
+                bondSteadyState == other.bondSteadyState &&
                 owner == other.owner &&
                 canStreamData == other.canStreamData &&
                 canHandleDataStream == other.canHandleDataStream

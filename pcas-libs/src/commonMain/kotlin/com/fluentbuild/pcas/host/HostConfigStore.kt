@@ -1,0 +1,61 @@
+package com.fluentbuild.pcas.host
+
+import com.fluentbuild.pcas.EngineStateObservable
+import com.fluentbuild.pcas.io.AtomicFile
+import com.fluentbuild.pcas.peripheral.Peripheral
+import kotlinx.serialization.decodeFromByteArray
+import kotlinx.serialization.encodeToByteArray
+import kotlinx.serialization.protobuf.ProtoBuf
+
+class HostConfigStore(
+	private val engineStateObservable: EngineStateObservable,
+	private val protoBuf: ProtoBuf,
+	private val atomicFile: AtomicFile,
+	nameProvider: () -> String,
+	randomUuidGenerator: () -> Uuid
+) {
+
+	private var cachedConfig: HostConfig? = null
+
+	init {
+		if(!atomicFile.exists()) {
+			update(HostConfig(randomUuidGenerator(), nameProvider(), null, null))
+		}
+
+		engineStateObservable.update(get())
+	}
+
+	fun setNetworkKey(newNetworkKey: ByteArray) {
+		get().apply {
+			networkKey = newNetworkKey
+			update(this)
+		}
+	}
+
+	fun setAudioPeripheral(newAudioPeripheral: Peripheral) {
+		get().apply {
+			audioPeripheral = newAudioPeripheral
+			update(this)
+		}
+	}
+
+	private fun update(hostConfig: HostConfig) {
+		cachedConfig = hostConfig
+		atomicFile.write(protoBuf.encodeToByteArray(hostConfig))
+		engineStateObservable.update(hostConfig)
+	}
+
+	fun get(): HostConfig {
+		val cachedConfig = cachedConfig
+		if(cachedConfig != null) return cachedConfig
+
+		val hostConfig = protoBuf.decodeFromByteArray<HostConfig>(atomicFile.readData())
+		this.cachedConfig = hostConfig
+		return hostConfig
+	}
+
+	companion object {
+
+		const val FILE_NAME = "host_info.config"
+	}
+}

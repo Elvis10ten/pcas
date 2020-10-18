@@ -14,7 +14,7 @@ internal open class IoModuleJvm(
 	hostAddressProvider: Provider<Address.Ipv4>
 ): IoModule() {
 
-	private val parceler = Parceler(config, secureRandom, BufferObjectPool)
+	private val parceler = Parceler(config.networkKey, secureRandom, BufferObjectPool)
 
 	val unicastChannel = UnicastChannelJvm(getSocketWrapper())
 

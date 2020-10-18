@@ -65,7 +65,7 @@ internal class AudioBlocksBuilder(
                 peripheral = audioPeripheral,
                 priority = blockUsages.maxOfOrNull { it.priority } ?: Block.NO_PRIORITY,
                 timestamp = timeProvider.currentTimeMillis,
-                bondState = blockBond.state,
+                bondSteadyState = blockBond.steadyState,
                 owner = hostObservable.currentValue,
                 canStreamData = canCaptureAudio && blockBond.profile.supportsStreaming,
                 canHandleDataStream = blockBond.profile.supportsStreaming

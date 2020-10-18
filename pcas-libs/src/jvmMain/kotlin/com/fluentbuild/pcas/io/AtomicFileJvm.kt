@@ -1,4 +1,4 @@
-package com.fluentbuild.pcas.utils
+package com.fluentbuild.pcas.io
 
 import com.fluentbuild.pcas.logs.getLog
 import java.io.*
@@ -17,7 +17,7 @@ import java.io.*
  *
  * Source: https://android.googlesource.com/platform/frameworks/support/+/a9ac247af2afd4115c3eb6d16c05bc92737d6305/compat/src/main/java/androidx/core/util/AtomicFile.java
  */
-class AtomicFile(private val baseFile: File) {
+class AtomicFileJvm(private val baseFile: File): AtomicFile {
 
 	private val log = getLog()
 	private val newFile = File(baseFile.path + ".new")
@@ -76,6 +76,13 @@ class AtomicFile(private val baseFile: File) {
 		rename(newFile, baseFile)
 	}
 
+	override fun write(data: ByteArray) {
+		startWrite().apply {
+			write(data)
+			finishWrite(this)
+		}
+	}
+
 	/**
 	 * Call when you have failed for some reason at writing to the stream returned by [startWrite].
 	 * This will close the current write stream, and delete the new file.
@@ -119,6 +126,12 @@ class AtomicFile(private val baseFile: File) {
 
 		return FileInputStream(baseFile)
 	}
+
+	override fun readData(): ByteArray {
+		return openRead().use { it.readBytes() }
+	}
+
+	override fun exists() = baseFile.exists()
 
 	private fun sync(stream: FileOutputStream): Boolean {
 		return try {

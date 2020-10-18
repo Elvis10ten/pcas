@@ -10,13 +10,13 @@ class HostConfig(
 	@ProtoNumber(1)
 	val uuid: Uuid,
 	@ProtoNumber(2)
-	val name: String,
+	var name: String,
 	@ProtoNumber(3)
-	val networkKey: ByteArray?,
+	var networkKey: ByteArray?,
 	@ProtoNumber(4)
-	val audioPeripheral: Peripheral?
+	var audioPeripheral: Peripheral?
 ) {
 
 	@Transient
-	val canCaptureAudio: Boolean = false
+	var canCaptureAudio: Boolean = false
 }

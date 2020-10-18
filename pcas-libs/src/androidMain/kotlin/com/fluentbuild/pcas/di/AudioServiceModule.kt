@@ -9,6 +9,7 @@ import com.fluentbuild.pcas.bluetooth.BluetoothProfileHolder
 import com.fluentbuild.pcas.host.HostInfoObservable
 import com.fluentbuild.pcas.async.Debouncer
 import com.fluentbuild.pcas.bluetooth.BluetoothPeripheralCommander
+import com.fluentbuild.pcas.peripheral.CommandRetrier
 import com.fluentbuild.pcas.peripheral.PeripheralProfile
 import com.fluentbuild.pcas.services.audio.*
 import com.fluentbuild.pcas.utils.TimeProviderJvm
@@ -31,15 +32,16 @@ internal class AudioServiceModule(
 
     private val audioProfileHolder = BluetoothProfileHolder(appContext)
 
-    private val a2dpCommander = BluetoothPeripheralCommander(appContext, audioProfileHolder, BluetoothProfile.A2DP)
-
-    private val headsetCommander = BluetoothPeripheralCommander(appContext, audioProfileHolder, BluetoothProfile.HEADSET)
-
     private val propertyObservable = AudioPropertyObservable(appContext, callStateWatcher, audioPlaybackWatcher)
 
 	private val profileStateWatchers = mapOf(
 		PeripheralProfile.A2DP to profileStateWatcherProvider(BluetoothA2dp.ACTION_CONNECTION_STATE_CHANGED),
 		PeripheralProfile.HEADSET to profileStateWatcherProvider(BluetoothHeadset.ACTION_CONNECTION_STATE_CHANGED),
+	)
+
+	private val profileCommanders = mapOf(
+		PeripheralProfile.A2DP to BluetoothPeripheralCommander(appContext, audioProfileHolder, BluetoothProfile.A2DP),
+		PeripheralProfile.HEADSET to BluetoothPeripheralCommander(appContext, audioProfileHolder, BluetoothProfile.HEADSET)
 	)
 
     private val bondsObservable = AudioBondsObservableAndroid(
@@ -62,16 +64,18 @@ internal class AudioServiceModule(
 
 	val resolutionHandler = AudioResolutionHandler(
         audioPeripheral = hostConfig.audioPeripheral!!,
-        a2dpCommander = a2dpCommander,
-        hspCommander = headsetCommander,
+		profileCommanders = profileCommanders,
         audioStreamer = audioStreamer
     )
+
+	private val commandRetrier = CommandRetrier(profileCommanders)
 
     val audioBlocksProducer = AudioBlocksObservable(
         propObservable = propertyObservable,
         bondsObservable = bondsObservable,
         debouncer = blockDebouncerProvider(AUDIO_BLOCK_DEBOUNCE_DELAY_MILLIS),
-		blocksBuilderProvider = audioBlocksBuilderProvider
+		blocksBuilderProvider = audioBlocksBuilderProvider,
+		commandRetrier = commandRetrier
     )
 
 	companion object {

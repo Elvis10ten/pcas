@@ -25,7 +25,7 @@ internal open class MulticastChannelJvm(
                 joinGroup(MULTICAST_ADDRESS.inetAddress)
             } catch (e: SocketException) {
                 log.error(e) { "Error joining group with default interface" }
-                val hostInterface = hostAddressProvider.get().getPrimaryInterfaceWithAddress()
+                val hostInterface = hostAddressProvider.currentValue.getPrimaryInterfaceWithAddress()
                 networkInterface = hostInterface
                 joinGroup(InetSocketAddress(MULTICAST_ADDRESS.inetAddress, MULTICAST_PORT), hostInterface)
             }

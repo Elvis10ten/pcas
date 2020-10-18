@@ -1,18 +1,17 @@
 package com.fluentbuild.pcas.io
 
-import com.fluentbuild.pcas.host.HostConfig
 import java.security.SecureRandom
 import javax.crypto.Cipher
 import javax.crypto.spec.GCMParameterSpec
 import javax.crypto.spec.SecretKeySpec
 
 internal class Parceler(
-	config: HostConfig,
+	private val networkKey: ByteArray?,
 	private val random: SecureRandom,
 	private val bufferPool: BufferObjectPool
 ) {
 
-    private val secretKey = SecretKeySpec(config.networkKey, OFFSET_ZERO, config.networkKey.size, KEY_ALGORITHM)
+    private val secretKey by lazy { SecretKeySpec(networkKey!!, OFFSET_ZERO, networkKey.size, KEY_ALGORITHM) }
     private val cipherCache = ThreadLocal.withInitial { Cipher.getInstance(CIPHER_TRANSFORMATION) }
     private val cipher get() = cipherCache.get()!!
 
@@ -20,6 +19,8 @@ internal class Parceler(
     private val iv get() = ivCache.get()!!
 
     inline fun <T> parcel(message: ByteArray, messageSize: Int, parcelTransform: (Parcel, Int) -> T): T {
+        if(networkKey == null) return parcelTransform(message, messageSize)
+
         val iv = init(Cipher.ENCRYPT_MODE) { random.nextBytes(it) }
         val parcel = bufferPool.allocate()
         val parcelSize = cipher.doFinal(message, OFFSET_ZERO, messageSize, parcel, IV_SIZE)
@@ -29,6 +30,8 @@ internal class Parceler(
     }
 
     inline fun <T> unparcel(parcel: ByteArray, parcelSize: Int, messageTransform: (Message, Int) -> T): T {
+        if(networkKey == null) return messageTransform(parcel, parcelSize)
+
         init(Cipher.DECRYPT_MODE) {
             System.arraycopy(parcel, OFFSET_ZERO, it, OFFSET_ZERO, IV_SIZE)
         }

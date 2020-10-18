@@ -2,7 +2,9 @@ package com.fluentbuild.pcas.peripheral
 
 interface PeripheralCommander {
 
-    fun perform(command: Command)
+    var retryInfo: RetryInfo?
+
+    fun perform(command: Command, retryCount: Int = 0)
 
     fun release()
 
@@ -14,4 +16,9 @@ interface PeripheralCommander {
 
         class Disconnect(override val peripheral: Peripheral): Command()
     }
+
+    data class RetryInfo(
+        val lastCommand: Command,
+        val retryCount: Int
+    )
 }

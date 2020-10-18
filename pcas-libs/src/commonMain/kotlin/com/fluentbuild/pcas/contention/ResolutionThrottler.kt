@@ -14,7 +14,7 @@ internal class ResolutionThrottler(private val timeProvider: TimeProvider) {
 
 	fun throttle(resolution: Contention.Resolution, action: (Contention.Resolution) -> Unit) {
 		log.debug(::throttle, resolution)
-		val currentElapsedRealtime = timeProvider.getElapsedRealtime()
+		val currentElapsedRealtime = timeProvider.elapsedRealtime
 		val lastTimeForResolution = lastResolutionsTimes[resolution]
 
 		val hasSatisfiedInterval = lastTimeForResolution == null ||

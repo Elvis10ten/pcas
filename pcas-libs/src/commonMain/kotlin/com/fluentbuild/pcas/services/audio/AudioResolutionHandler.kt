@@ -9,8 +9,7 @@ import com.fluentbuild.pcas.peripheral.PeripheralProfile
 
 internal class AudioResolutionHandler(
     private val audioPeripheral: Peripheral,
-    private val a2dpCommander: PeripheralCommander,
-    private val hspCommander: PeripheralCommander,
+    private val profileCommanders: Map<PeripheralProfile, PeripheralCommander>,
     private val audioStreamer: AudioStreamer,
 ): ResolutionHandler {
 
@@ -33,25 +32,14 @@ internal class AudioResolutionHandler(
 
     override fun release() {
         audioStreamer.stop()
-        a2dpCommander.release()
-        hspCommander.release()
+        profileCommanders.values.forEach { it.release() }
     }
 
     private fun PeripheralProfile.connect() {
-        val command = Command.Connect(audioPeripheral)
-        when(this) {
-            PeripheralProfile.A2DP -> a2dpCommander.perform(command)
-            PeripheralProfile.HEADSET -> hspCommander.perform(command)
-            PeripheralProfile.HID -> error("HID profile not supported in audio service")
-        }
+        profileCommanders.getValue(this).perform(Command.Connect(audioPeripheral))
     }
 
     private fun PeripheralProfile.disconnect() {
-        val command = Command.Disconnect(audioPeripheral)
-        when(this) {
-            PeripheralProfile.A2DP -> a2dpCommander.perform(command)
-            PeripheralProfile.HEADSET -> hspCommander.perform(command)
-            PeripheralProfile.HID -> error("HID profile not supported in audio service")
-        }
+        profileCommanders.getValue(this).perform(Command.Disconnect(audioPeripheral))
     }
 }

@@ -55,8 +55,10 @@ internal class AudioBondsObservableAndroid(
         }
     }
 
-    private fun BluetoothProfile.getPeripheralBond() =
-        PeripheralBond(toPeripheralProfile(), getPeripheralBondState(bluetoothDevice))
+    private fun BluetoothProfile.getPeripheralBond(): PeripheralBond {
+        val bondHotState = getPeripheralBondState(bluetoothDevice)
+        return PeripheralBond(toPeripheralProfile(), bondHotState, bondHotState.getSteadyState())
+    }
 
     private fun BluetoothProfile.toPeripheralProfile(): PeripheralProfile {
         return when (this) {

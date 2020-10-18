@@ -17,9 +17,12 @@ internal class BluetoothPeripheralCommander(
     private val log = getLog()
     private var cancellable: Cancellable = SentinelCancellable
 
-    override fun perform(command: Command) {
-        log.debug(::perform, command)
+    override var retryInfo: PeripheralCommander.RetryInfo? = null
+
+    override fun perform(command: Command, retryCount: Int) {
+        log.debug(::perform, command, retryCount)
         cancellable.cancel()
+        retryInfo = PeripheralCommander.RetryInfo(command, retryCount)
 
         cancellable = profileHolder.useProfile(androidProfileId) { profile ->
             val bluetoothDevice = context.bluetoothAdapter.toBluetoothDevice(command.peripheral)
@@ -38,6 +41,7 @@ internal class BluetoothPeripheralCommander(
         log.debug(::release)
         cancellable.cancel()
         cancellable = SentinelCancellable
+        retryInfo = null
         profileHolder.clearCache(androidProfileId)
     }
 }

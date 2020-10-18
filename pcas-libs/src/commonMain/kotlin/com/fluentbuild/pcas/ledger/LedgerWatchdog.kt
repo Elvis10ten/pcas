@@ -22,7 +22,7 @@ internal class LedgerWatchdog(
         runner.runOnMainRepeating(HEARTBEAT_INTERVAL_MILLIS) {
             messageSender.sendHeartbeat()
 
-            val currentTimestamp = timeProvider.currentTimeMillis()
+            val currentTimestamp = timeProvider.currentTimeMillis
             val deadHosts = lastHostHeartbeatTimestamps.filter { (_, lastHeartbeatTimestamp) ->
                 currentTimestamp - lastHeartbeatTimestamp > HOST_TTL_MILLIS
             }.keys
@@ -41,7 +41,7 @@ internal class LedgerWatchdog(
     }
 
     fun onHeartbeatReceived(hostUuid: Uuid) {
-        lastHostHeartbeatTimestamps[hostUuid] = timeProvider.currentTimeMillis()
+        lastHostHeartbeatTimestamps[hostUuid] = timeProvider.currentTimeMillis
     }
 
     companion object {
