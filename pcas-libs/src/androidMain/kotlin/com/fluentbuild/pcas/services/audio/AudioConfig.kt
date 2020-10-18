@@ -11,12 +11,14 @@ internal object AudioConfig {
 
     const val ENCODING = AudioFormat.ENCODING_PCM_16BIT
 
-    val minBufferSizeBytes get() = AudioTrack.getMinBufferSize(SAMPLE_RATE_HZ, CHANNEL_MASK, ENCODING)
-
     val audioFormat: AudioFormat
         get() = AudioFormat.Builder()
             .setEncoding(ENCODING)
             .setChannelMask(CHANNEL_MASK)
             .setSampleRate(SAMPLE_RATE_HZ)
             .build()
+
+    fun getIdealBufferSizeBytes(): Int {
+        return AudioTrack.getMinBufferSize(SAMPLE_RATE_HZ, CHANNEL_MASK, ENCODING)
+    }
 }

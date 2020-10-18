@@ -4,5 +4,5 @@ import android.os.SystemClock
 
 internal class TimeProviderAndroid: TimeProviderJvm() {
 
-	override fun getElapsedRealtime() = SystemClock.elapsedRealtime()
+	override val elapsedRealtime get() = SystemClock.elapsedRealtime()
 }

@@ -1,12 +1,9 @@
 package com.fluentbuild.pcas.utils
 
-import android.app.NotificationManager
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothManager
 import android.content.Context
-import android.content.pm.PackageManager
 import android.media.AudioManager
-import android.media.projection.MediaProjectionManager
 import android.net.ConnectivityManager
 import android.net.wifi.WifiManager
 import android.os.PowerManager

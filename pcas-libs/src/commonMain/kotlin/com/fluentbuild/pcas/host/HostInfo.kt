@@ -19,7 +19,7 @@ data class HostInfo(
 	@ProtoNumber(5)
     val isInteractive: Boolean,
 	@ProtoNumber(6)
-    val minAudioBufferSizeBytes: Int
+    val idealAudioBufferSizeBytes: Int
 ): Model<HostInfo> {
 
     override fun equals(other: Any?) = uuid == (other as? HostInfo)?.uuid
@@ -32,6 +32,6 @@ data class HostInfo(
 				address == this.address &&
 				port == this.port &&
 				isInteractive == this.isInteractive &&
-				minAudioBufferSizeBytes == this.minAudioBufferSizeBytes
+				idealAudioBufferSizeBytes == this.idealAudioBufferSizeBytes
 	}
 }

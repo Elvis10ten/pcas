@@ -19,7 +19,6 @@ internal class MulticastChannelAndroid(
             setReferenceCounted(false)
             acquire()
         }
-
         super.init(receiver)
     }
 
@@ -31,6 +30,6 @@ internal class MulticastChannelAndroid(
 
     companion object {
 
-        private const val TAG_MULTICAST_LOCK = "TAG_MULTICAST_LOCK"
+        private const val TAG_MULTICAST_LOCK = "PCAS_MULTICAST_LOCK"
     }
 }

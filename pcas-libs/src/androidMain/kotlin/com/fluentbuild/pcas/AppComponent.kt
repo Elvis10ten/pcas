@@ -15,8 +15,6 @@ class AppComponent(
 	isDebug: Boolean
 ) {
 
-	val richLog = RichLog
-
 	val mainHandler = Handler(appContext.mainLooper)
 
 	private val protoBuf = ProtoBuf

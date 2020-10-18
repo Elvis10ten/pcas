@@ -7,6 +7,8 @@ data class PeripheralBond(
 
     enum class State {
         CONNECTED,
-        DISCONNECTED
+        CONNECTING,
+        DISCONNECTED,
+        DISCONNECTING
     }
 }

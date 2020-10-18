@@ -13,7 +13,8 @@ import com.fluentbuild.pcas.values.Provider
 
 internal class HostInfoObservableAndroid(
 	private val context: Context,
-	private val hostConfig: HostConfig,
+	private val hostUuid: Uuid,
+	private val hostName: String,
 	private val hostAddressProvider: Provider<Address.Ipv4>,
 	private val unicastChannel: UnicastChannel,
 	private val audioConfig: AudioConfig,
@@ -41,11 +42,11 @@ internal class HostInfoObservableAndroid(
 
 	override val currentValue: HostInfo
 		get() = HostInfo(
-			uuid = hostConfig.uuid,
-			name = hostConfig.name,
+			uuid = hostUuid,
+			name = hostName,
 			address = hostAddressProvider.currentValue,
 			port = unicastChannel.getPort(),
 			isInteractive = context.powerManager.isInteractive,
-			minAudioBufferSizeBytes = audioConfig.minBufferSizeBytes
+			idealAudioBufferSizeBytes = audioConfig.getIdealBufferSizeBytes()
 		)
 }

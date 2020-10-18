@@ -19,18 +19,20 @@ internal class AudioPropertyObservable(
 ): Observable<AudioProperty> {
 
     private val log = getLog()
-    private val audioManager get() = context.audioManager
+
     private val telephonyManager get() = context.telephonyManager
-    private val currentAudioAttributes get() = audioManager.activePlaybackConfigurations.map { it.audioAttributes }
     private val currentTelephonyState get() = telephonyManager.callState
+
+    private val audioManager get() = context.audioManager
+    private val currentAudioAttributes get() = audioManager.activePlaybackConfigurations.map { it.audioAttributes }
 
     override fun subscribe(observer: (AudioProperty) -> Unit): Cancellable {
         log.debug { "Observing AudioProperty" }
         val initialAudioAttributes = currentAudioAttributes
         val initialTelephonyState = currentTelephonyState
-        observer(getCurrentAudioProperty(initialAudioAttributes, initialTelephonyState))
+        observer(getAudioProperty(initialAudioAttributes, initialTelephonyState))
 
-        val notifyObserver = { observer(getCurrentAudioProperty(currentAudioAttributes, currentTelephonyState)) }
+        val notifyObserver = { observer(getAudioProperty(currentAudioAttributes, currentTelephonyState)) }
         callStateWatcher.register(initialTelephonyState, notifyObserver)
         audioPlaybackWatcher.register(initialAudioAttributes, notifyObserver)
 
@@ -41,7 +43,7 @@ internal class AudioPropertyObservable(
         }
     }
 
-    private fun getCurrentAudioProperty(audioAttributes: List<AudioAttributes>, telephonyState: Int): AudioProperty {
+    private fun getAudioProperty(audioAttributes: List<AudioAttributes>, telephonyState: Int): AudioProperty {
         val audioUsages = audioAttributes.mapSetNotNullMutable { it.toAudioPropertyUsage() }
 
         if(telephonyState != TelephonyManager.CALL_STATE_IDLE) {
@@ -60,8 +62,8 @@ internal class AudioPropertyObservable(
             contentType == AudioAttributes.CONTENT_TYPE_SPEECH -> AudioProperty.Usage.SPEECH
             contentType == AudioAttributes.CONTENT_TYPE_MUSIC -> AudioProperty.Usage.MUSIC
 
-            usage == AudioAttributes.USAGE_UNKNOWN -> AudioProperty.Usage.UNKNOWN
             usage == AudioAttributes.USAGE_MEDIA -> AudioProperty.Usage.MEDIA_UNKNOWN
+            usage == AudioAttributes.USAGE_UNKNOWN -> AudioProperty.Usage.UNKNOWN
             else -> null
         }
     }

@@ -17,18 +17,18 @@ internal class AudioBlocksObservable(
     override fun subscribe(observer: (Set<Block>) -> Unit): Cancellable {
         val builder = blocksBuilderProvider()
         val cancellables = Cancellables()
-        val updateObserver = {
+        val notifyObserver = {
 			debouncer.debounce { builder.buildNovel(observer) }
 		}
 
         cancellables += propObservable.subscribe {
             builder.setProperty(it)
-            updateObserver()
+            notifyObserver()
         }
 
         cancellables += bondsObservable.subscribe {
             builder.setBond(it)
-            updateObserver()
+            notifyObserver()
         }
 
         return Cancellable {
