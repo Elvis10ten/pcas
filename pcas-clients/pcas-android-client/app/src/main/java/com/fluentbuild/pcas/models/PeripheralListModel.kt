@@ -5,6 +5,5 @@ class PeripheralListModel(
     val description: String,
     val peripherals: List<PeripheralModel>,
     val isCancellable: Boolean,
-    val doneButtonText: String,
     val onSelected: (PeripheralModel) -> Unit
 ): Model

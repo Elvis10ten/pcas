@@ -1,4 +1,4 @@
-package com.fluentbuild.pcas.utils
+package com.fluentbuild.pcas
 
 import android.app.Notification
 import android.app.NotificationChannel
@@ -8,8 +8,6 @@ import android.content.Context
 import androidx.annotation.StringRes
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
-import com.fluentbuild.pcas.MainActivity
-import com.fluentbuild.pcas.R
 
 class GeneralNotifications(private val context: Context) {
 

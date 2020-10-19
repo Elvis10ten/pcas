@@ -4,18 +4,10 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.fluentbuild.pcas.actions.StartEngineSoftAction
-import com.fluentbuild.pcas.actions.ShowPeripheralListAction
-import com.fluentbuild.pcas.actions.ShowEncryptionSetupAction
-import com.fluentbuild.pcas.actions.StopEngineSoftAction
-import com.fluentbuild.pcas.services.ServiceClass
+import com.fluentbuild.pcas.actions.*
 import kotlinx.android.synthetic.main.activity_main.*
 
-
 class MainActivity: AppCompatActivity() {
-
-    private val engineStateObservable get() = appComponent.engineStateObservable
-    private val currentHostConfig get() = engineStateObservable.currentState.hostConfig
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,24 +17,14 @@ class MainActivity: AppCompatActivity() {
             onActionClicked(it.itemId)
             true
         }
+    }
 
-        StartEngineSoftAction.perform(this)
-
-        if(currentHostConfig.peripherals.isEmpty()) {
-            ShowPeripheralListAction(ServiceClass.AUDIO).perform(this)
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if(requestCode == RequestMediaProjectionAction.REQUEST_CODE) {
+            SetMediaProjectionAction(resultCode, data).perform(this)
+        } else {
+            super.onActivityResult(requestCode, resultCode, data)
         }
-
-        /*val intent = Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS)
-        startActivity(intent)
-
-        val intent = Intent()
-        val packageName = packageName
-        val pm = getSystemService(POWER_SERVICE) as PowerManager
-        if (!pm.isIgnoringBatteryOptimizations(packageName)) {
-            intent.action = Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS
-            intent.data = Uri.parse("package:$packageName")
-            startActivity(intent)
-        }*/
     }
 
     private fun onActionClicked(itemId: Int) {

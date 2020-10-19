@@ -4,7 +4,6 @@ import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.os.IBinder
-import com.fluentbuild.pcas.utils.GeneralNotifications
 
 class MainService: Service() {
 
@@ -19,6 +18,7 @@ class MainService: Service() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         val power = intent?.getSerializableExtra(EXTRA_POWER) as Power?
         if(power != Power.SOFT) {
+            stopEngine()
             startEngine()
         }
 

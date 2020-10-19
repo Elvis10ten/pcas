@@ -2,15 +2,16 @@ package com.fluentbuild.pcas
 
 import com.fluentbuild.pcas.async.Cancellable
 import com.fluentbuild.pcas.host.HostConfig
+import com.fluentbuild.pcas.host.HostConfigStore
 import com.fluentbuild.pcas.ledger.Ledger
 import com.fluentbuild.pcas.utils.Delegates.observable
 import com.fluentbuild.pcas.values.Observable
 
-class EngineStateObservable: Observable<EngineState> {
+class EngineStateObservable(hostConfigStore: HostConfigStore): Observable<EngineState> {
 
 	private val observers = mutableSetOf<Function1<EngineState, Unit>>()
 	//TODO
-	var currentState by observable(EngineState()) { notifyObservers() }
+	var currentState by observable(EngineState(hostConfig = hostConfigStore.get())) { notifyObservers() }
 		private set
 
 	override fun subscribe(observer: (EngineState) -> Unit): Cancellable {

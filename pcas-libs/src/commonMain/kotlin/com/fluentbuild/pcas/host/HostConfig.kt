@@ -15,11 +15,10 @@ class HostConfig(
 	@ProtoNumber(3)
 	var networkKey: ByteArray? = null,
 	@ProtoNumber(4)
-	var peripherals: MutableMap<ServiceClass, Peripheral> = mutableMapOf()
-) {
-
+	var peripherals: MutableMap<ServiceClass, Peripheral> = mutableMapOf(),
 	@Transient
-	var canCaptureAudio: Boolean = false
+	var isAudioCaptureEnabled: Boolean = false
+) {
 
 	val requireAudioPeripheral get() = peripherals.getValue(ServiceClass.AUDIO)
 

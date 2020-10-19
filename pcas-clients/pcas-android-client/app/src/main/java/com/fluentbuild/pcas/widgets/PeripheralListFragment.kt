@@ -26,13 +26,12 @@ class PeripheralListFragment: BottomSheetDialogFragment(), Widget<PeripheralList
     override fun update(model: PeripheralListModel) {
         peripheralTitleTextView.text = model.title
         peripheralDescTextView.text = model.description
-
-        doneButtonView.text = model.doneButtonText
-        doneButtonView.isEnabled = model.isCancellable
-        doneButtonView.setOnClickListener { dismiss() }
         isCancelable = model.isCancellable
 
-        peripheralListView.update(model.peripherals) { model.onSelected(it) }
+        peripheralListView.update(model.peripherals) {
+            model.onSelected(it)
+            dismiss()
+        }
     }
 
     override fun onCreateView(

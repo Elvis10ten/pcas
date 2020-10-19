@@ -43,19 +43,10 @@ class PeripheralListAdapter(
             description = getDescription(peripherals),
             peripherals = peripherals,
             isCancellable = state.hostConfig.hasAnyPeripheral,
-            doneButtonText = state.doneButtonText,
             onSelected = { SelectPeripheralAction(serviceClass, it.peripheral).perform(context) },
         )
     }
 
     private fun EngineState.isPeripheralSelected(peripheral: Peripheral) =
         hostConfig.peripherals[serviceClass] == peripheral
-
-    private inline val EngineState.doneButtonText: String get() {
-        return if(hostConfig.hasAnyPeripheral) {
-            context.getString(R.string.selectPeripheralDoneActionEnabled)
-        } else {
-            context.getString(R.string.selectPeripheralDoneActionDisabled)
-        }
-    }
 }

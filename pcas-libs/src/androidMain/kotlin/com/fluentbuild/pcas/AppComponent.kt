@@ -1,6 +1,7 @@
 package com.fluentbuild.pcas
 
 import android.content.Context
+import android.media.projection.MediaProjection
 import com.fluentbuild.pcas.host.HostConfigStore
 import com.fluentbuild.pcas.io.AtomicFileJvm
 import com.fluentbuild.pcas.peripheral.PeripheralRepositoryAndroid
@@ -18,7 +19,7 @@ class AppComponent(
 
 	private val protoBuf = ProtoBuf
 
-	val engineStateObservable = EngineStateObservable()
+	var mediaProjection: MediaProjection? = null
 
 	val hostConfigStore = HostConfigStore(
 		protoBuf = protoBuf,
@@ -27,8 +28,11 @@ class AppComponent(
 		randomUuidGenerator = { createRandomUuid() }
 	)
 
+	val engineStateObservable = EngineStateObservable(hostConfigStore)
+
 	val engine = Engine(engineStateObservable) {
 		EngineComponentAndroid(
+			mediaProjection = mediaProjection,
 			appContext = appContext,
 			hostConfig = hostConfigStore.get(),
 			protoBuf = protoBuf
@@ -41,5 +45,7 @@ class AppComponent(
 		if(isDebug) {
 			Timber.plant(LogcatTree())
 		}
+
+		hostConfigStore.engineStateObservable = engineStateObservable
 	}
 }

@@ -1,6 +1,7 @@
 package com.fluentbuild.pcas
 
 import android.content.Context
+import android.media.projection.MediaProjection
 import android.os.Handler
 import com.fluentbuild.pcas.di.AsyncModuleAndroid
 import com.fluentbuild.pcas.di.AudioServiceModule
@@ -16,6 +17,7 @@ import com.fluentbuild.pcas.io.AddressProviderAndroid
 import kotlinx.serialization.protobuf.ProtoBuf
 
 internal class EngineComponentAndroid(
+	mediaProjection: MediaProjection?,
 	appContext: Context,
 	hostConfig: HostConfig,
 	protoBuf: ProtoBuf

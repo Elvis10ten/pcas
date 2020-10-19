@@ -17,7 +17,6 @@ class HostConfigStore(
 
 	private var cachedConfig: HostConfig? = null
 
-	// todo
 	internal var engineStateObservable: EngineStateObservable? = null
 
 	init {
@@ -25,7 +24,7 @@ class HostConfigStore(
 			update(HostConfig(randomUuidGenerator(), nameProvider()))
 		}
 
-		engineStateObservable.update(get())
+		engineStateObservable?.update(get())
 	}
 
 	fun setNetworkKey(newNetworkKey: ByteArray?) {
@@ -42,10 +41,17 @@ class HostConfigStore(
 		}
 	}
 
+	fun setAudioCaptureEnabled(audioCaptureEnabled: Boolean) {
+		get().apply {
+			isAudioCaptureEnabled = audioCaptureEnabled
+			update(this)
+		}
+	}
+
 	private fun update(hostConfig: HostConfig) {
 		cachedConfig = hostConfig
 		atomicFile.write(protoBuf.encodeToByteArray(hostConfig))
-		engineStateObservable.update(hostConfig)
+		engineStateObservable?.update(hostConfig)
 	}
 
 	fun get(): HostConfig {

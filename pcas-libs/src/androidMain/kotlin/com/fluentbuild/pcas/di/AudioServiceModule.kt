@@ -54,7 +54,7 @@ internal class AudioServiceModule(
 	private val audioBlocksBuilderProvider = {
 		AudioBlocksBuilder(
 			audioPeripheral = hostConfig.requireAudioPeripheral,
-			canCaptureAudio = hostConfig.canCaptureAudio,
+			canCaptureAudio = hostConfig.isAudioCaptureEnabled,
 			timeProvider = timeProvider,
 			hostObservable = hostObservable
 		)
