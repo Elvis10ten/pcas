@@ -18,6 +18,8 @@ class PeripheralListFragment: BottomSheetDialogFragment() {
     private val hostConfigStore get() = requireContext().appComponent.hostConfigStore
     private val peripheralRepository get() = requireContext().appComponent.peripheralRepository
 
+    private val serviceClassArg get() = requireArguments().getSerializable(ARG_SERVICE_CLASS) as ServiceClass
+
     private var currentSelectedPeripheral: Peripheral? by observable(null) { newValue: Peripheral? ->
         if(newValue == null) {
             peripheralSelectButtonView.isEnabled = false
@@ -38,13 +40,13 @@ class PeripheralListFragment: BottomSheetDialogFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        isCancelable = hostConfigStore.isPeripheralsSetup()
+        isCancelable = hostConfigStore.get().audioPeripheral != null
         return inflater.inflate(R.layout.peripheral_list_fragment, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val peripherals = peripheralRepository.getAudioPeripherals().toList()
-        val selectedPeripheral = hostConfigStore.getPartial().audioPeripheral
+        val peripherals = peripheralRepository.getPeripherals(serviceClassArg).toList()
+        val selectedPeripheral = hostConfigStore.get().audioPeripheral
 
         val peripheralList = PeripheralListView(
             requireContext(),

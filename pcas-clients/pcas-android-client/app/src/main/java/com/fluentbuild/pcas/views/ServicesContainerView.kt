@@ -13,9 +13,14 @@ class ServicesContainerView @JvmOverloads constructor(
 ): LinearLayout(context, attrs, defStyle) {
 
     init {
-        orientation = HORIZONTAL
-        addView(ServiceWidget(context, ServiceClass.AUDIO))
-        addView(ServiceWidget(context, ServiceClass.MOUSE))
-        addView(ServiceWidget(context, ServiceClass.KEYPAD))
+        orientation = VERTICAL
+        ServiceClass.values().forEach {
+            addView(ServiceWidget(context, it), getServiceWidgetParams())
+        }
     }
+
+    private fun getServiceWidgetParams() =
+        LayoutParams(LayoutParams.MATCH_PARENT, 0).apply {
+            weight = 1f
+        }
 }

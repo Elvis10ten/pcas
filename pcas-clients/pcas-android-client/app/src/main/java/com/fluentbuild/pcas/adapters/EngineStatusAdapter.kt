@@ -1,8 +1,8 @@
 package com.fluentbuild.pcas.adapters
 
 import android.content.Context
-import com.fluentbuild.pcas.AppState
 import com.fluentbuild.pcas.Engine
+import com.fluentbuild.pcas.EngineState
 import com.fluentbuild.pcas.R
 import com.fluentbuild.pcas.actions.RunEngineAction
 import com.fluentbuild.pcas.actions.HardStopEngineAction
@@ -12,7 +12,7 @@ import com.fluentbuild.pcas.utils.getDrawableCompat
 
 class EngineStatusAdapter(private val context: Context): Adapter<EngineStatusModel> {
 
-    override fun toModel(state: AppState) = state.engineStatus.toModel()
+    override fun toModel(state: EngineState) = state.engineStatus.toModel()
 
     private fun Engine.Status.toModel(): EngineStatusModel {
         return when(this) {

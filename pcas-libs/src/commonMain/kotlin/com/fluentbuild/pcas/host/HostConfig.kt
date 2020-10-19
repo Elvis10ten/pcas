@@ -12,9 +12,9 @@ class HostConfig(
 	@ProtoNumber(2)
 	var name: String,
 	@ProtoNumber(3)
-	var networkKey: ByteArray?,
+	var networkKey: ByteArray? = null,
 	@ProtoNumber(4)
-	var audioPeripheral: Peripheral?
+	var audioPeripheral: Peripheral? = null
 ) {
 
 	@Transient

@@ -10,8 +10,8 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity: AppCompatActivity() {
 
-    private val appStateObservable = appComponent.appStateObservable
-    private val currentHostConfig get() = appStateObservable.currentAppState.hostConfig
+    private val engineStateObservable get() = appComponent.engineStateObservable
+    private val currentHostConfig get() = engineStateObservable.currentAppState.hostConfig
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,14 +24,13 @@ class MainActivity: AppCompatActivity() {
 
         DryRunEngineAction.perform(this)
 
-        if(currentHostConfig.audioPeripheral == null) {
+        if(currentHostConfig?.audioPeripheral == null) {
             SelectPeripheralAction(ServiceClass.AUDIO).perform(this)
         }
     }
 
     private fun onActionClicked(itemId: Int) {
         when(itemId) {
-            R.id.actionClearConsole -> ClearLogAction.perform(this)
             R.id.actionSetupSecurity -> SetupSecurityAction.perform(this)
         }
     }

@@ -17,7 +17,8 @@ class NetworkSetup(private val context: Context) {
 
     @Throws(Exception::class)
     fun getSetupInfo(): Info {
-        val hostConfig = hostConfigStore.getPartial()
+        TODO()
+        /*val hostConfig = hostConfigStore.get()
         val bitmap = barcodeEncoder.encodeBitmap(
             KeyTool.toString(hostConfig.networkKey),
             BarcodeFormat.QR_CODE,
@@ -25,7 +26,7 @@ class NetworkSetup(private val context: Context) {
             qrCodeSize
         )
 
-        return Info(hostConfig.name, bitmap)
+        return Info(hostConfig.name, bitmap)*/
     }
 
     fun setup(networkKey: String) {

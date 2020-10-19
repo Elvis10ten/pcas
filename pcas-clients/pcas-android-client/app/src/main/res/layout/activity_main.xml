@@ -29,25 +29,11 @@
 
         <com.fluentbuild.pcas.views.ServicesContainerView
             android:id="@+id/servicesContainerView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:orientation="horizontal"
             android:layout_gravity="center_horizontal"
             />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/titleConsole"
-            android:paddingBottom="@dimen/size5"
-            android:textAppearance="@style/TextAppearance.AppCompat.Title"
-            />
-
-        <com.fluentbuild.pcas.widgets.ConsoleWidget
-            android:id="@+id/consoleWidget"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1" />
 
     </LinearLayout>
 

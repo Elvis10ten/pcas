@@ -10,7 +10,7 @@ class WidgetDelegate<ModelT: Model, WidgetT>(
     private val widget: WidgetT
 ) where WidgetT: Widget<ModelT>, WidgetT: View {
 
-    private val appStateObservable = widget.context.appComponent.appStateObservable
+    private val appStateObservable = widget.context.appComponent.engineStateObservable
 
     private var currentModel: ModelT? by observable { oldValue, newValue ->
         if (newValue != null && oldValue != newValue) {

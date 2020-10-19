@@ -13,8 +13,9 @@ data class ServiceClassModel(
     @DrawableRes
     val icon: Int,
     @ColorInt
-    val iconBackgroundColor: Int,
+    val iconBackgroundTintColor: Int,
     @ColorInt
-    val iconColor: Int,
-    val connectionCount: Int = 0
+    val iconTintColor: Int,
+    val connectionCount: Int = 0,
+    val description: String? = null
 ): Model

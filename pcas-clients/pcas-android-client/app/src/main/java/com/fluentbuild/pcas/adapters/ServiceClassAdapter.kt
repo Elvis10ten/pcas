@@ -1,7 +1,7 @@
 package com.fluentbuild.pcas.adapters
 
 import android.graphics.Color
-import com.fluentbuild.pcas.AppState
+import com.fluentbuild.pcas.EngineState
 import com.fluentbuild.pcas.R
 import com.fluentbuild.pcas.ledger.Block
 import com.fluentbuild.pcas.ledger.Ledger
@@ -11,12 +11,13 @@ import com.fluentbuild.pcas.services.ServiceClass
 
 class ServiceClassAdapter(private val widgetServiceClass: ServiceClass): Adapter<ServiceClassModel> {
 
-    override fun toModel(state: AppState): ServiceClassModel {
+    override fun toModel(state: EngineState): ServiceClassModel {
         val connectedBlocks = state.ledger?.connectedBlocks ?: emptyList()
-        return createModel(connectedBlocks.size)
+        val description = state.ledger?.description
+        return createModel(connectedBlocks.size, description)
     }
 
-    private fun createModel(connectionCount: Int): ServiceClassModel {
+    private fun createModel(connectionCount: Int, description: String?): ServiceClassModel {
         return when(widgetServiceClass) {
             ServiceClass.AUDIO -> {
                 ServiceClassModel(
@@ -24,9 +25,10 @@ class ServiceClassAdapter(private val widgetServiceClass: ServiceClass): Adapter
                     isEnabled = true,
                     name = R.string.serviceAudio,
                     icon = R.drawable.ic_headset,
-                    iconBackgroundColor = Color.parseColor("#FEF7DF"),
-                    iconColor = Color.parseColor("#F9B538"),
-                    connectionCount = connectionCount
+                    iconBackgroundTintColor = Color.parseColor("#FEF7DF"),
+                    iconTintColor = Color.parseColor("#F9B538"),
+                    connectionCount = connectionCount,
+                    description = description
                 )
             }
             ServiceClass.KEYPAD -> {
@@ -35,9 +37,10 @@ class ServiceClassAdapter(private val widgetServiceClass: ServiceClass): Adapter
                     isEnabled = false,
                     name = R.string.serviceMouse,
                     icon = R.drawable.ic_mouse,
-                    iconBackgroundColor = Color.parseColor("#E6F4EA"),
-                    iconColor = Color.parseColor("#1C8E3C"),
-                    connectionCount = connectionCount
+                    iconBackgroundTintColor = Color.parseColor("#E6F4EA"),
+                    iconTintColor = Color.parseColor("#1C8E3C"),
+                    connectionCount = connectionCount,
+                    description = description
                 )
             }
             ServiceClass.MOUSE -> {
@@ -46,9 +49,10 @@ class ServiceClassAdapter(private val widgetServiceClass: ServiceClass): Adapter
                     isEnabled = false,
                     name = R.string.serviceKeypad,
                     icon = R.drawable.ic_keyboard,
-                    iconBackgroundColor = Color.parseColor("#E7F1FE"),
-                    iconColor = Color.parseColor("#1170E8"),
-                    connectionCount = connectionCount
+                    iconBackgroundTintColor = Color.parseColor("#E7F1FE"),
+                    iconTintColor = Color.parseColor("#1170E8"),
+                    connectionCount = connectionCount,
+                    description = description
                 )
             }
         }
@@ -56,7 +60,15 @@ class ServiceClassAdapter(private val widgetServiceClass: ServiceClass): Adapter
 
     private inline val Ledger.connectedBlocks: List<Block> get() {
         return selfBlocks.filter {
-            it.bondState == PeripheralBond.State.CONNECTED && it.serviceClass == widgetServiceClass
+            it.bondSteadyState == PeripheralBond.State.CONNECTED && it.serviceClass == widgetServiceClass
         }
+    }
+
+    private inline val Ledger.description: String get() {
+        return selfBlocks
+            .filter { it.serviceClass == widgetServiceClass }
+            .joinToString(separator = "\n", transform = {
+                "${it.profile.formattedName}: ${it.bondSteadyState.formattedName}"
+            })
     }
 }

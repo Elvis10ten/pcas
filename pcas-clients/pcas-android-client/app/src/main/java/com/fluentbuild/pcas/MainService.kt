@@ -59,7 +59,7 @@ class MainService: Service() {
         }
 
         fun stop(context: Context, interrupt: Boolean) {
-            val engineStatus = context.appComponent.appStateObservable.currentAppState.engineStatus
+            val engineStatus = context.appComponent.engineStateObservable.currentAppState.engineStatus
             if(interrupt || (!interrupt && engineStatus == Engine.Status.IDLE)) {
                 context.stopService(getBaseIntent(context))
             }

@@ -9,10 +9,4 @@
         android:title="@string/actionSetupSecurity"
         app:showAsAction="always"
         />
-
-    <item
-        android:id="@+id/actionClearConsole"
-        android:title="@string/actionClearConsole"
-        app:showAsAction="never"
-        />
 </menu>
