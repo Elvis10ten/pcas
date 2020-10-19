@@ -1,4 +1,4 @@
-package com.fluentbuild.pcas.widgets
+package com.fluentbuild.pcas.widgets.foundation
 
 import com.fluentbuild.pcas.adapters.Adapter
 import com.fluentbuild.pcas.models.Model

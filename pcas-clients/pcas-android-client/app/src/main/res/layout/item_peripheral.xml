@@ -6,6 +6,7 @@
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="48dp"
+    android:background="?selectableItemBackground"
     android:gravity="center">
 
     <TextView
@@ -13,6 +14,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+        android:gravity="center_horizontal"
         android:maxLines="1"
         android:ellipsize="end"
         tools:text="Sony WXM"
@@ -20,14 +22,13 @@
 
     <ImageView
         android:id="@+id/peripheralIconView"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
         android:layout_marginStart="@dimen/size3"
-        android:padding="@dimen/size2"
+        android:padding="@dimen/size1"
         android:background="@drawable/bg_oval"
-        app:tint="@android:color/white"
         app:backgroundTint="@color/colorSuccessStatus"
-        android:src="@drawable/ic_check"
+        android:src="@drawable/ic_check_white"
         tools:ignore="ContentDescription"
         />
 </LinearLayout>

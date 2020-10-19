@@ -1,14 +1,13 @@
-package com.fluentbuild.pcas.widgets
+package com.fluentbuild.pcas.widgets.foundation
 
+import android.content.Context
 import android.view.View
-import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
 import com.fluentbuild.pcas.appComponent
 import com.fluentbuild.pcas.models.Model
 import com.fluentbuild.pcas.utils.Delegates.observable
-import com.fluentbuild.pcas.utils.FragmentAwareSubscription
-import com.fluentbuild.pcas.utils.ViewAwareSubscription
 
-fun <ModelT: Model, WidgetT> WidgetT.initView() where WidgetT: Widget<ModelT>, WidgetT: View {
+fun <ModelT: Model, WidgetT> WidgetT.init() where WidgetT: Widget<ModelT>, WidgetT: View {
     var currentModel: ModelT? by observable { oldValue, newValue ->
         if (newValue != null && oldValue != newValue) {
             update(newValue)
@@ -20,14 +19,14 @@ fun <ModelT: Model, WidgetT> WidgetT.initView() where WidgetT: Widget<ModelT>, W
     }
 }
 
-fun <ModelT: Model, WidgetT> WidgetT.initFragment() where WidgetT: Widget<ModelT>, WidgetT: Fragment {
+fun <ModelT: Model, WidgetT: Widget<ModelT>> WidgetT.init(context: Context, lifecycle: Lifecycle) {
     var currentModel: ModelT? by observable { oldValue, newValue ->
         if (newValue != null && oldValue != newValue) {
             update(newValue)
         }
     }
 
-    FragmentAwareSubscription(this, requireContext().appComponent.engineStateObservable) { state ->
+    LifecycleAwareSubscription(lifecycle, context.appComponent.engineStateObservable) { state ->
         currentModel = adapter.toModel(state)
     }
 }

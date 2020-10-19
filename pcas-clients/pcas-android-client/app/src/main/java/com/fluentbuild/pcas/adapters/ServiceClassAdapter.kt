@@ -11,8 +11,8 @@ import com.fluentbuild.pcas.ledger.Ledger
 import com.fluentbuild.pcas.models.ServiceClassModel
 import com.fluentbuild.pcas.peripheral.PeripheralBond
 import com.fluentbuild.pcas.services.ServiceClass
-import com.fluentbuild.pcas.utils.asColorStateList
-import com.fluentbuild.pcas.utils.getDrawableCompat
+import com.fluentbuild.pcas.widgets.views.asColorStateList
+import com.fluentbuild.pcas.widgets.views.getDrawableCompat
 
 class ServiceClassAdapter(
     private val context: Context,

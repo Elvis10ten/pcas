@@ -1,4 +1,4 @@
-package com.fluentbuild.pcas.utils
+package com.fluentbuild.pcas.widgets.views
 
 import android.content.Context
 import android.content.res.ColorStateList

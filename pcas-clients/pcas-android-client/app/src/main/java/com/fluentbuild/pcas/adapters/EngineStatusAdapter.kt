@@ -7,8 +7,8 @@ import com.fluentbuild.pcas.R
 import com.fluentbuild.pcas.actions.StartEngineHardAction
 import com.fluentbuild.pcas.actions.StopEngineHardAction
 import com.fluentbuild.pcas.models.EngineStatusModel
-import com.fluentbuild.pcas.utils.createColorStateList
-import com.fluentbuild.pcas.utils.getDrawableCompat
+import com.fluentbuild.pcas.widgets.views.createColorStateList
+import com.fluentbuild.pcas.widgets.views.getDrawableCompat
 
 class EngineStatusAdapter(private val context: Context): Adapter<EngineStatusModel> {
 
@@ -18,7 +18,7 @@ class EngineStatusAdapter(private val context: Context): Adapter<EngineStatusMod
         return when(this) {
             Engine.Status.RUNNING -> {
                 EngineStatusModel(
-                    icon = context.getDrawableCompat(R.drawable.ic_stop),
+                    icon = context.getDrawableCompat(R.drawable.ic_stop_white),
                     backgroundTint = context.createColorStateList(R.color.colorDanger),
                     shouldAnimate = true,
                     clickAction = StopEngineHardAction
@@ -26,7 +26,7 @@ class EngineStatusAdapter(private val context: Context): Adapter<EngineStatusMod
             }
             Engine.Status.IDLE -> {
                 EngineStatusModel(
-                    icon = context.getDrawableCompat(R.drawable.ic_play_arrow),
+                    icon = context.getDrawableCompat(R.drawable.ic_play_arrow_white),
                     backgroundTint = context.createColorStateList(R.color.colorSecondary),
                     shouldAnimate = false,
                     clickAction = StartEngineHardAction

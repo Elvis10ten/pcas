@@ -6,6 +6,8 @@ import android.view.animation.AnimationUtils
 import com.fluentbuild.pcas.R
 import com.fluentbuild.pcas.adapters.EngineStatusAdapter
 import com.fluentbuild.pcas.models.EngineStatusModel
+import com.fluentbuild.pcas.widgets.foundation.Widget
+import com.fluentbuild.pcas.widgets.foundation.init
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class EngineButtonWidget @JvmOverloads constructor(
@@ -17,7 +19,7 @@ class EngineButtonWidget @JvmOverloads constructor(
     private val buttonAnimation = AnimationUtils.loadAnimation(context, R.anim.rotate_repeating)
 
     init {
-        initView()
+        init()
     }
 
     override val adapter = EngineStatusAdapter(context)

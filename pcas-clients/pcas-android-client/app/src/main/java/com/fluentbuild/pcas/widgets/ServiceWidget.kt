@@ -9,7 +9,9 @@ import com.fluentbuild.pcas.R
 import com.fluentbuild.pcas.adapters.ServiceClassAdapter
 import com.fluentbuild.pcas.models.ServiceClassModel
 import com.fluentbuild.pcas.services.ServiceClass
-import com.fluentbuild.pcas.utils.addLayout
+import com.fluentbuild.pcas.widgets.views.addLayout
+import com.fluentbuild.pcas.widgets.foundation.Widget
+import com.fluentbuild.pcas.widgets.foundation.init
 import kotlinx.android.synthetic.main.item_service.view.*
 
 
@@ -26,7 +28,7 @@ class ServiceWidget(
         }
 
         addLayout<View>(R.layout.item_service)
-        initView()
+        init()
     }
 
     override val adapter = ServiceClassAdapter(context, serviceClass)

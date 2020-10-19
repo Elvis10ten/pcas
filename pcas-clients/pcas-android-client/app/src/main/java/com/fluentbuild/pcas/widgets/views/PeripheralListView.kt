@@ -2,6 +2,7 @@ package com.fluentbuild.pcas.widgets.views
 
 import android.content.Context
 import android.util.AttributeSet
+import android.view.ContextThemeWrapper
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -10,8 +11,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.fluentbuild.pcas.R
 import com.fluentbuild.pcas.models.PeripheralModel
-import com.fluentbuild.pcas.utils.inflate
-import com.fluentbuild.pcas.utils.setVisible
 import kotlinx.android.synthetic.main.item_peripheral.view.*
 
 class PeripheralListView @JvmOverloads constructor(
@@ -26,12 +25,13 @@ class PeripheralListView @JvmOverloads constructor(
     init {
         adapter = PeripheralAdapter()
         layoutManager = LinearLayoutManager(context)
-        addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
+
+        val contextWrapper = ContextThemeWrapper(context, R.style.AppTheme)
+        addItemDecoration(DividerItemDecoration(contextWrapper, DividerItemDecoration.VERTICAL))
     }
 
     fun update(newPeripherals: List<PeripheralModel>, newOnClick: (PeripheralModel) -> Unit) {
-        val diffCallback = PeripheralDiffCallback(peripherals, newPeripherals)
-        val diffResult = DiffUtil.calculateDiff(diffCallback)
+        val diffResult = DiffUtil.calculateDiff(PeripheralDiffCallback(peripherals, newPeripherals))
         peripherals = newPeripherals
         onClick = newOnClick
         diffResult.dispatchUpdatesTo(adapter!!)
@@ -68,7 +68,7 @@ class PeripheralListView @JvmOverloads constructor(
         override fun getNewListSize(): Int = newList.size
 
         override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-            return oldList[oldItemPosition].address === newList[newItemPosition].address
+            return oldList[oldItemPosition].address == newList[newItemPosition].address
         }
 
         override fun areContentsTheSame(oldPosition: Int, newPosition: Int): Boolean {
@@ -77,7 +77,6 @@ class PeripheralListView @JvmOverloads constructor(
 
             return oldPeripheral.name == newPeripheral.name &&
                     oldPeripheral.isSelected == newPeripheral.isSelected
-
         }
     }
 }

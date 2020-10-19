@@ -26,4 +26,6 @@ class HostConfig(
 	val requireMousePeripheral get() = peripherals.getValue(ServiceClass.MOUSE)
 
 	val requireKeypadPeripheral get() = peripherals.getValue(ServiceClass.KEYPAD)
+
+	val hasAnyPeripheral get() = peripherals.isNotEmpty()
 }

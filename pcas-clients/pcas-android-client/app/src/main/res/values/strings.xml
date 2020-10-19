@@ -29,8 +29,8 @@
     <string name="setupInvalidQrCodeError">The scanned QR code is invalid</string>
 
     <string name="serviceUnsupportedError">Service not yet supported</string>
-    <string name="selectPeripheralTitle">Select audio device</string>
-    <string name="selectPeripheralSubtitle">Device must already be paired and support A2DP and Headset (HSP or HFP) profiles to be shown below</string>
-    <string name="selectPeripheralActionDisabled">Select a device</string>
-    <string name="selectPeripheralActionEnabled">Save</string>
+    <string name="selectAudioPeripheralTitle">Select audio device</string>
+    <string name="selectAudioPeripheralDesc">Device must already be paired and support A2DP and Headset (HSP or HFP) profiles to be shown below</string>
+    <string name="selectPeripheralDoneActionDisabled">Select a device</string>
+    <string name="selectPeripheralDoneActionEnabled">Done</string>
 </resources>

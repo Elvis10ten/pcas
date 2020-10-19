@@ -9,6 +9,8 @@ import com.fluentbuild.pcas.R
 import com.fluentbuild.pcas.adapters.PeripheralListAdapter
 import com.fluentbuild.pcas.models.PeripheralListModel
 import com.fluentbuild.pcas.services.ServiceClass
+import com.fluentbuild.pcas.widgets.foundation.Widget
+import com.fluentbuild.pcas.widgets.foundation.init
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import kotlinx.android.synthetic.main.peripheral_list_fragment.*
 
@@ -22,7 +24,13 @@ class PeripheralListFragment: BottomSheetDialogFragment(), Widget<PeripheralList
     }
 
     override fun update(model: PeripheralListModel) {
+        peripheralTitleTextView.text = model.title
+        peripheralDescTextView.text = model.description
+
+        doneButtonView.text = model.doneButtonText
+        doneButtonView.isEnabled = model.isCancellable
         isCancelable = model.isCancellable
+
         peripheralListView.update(model.peripherals) {
             model.selectAction(it).perform(requireContext())
         }
@@ -33,7 +41,7 @@ class PeripheralListFragment: BottomSheetDialogFragment(), Widget<PeripheralList
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        initFragment()
+        init(requireContext(), viewLifecycleOwner.lifecycle)
         return inflater.inflate(R.layout.peripheral_list_fragment, container, false)
     }
 

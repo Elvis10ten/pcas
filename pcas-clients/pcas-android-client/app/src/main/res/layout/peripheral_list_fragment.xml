@@ -8,19 +8,19 @@
     android:orientation="vertical">
 
     <TextView
+        android:id="@+id/peripheralTitleTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/selectPeripheralTitle"
         android:gravity="center_horizontal"
         android:textAppearance="@style/TextAppearance.AppCompat.Title"
         />
 
     <TextView
+        android:id="@+id/peripheralDescTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-        android:text="@string/selectPeripheralSubtitle"
         android:layout_marginBottom="@dimen/size3"
         />
 
@@ -31,7 +31,7 @@
         />
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/peripheralSelectButtonView"
+        android:id="@+id/doneButtonView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:minHeight="56dp"

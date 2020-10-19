@@ -1,4 +1,4 @@
-package com.fluentbuild.pcas.utils
+package com.fluentbuild.pcas.widgets.foundation
 
 import android.view.View
 import com.fluentbuild.pcas.async.Cancellable
