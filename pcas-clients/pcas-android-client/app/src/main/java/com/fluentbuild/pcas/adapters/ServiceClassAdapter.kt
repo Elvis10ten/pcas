@@ -1,18 +1,17 @@
 package com.fluentbuild.pcas.adapters
 
 import android.content.Context
-import android.graphics.Color
 import com.fluentbuild.pcas.EngineState
 import com.fluentbuild.pcas.R
 import com.fluentbuild.pcas.actions.Action
-import com.fluentbuild.pcas.actions.SelectPeripheralAction
+import com.fluentbuild.pcas.actions.ShowPeripheralListAction
 import com.fluentbuild.pcas.actions.ShowToastAction
 import com.fluentbuild.pcas.ledger.Block
 import com.fluentbuild.pcas.ledger.Ledger
 import com.fluentbuild.pcas.models.ServiceClassModel
 import com.fluentbuild.pcas.peripheral.PeripheralBond
 import com.fluentbuild.pcas.services.ServiceClass
-import com.fluentbuild.pcas.utils.createColorStateList
+import com.fluentbuild.pcas.utils.asColorStateList
 import com.fluentbuild.pcas.utils.getDrawableCompat
 
 class ServiceClassAdapter(
@@ -30,7 +29,7 @@ class ServiceClassAdapter(
 
     private val serviceClickAction: Action get() {
         return if(isServiceEnabled) {
-            SelectPeripheralAction(serviceClass)
+            ShowPeripheralListAction(serviceClass)
         } else {
             ShowToastAction(R.string.serviceUnsupportedError)
         }
@@ -50,8 +49,8 @@ class ServiceClassAdapter(
                     isEnabled = isServiceEnabled,
                     name = context.getString(R.string.serviceAudio),
                     icon = context.getDrawableCompat(R.drawable.ic_headset),
-                    iconBackgroundTintColor = context.createColorStateList("#FEF7DF"),
-                    iconTintColor = context.createColorStateList("#F9B538"),
+                    iconBackgroundTintColor = "#FEF7DF".asColorStateList,
+                    iconTintColor = "#F9B538".asColorStateList,
                     connectionCount = connectionCount,
                     description = description,
                     clickAction = serviceClickAction
@@ -63,8 +62,8 @@ class ServiceClassAdapter(
                     isEnabled = isServiceEnabled,
                     name = context.getString(R.string.serviceMouse),
                     icon = context.getDrawableCompat(R.drawable.ic_mouse),
-                    iconBackgroundTintColor = context.createColorStateList("#E6F4EA"),
-                    iconTintColor = context.createColorStateList("#1C8E3C"),
+                    iconBackgroundTintColor = "#E6F4EA".asColorStateList,
+                    iconTintColor = "#1C8E3C".asColorStateList,
                     connectionCount = connectionCount,
                     description = description,
                     clickAction = serviceClickAction
@@ -76,8 +75,8 @@ class ServiceClassAdapter(
                     isEnabled = isServiceEnabled,
                     name = context.getString(R.string.serviceKeypad),
                     icon = context.getDrawableCompat(R.drawable.ic_keyboard),
-                    iconBackgroundTintColor = context.createColorStateList("#E7F1FE"),
-                    iconTintColor = context.createColorStateList("#1170E8"),
+                    iconBackgroundTintColor = "#E7F1FE".asColorStateList,
+                    iconTintColor = "#1170E8".asColorStateList,
                     connectionCount = connectionCount,
                     description = description,
                     clickAction = serviceClickAction

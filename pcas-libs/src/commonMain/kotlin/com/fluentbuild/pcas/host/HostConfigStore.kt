@@ -3,6 +3,7 @@ package com.fluentbuild.pcas.host
 import com.fluentbuild.pcas.EngineStateObservable
 import com.fluentbuild.pcas.io.AtomicFile
 import com.fluentbuild.pcas.peripheral.Peripheral
+import com.fluentbuild.pcas.services.ServiceClass
 import kotlinx.serialization.decodeFromByteArray
 import kotlinx.serialization.encodeToByteArray
 import kotlinx.serialization.protobuf.ProtoBuf
@@ -19,7 +20,7 @@ class HostConfigStore(
 
 	init {
 		if(!atomicFile.exists()) {
-			update(HostConfig(randomUuidGenerator(), nameProvider(), null, null))
+			update(HostConfig(randomUuidGenerator(), nameProvider()))
 		}
 
 		engineStateObservable.update(get())
@@ -32,9 +33,9 @@ class HostConfigStore(
 		}
 	}
 
-	fun setAudioPeripheral(newAudioPeripheral: Peripheral) {
+	fun setPeripheral(serviceClass: ServiceClass, peripheral: Peripheral) {
 		get().apply {
-			audioPeripheral = newAudioPeripheral
+			peripherals[serviceClass] = peripheral
 			update(this)
 		}
 	}

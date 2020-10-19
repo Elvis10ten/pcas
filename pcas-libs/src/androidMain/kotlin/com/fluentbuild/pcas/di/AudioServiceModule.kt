@@ -46,14 +46,14 @@ internal class AudioServiceModule(
 
     private val bondsObservable = AudioBondsObservableAndroid(
 		context = appContext,
-		audioPeripheral = hostConfig.audioPeripheral!!,
+		audioPeripheral = hostConfig.requireAudioPeripheral,
 		profileHolder = audioProfileHolder,
 		profileStateWatchers = profileStateWatchers
 	)
 
 	private val audioBlocksBuilderProvider = {
 		AudioBlocksBuilder(
-			audioPeripheral = hostConfig.audioPeripheral!!,
+			audioPeripheral = hostConfig.requireAudioPeripheral,
 			canCaptureAudio = hostConfig.canCaptureAudio,
 			timeProvider = timeProvider,
 			hostObservable = hostObservable
@@ -63,7 +63,7 @@ internal class AudioServiceModule(
 	val streamHandler = AudioStreamHandlerAndroid()
 
 	val resolutionHandler = AudioResolutionHandler(
-        audioPeripheral = hostConfig.audioPeripheral!!,
+        audioPeripheral = hostConfig.requireAudioPeripheral,
 		profileCommanders = profileCommanders,
         audioStreamer = audioStreamer
     )

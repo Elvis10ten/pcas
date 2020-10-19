@@ -1,12 +1,10 @@
-package com.fluentbuild.pcas.helpers
+package com.fluentbuild.pcas.utils
 
 import android.content.Context
 import android.graphics.Bitmap
-import android.util.Base64
 import com.fluentbuild.pcas.R
 import com.fluentbuild.pcas.appComponent
 import com.fluentbuild.pcas.io.KeyTool
-import com.google.zxing.BarcodeFormat
 import com.journeyapps.barcodescanner.BarcodeEncoder
 
 class NetworkSetup(private val context: Context) {

@@ -27,8 +27,10 @@ class EngineStateObservable: Observable<EngineState> {
 		currentState = currentState.copy(engineStatus = engineStatus)
 	}
 
-	internal fun update(hostConfig: HostConfig) {
-		currentState = currentState.copy(hostConfig = hostConfig)
+	internal fun update(newHostConfig: HostConfig) {
+		currentState = currentState.copy().apply {
+			hostConfig = newHostConfig
+		}
 	}
 
 	private fun notifyObservers() {

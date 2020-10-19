@@ -24,8 +24,8 @@
         android:layout_marginBottom="@dimen/size3"
         />
 
-    <FrameLayout
-        android:id="@+id/peripheralListContainer"
+    <com.fluentbuild.pcas.widgets.views.PeripheralListView
+        android:id="@+id/peripheralListView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         />

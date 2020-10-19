@@ -1,4 +1,4 @@
-package com.fluentbuild.pcas.helpers
+package com.fluentbuild.pcas.utils
 
 import android.app.Notification
 import android.app.NotificationChannel

@@ -1,4 +1,4 @@
-package com.fluentbuild.pcas.views
+package com.fluentbuild.pcas.widgets.views
 
 import android.content.Context
 import android.util.AttributeSet

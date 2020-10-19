@@ -27,7 +27,7 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Title"
             />
 
-        <com.fluentbuild.pcas.views.ServicesContainerView
+        <com.fluentbuild.pcas.widgets.views.ServicesContainerView
             android:id="@+id/servicesContainerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

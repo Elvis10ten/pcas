@@ -5,7 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.fluentbuild.pcas.actions.StartEngineSoftAction
-import com.fluentbuild.pcas.actions.SelectPeripheralAction
+import com.fluentbuild.pcas.actions.ShowPeripheralListAction
 import com.fluentbuild.pcas.actions.SetupSecurityAction
 import com.fluentbuild.pcas.actions.StopEngineSoftAction
 import com.fluentbuild.pcas.services.ServiceClass
@@ -28,8 +28,8 @@ class MainActivity: AppCompatActivity() {
 
         StartEngineSoftAction.perform(this)
 
-        if(currentHostConfig?.audioPeripheral == null) {
-            SelectPeripheralAction(ServiceClass.AUDIO).perform(this)
+        if(currentHostConfig.peripherals.isEmpty()) {
+            ShowPeripheralListAction(ServiceClass.AUDIO).perform(this)
         }
 
         /*val intent = Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS)

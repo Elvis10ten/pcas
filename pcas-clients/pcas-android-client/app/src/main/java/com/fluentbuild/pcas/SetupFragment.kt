@@ -7,7 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.text.parseAsHtml
-import com.fluentbuild.pcas.helpers.NetworkSetup
+import com.fluentbuild.pcas.utils.NetworkSetup
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.zxing.integration.android.IntentIntegrator
 import kotlinx.android.synthetic.main.setup_fragment.*

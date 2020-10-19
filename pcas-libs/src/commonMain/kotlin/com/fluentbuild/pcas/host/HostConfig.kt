@@ -1,6 +1,7 @@
 package com.fluentbuild.pcas.host
 
 import com.fluentbuild.pcas.peripheral.Peripheral
+import com.fluentbuild.pcas.services.ServiceClass
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 import kotlinx.serialization.protobuf.ProtoNumber
@@ -14,9 +15,15 @@ class HostConfig(
 	@ProtoNumber(3)
 	var networkKey: ByteArray? = null,
 	@ProtoNumber(4)
-	var audioPeripheral: Peripheral? = null
+	var peripherals: MutableMap<ServiceClass, Peripheral> = mutableMapOf()
 ) {
 
 	@Transient
 	var canCaptureAudio: Boolean = false
+
+	val requireAudioPeripheral get() = peripherals.getValue(ServiceClass.AUDIO)
+
+	val requireMousePeripheral get() = peripherals.getValue(ServiceClass.MOUSE)
+
+	val requireKeypadPeripheral get() = peripherals.getValue(ServiceClass.KEYPAD)
 }
