@@ -19,8 +19,8 @@
     <string name="notificationErrorMsg">An error occurred while running. Please restart app.</string>
 
     <string name="setupEncryptSecurityTitle">Encryption setup</string>
-    <string name="setupEncryptShareInstruction">Scan this QR code on another device to get <![CDATA[<b>%s</b>]]> network key. Only devices using the same key can communicate.</string>
-    <string name="setupEncryptInitialInstruction">To enable <![CDATA[<b>E2E</b>]]> encryption, create a key on one device and scan it on another.</string>
+    <string name="setupEncryptShareInstruction">Scan this QR code on another device to get <![CDATA[<b>%s</b>]]>\'s key. Only devices using the same key can communicate.</string>
+    <string name="setupEncryptInitialInstruction">To enable <![CDATA[<b>E2E</b>]]> encryption, create a key on one device and scan it on another device.</string>
     <string name="setupEncryptQrCodeContentDesc">Qr Code</string>
     <string name="setupEncryptActionCreateKey">Create key</string>
     <string name="setupEncryptActionScanKey">Scan QR code</string>

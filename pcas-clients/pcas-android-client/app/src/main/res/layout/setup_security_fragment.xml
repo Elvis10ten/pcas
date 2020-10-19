@@ -44,16 +44,6 @@
         />
 
     <Button
-        android:id="@+id/setupScanKeyButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:minHeight="56dp"
-        android:layout_marginTop="@dimen/size5"
-        android:text="@string/setupEncryptActionScanKey"
-        style="@style/Widget.MaterialComponents.Button"
-        />
-
-    <Button
         android:id="@+id/setupDisableButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -62,5 +52,15 @@
         android:text="@string/setupEncryptActionDisable"
         android:visibility="gone"
         style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        />
+
+    <Button
+        android:id="@+id/setupScanKeyButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="56dp"
+        android:layout_marginTop="@dimen/size5"
+        android:text="@string/setupEncryptActionScanKey"
+        style="@style/Widget.MaterialComponents.Button"
         />
 </LinearLayout>
