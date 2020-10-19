@@ -6,9 +6,7 @@ import android.content.res.ColorStateList
 import android.util.TypedValue
 import android.view.View
 import android.widget.FrameLayout
-import android.widget.Toast
 import com.fluentbuild.pcas.R
-import com.fluentbuild.pcas.actions.SelectPeripheralAction
 import com.fluentbuild.pcas.adapters.ServiceClassAdapter
 import com.fluentbuild.pcas.models.ServiceClassModel
 import com.fluentbuild.pcas.services.ServiceClass
@@ -29,7 +27,7 @@ class ServiceWidget(
         }
 
         addLayout<View>(R.layout.item_service)
-        WidgetDelegate(this)
+        initView()
     }
 
     override val adapter = ServiceClassAdapter(serviceClass)
@@ -49,13 +47,6 @@ class ServiceWidget(
 
         serviceNameTextView.setText(model.name)
         serviceDescTextView.text = model.description
-
-        setOnClickListener {
-            if(model.isEnabled) {
-                SelectPeripheralAction(serviceClass).perform(context)
-            } else {
-                Toast.makeText(context, R.string.serviceUnsupportedError, Toast.LENGTH_LONG).show()
-            }
-        }
+        setOnClickListener { model.clickAction.perform(context) }
     }
 }

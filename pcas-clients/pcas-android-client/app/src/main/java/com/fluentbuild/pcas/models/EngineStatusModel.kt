@@ -6,7 +6,7 @@ import com.fluentbuild.pcas.actions.Action
 
 class EngineStatusModel(
     val icon: Drawable,
-    val background: ColorStateList,
+    val backgroundTint: ColorStateList,
     val shouldAnimate: Boolean,
     val clickAction: Action
 ): Model

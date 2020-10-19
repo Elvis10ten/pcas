@@ -17,14 +17,14 @@ class EngineButtonWidget @JvmOverloads constructor(
     private val buttonAnimation = AnimationUtils.loadAnimation(context, R.anim.rotate_repeating)
 
     init {
-        WidgetDelegate(this)
+        initView()
     }
 
     override val adapter = EngineStatusAdapter(context)
 
     override fun update(model: EngineStatusModel) {
         setImageDrawable(model.icon)
-        backgroundTintList = model.background
+        backgroundTintList = model.backgroundTint
         setOnClickListener { model.clickAction.perform(context) }
 
         if(model.shouldAnimate) {
