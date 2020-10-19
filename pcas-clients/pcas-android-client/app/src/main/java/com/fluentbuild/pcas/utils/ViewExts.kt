@@ -2,6 +2,7 @@ package com.fluentbuild.pcas.utils
 
 import android.content.Context
 import android.content.res.ColorStateList
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -23,6 +24,8 @@ fun ViewGroup.isScrolledToBottom() =
 fun ScrollView.scrollToBottom() = post { fullScroll(View.FOCUS_DOWN) }
 
 fun Context.createColorStateList(@ColorRes id: Int) = ColorStateList.valueOf(getColorCompat(id))
+
+fun Context.createColorStateList(hex: String) = ColorStateList.valueOf(Color.parseColor(hex))
 
 fun Context.getDrawableCompat(@DrawableRes id: Int) = ContextCompat.getDrawable(this, id)!!
 

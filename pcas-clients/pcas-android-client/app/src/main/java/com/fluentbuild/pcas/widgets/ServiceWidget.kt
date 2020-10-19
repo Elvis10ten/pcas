@@ -2,7 +2,6 @@ package com.fluentbuild.pcas.widgets
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.content.res.ColorStateList
 import android.util.TypedValue
 import android.view.View
 import android.widget.FrameLayout
@@ -17,7 +16,7 @@ import kotlinx.android.synthetic.main.item_service.view.*
 @SuppressLint("ViewConstructor")
 class ServiceWidget(
     context: Context,
-    private val serviceClass: ServiceClass,
+    serviceClass: ServiceClass,
 ): FrameLayout(context), Widget<ServiceClassModel> {
 
     init {
@@ -30,12 +29,12 @@ class ServiceWidget(
         initView()
     }
 
-    override val adapter = ServiceClassAdapter(serviceClass)
+    override val adapter = ServiceClassAdapter(context, serviceClass)
 
     override fun update(model: ServiceClassModel) {
-        serviceIconView.setImageResource(model.icon)
-        serviceIconView.imageTintList = ColorStateList.valueOf(model.iconTintColor)
-        serviceIconView.backgroundTintList = ColorStateList.valueOf(model.iconBackgroundTintColor)
+        serviceIconView.setImageDrawable(model.icon)
+        serviceIconView.imageTintList = model.iconTintColor
+        serviceIconView.backgroundTintList = model.iconBackgroundTintColor
 
         val badgeIcon = when(model.connectionCount) {
             0 -> R.drawable.ic_clear
@@ -45,7 +44,7 @@ class ServiceWidget(
         }
         serviceIconBadgeView.setImageResource(badgeIcon)
 
-        serviceNameTextView.setText(model.name)
+        serviceNameTextView.text = model.name
         serviceDescTextView.text = model.description
         setOnClickListener { model.clickAction.perform(context) }
     }

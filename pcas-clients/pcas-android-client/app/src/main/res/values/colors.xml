@@ -15,5 +15,4 @@
     <color name="colorNeutralStatus">#FFA458</color>
     <color name="colorAlertStatus">#FF5F87</color>
     <color name="colorDanger">@color/colorAlertStatus</color>
-    <color name="colorConsoleBackground">#282a36</color>
 </resources>

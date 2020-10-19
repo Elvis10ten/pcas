@@ -1,5 +1,6 @@
 package com.fluentbuild.pcas.adapters
 
+import android.content.Context
 import android.graphics.Color
 import com.fluentbuild.pcas.EngineState
 import com.fluentbuild.pcas.R
@@ -11,8 +12,13 @@ import com.fluentbuild.pcas.ledger.Ledger
 import com.fluentbuild.pcas.models.ServiceClassModel
 import com.fluentbuild.pcas.peripheral.PeripheralBond
 import com.fluentbuild.pcas.services.ServiceClass
+import com.fluentbuild.pcas.utils.createColorStateList
+import com.fluentbuild.pcas.utils.getDrawableCompat
 
-class ServiceClassAdapter(private val serviceClass: ServiceClass): Adapter<ServiceClassModel> {
+class ServiceClassAdapter(
+    private val context: Context,
+    private val serviceClass: ServiceClass
+): Adapter<ServiceClassModel> {
 
     private val isServiceEnabled: Boolean get() {
         return when(serviceClass) {
@@ -42,10 +48,10 @@ class ServiceClassAdapter(private val serviceClass: ServiceClass): Adapter<Servi
                 ServiceClassModel(
                     serviceClass = ServiceClass.AUDIO,
                     isEnabled = isServiceEnabled,
-                    name = R.string.serviceAudio,
-                    icon = R.drawable.ic_headset,
-                    iconBackgroundTintColor = Color.parseColor("#FEF7DF"),
-                    iconTintColor = Color.parseColor("#F9B538"),
+                    name = context.getString(R.string.serviceAudio),
+                    icon = context.getDrawableCompat(R.drawable.ic_headset),
+                    iconBackgroundTintColor = context.createColorStateList("#FEF7DF"),
+                    iconTintColor = context.createColorStateList("#F9B538"),
                     connectionCount = connectionCount,
                     description = description,
                     clickAction = serviceClickAction
@@ -55,10 +61,10 @@ class ServiceClassAdapter(private val serviceClass: ServiceClass): Adapter<Servi
                 ServiceClassModel(
                     serviceClass = ServiceClass.MOUSE,
                     isEnabled = isServiceEnabled,
-                    name = R.string.serviceMouse,
-                    icon = R.drawable.ic_mouse,
-                    iconBackgroundTintColor = Color.parseColor("#E6F4EA"),
-                    iconTintColor = Color.parseColor("#1C8E3C"),
+                    name = context.getString(R.string.serviceMouse),
+                    icon = context.getDrawableCompat(R.drawable.ic_mouse),
+                    iconBackgroundTintColor = context.createColorStateList("#E6F4EA"),
+                    iconTintColor = context.createColorStateList("#1C8E3C"),
                     connectionCount = connectionCount,
                     description = description,
                     clickAction = serviceClickAction
@@ -68,10 +74,10 @@ class ServiceClassAdapter(private val serviceClass: ServiceClass): Adapter<Servi
                 ServiceClassModel(
                     serviceClass = ServiceClass.KEYPAD,
                     isEnabled = isServiceEnabled,
-                    name = R.string.serviceKeypad,
-                    icon = R.drawable.ic_keyboard,
-                    iconBackgroundTintColor = Color.parseColor("#E7F1FE"),
-                    iconTintColor = Color.parseColor("#1170E8"),
+                    name = context.getString(R.string.serviceKeypad),
+                    icon = context.getDrawableCompat(R.drawable.ic_keyboard),
+                    iconBackgroundTintColor = context.createColorStateList("#E7F1FE"),
+                    iconTintColor = context.createColorStateList("#1170E8"),
                     connectionCount = connectionCount,
                     description = description,
                     clickAction = serviceClickAction

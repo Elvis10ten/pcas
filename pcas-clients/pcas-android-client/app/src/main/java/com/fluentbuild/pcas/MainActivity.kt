@@ -15,7 +15,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 class MainActivity: AppCompatActivity() {
 
     private val engineStateObservable get() = appComponent.engineStateObservable
-    private val currentHostConfig get() = engineStateObservable.currentAppState.hostConfig
+    private val currentHostConfig get() = engineStateObservable.currentState.hostConfig
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
