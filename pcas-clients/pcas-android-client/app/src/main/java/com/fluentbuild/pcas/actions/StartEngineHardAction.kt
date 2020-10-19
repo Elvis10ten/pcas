@@ -3,9 +3,9 @@ package com.fluentbuild.pcas.actions
 import android.content.Context
 import com.fluentbuild.pcas.MainService
 
-object SoftStopEngineAction: Action {
+object StartEngineHardAction: Action {
 
     override fun perform(context: Context) {
-        MainService.stop(context, false)
+        MainService.start(context, MainService.Power.HARD)
     }
 }

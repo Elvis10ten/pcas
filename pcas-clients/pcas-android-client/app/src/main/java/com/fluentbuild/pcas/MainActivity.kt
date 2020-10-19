@@ -2,15 +2,12 @@ package com.fluentbuild.pcas
 
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
-import android.os.PowerManager
-import android.provider.Settings
 import androidx.appcompat.app.AppCompatActivity
-import com.fluentbuild.pcas.actions.DryRunEngineAction
+import com.fluentbuild.pcas.actions.StartEngineSoftAction
 import com.fluentbuild.pcas.actions.SelectPeripheralAction
 import com.fluentbuild.pcas.actions.SetupSecurityAction
-import com.fluentbuild.pcas.actions.SoftStopEngineAction
+import com.fluentbuild.pcas.actions.StopEngineSoftAction
 import com.fluentbuild.pcas.services.ServiceClass
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -29,7 +26,7 @@ class MainActivity: AppCompatActivity() {
             true
         }
 
-        DryRunEngineAction.perform(this)
+        StartEngineSoftAction.perform(this)
 
         if(currentHostConfig?.audioPeripheral == null) {
             SelectPeripheralAction(ServiceClass.AUDIO).perform(this)
@@ -55,7 +52,7 @@ class MainActivity: AppCompatActivity() {
     }
 
     override fun onDestroy() {
-        SoftStopEngineAction.perform(this)
+        StopEngineSoftAction.perform(this)
         super.onDestroy()
     }
 

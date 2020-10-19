@@ -4,8 +4,8 @@ import android.content.Context
 import com.fluentbuild.pcas.Engine
 import com.fluentbuild.pcas.EngineState
 import com.fluentbuild.pcas.R
-import com.fluentbuild.pcas.actions.RunEngineAction
-import com.fluentbuild.pcas.actions.HardStopEngineAction
+import com.fluentbuild.pcas.actions.StartEngineHardAction
+import com.fluentbuild.pcas.actions.StopEngineHardAction
 import com.fluentbuild.pcas.models.EngineStatusModel
 import com.fluentbuild.pcas.utils.createColorStateList
 import com.fluentbuild.pcas.utils.getDrawableCompat
@@ -21,7 +21,7 @@ class EngineStatusAdapter(private val context: Context): Adapter<EngineStatusMod
                     icon = context.getDrawableCompat(R.drawable.ic_stop),
                     backgroundTint = context.createColorStateList(R.color.colorDanger),
                     shouldAnimate = true,
-                    clickAction = HardStopEngineAction
+                    clickAction = StopEngineHardAction
                 )
             }
             Engine.Status.IDLE -> {
@@ -29,7 +29,7 @@ class EngineStatusAdapter(private val context: Context): Adapter<EngineStatusMod
                     icon = context.getDrawableCompat(R.drawable.ic_play_arrow),
                     backgroundTint = context.createColorStateList(R.color.colorSecondary),
                     shouldAnimate = false,
-                    clickAction = RunEngineAction
+                    clickAction = StartEngineHardAction
                 )
             }
         }

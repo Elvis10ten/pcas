@@ -17,7 +17,8 @@ class MainService: Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        if(intent?.getBooleanExtra(EXTRA_DRY_START, false) != true) {
+        val power = intent?.getSerializableExtra(EXTRA_POWER) as Power?
+        if(power != Power.SOFT) {
             startEngine()
         }
 
@@ -25,8 +26,8 @@ class MainService: Service() {
     }
 
     override fun onDestroy() {
-        stopForeground(true)
         stopEngine()
+        stopForeground(true)
         super.onDestroy()
     }
 
@@ -49,22 +50,29 @@ class MainService: Service() {
     
     companion object {
 
-        private const val EXTRA_DRY_START = "EXTRA_DRY_START"
+        private const val EXTRA_POWER = "EXTRA_POWER"
 
-        fun start(context: Context, dryStart: Boolean) {
+        fun start(context: Context, power: Power) {
             getBaseIntent(context).apply {
-                putExtra(EXTRA_DRY_START, dryStart)
+                putExtra(EXTRA_POWER, power)
                 context.startForegroundService(this)
             }
         }
 
-        fun stop(context: Context, interrupt: Boolean) {
-            val engineStatus = context.appComponent.engineStateObservable.currentAppState.engineStatus
-            if(interrupt || (!interrupt && engineStatus == Engine.Status.IDLE)) {
+        fun stop(context: Context, power: Power) {
+            val engineStatus = context.appComponent.engineStateObservable.currentState.engineStatus
+            if(power == Power.HARD || (power == Power.SOFT && engineStatus == Engine.Status.IDLE)) {
                 context.stopService(getBaseIntent(context))
             }
         }
 
         private fun getBaseIntent(context: Context) = Intent(context, MainService::class.java)
+    }
+
+    enum class Power {
+        // Starts or stops the engine immediately
+        HARD,
+        // When starting, starts only this service. When stopping, stops only when IDLE.
+        SOFT
     }
 }
