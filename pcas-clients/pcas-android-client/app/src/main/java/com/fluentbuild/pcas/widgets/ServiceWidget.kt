@@ -48,6 +48,6 @@ class ServiceWidget(
 
         serviceNameTextView.text = model.name
         serviceDescTextView.text = model.description
-        setOnClickListener { model.clickAction.perform(context) }
+        setOnClickListener { model.onClicked() }
     }
 }

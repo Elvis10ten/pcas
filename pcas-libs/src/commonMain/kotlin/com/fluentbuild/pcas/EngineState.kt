@@ -5,8 +5,6 @@ import com.fluentbuild.pcas.ledger.Ledger
 
 data class EngineState(
 	val engineStatus: Engine.Status = Engine.Status.IDLE,
-	val ledger: Ledger? = null
-) {
-
-	lateinit var hostConfig: HostConfig
-}
+	val ledger: Ledger? = null,
+	val hostConfig: HostConfig
+)

@@ -2,14 +2,14 @@ package com.fluentbuild.pcas.actions
 
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
-import com.fluentbuild.pcas.SetupFragment
+import com.fluentbuild.pcas.widgets.EncryptionSetupFragment
 
-object SetupSecurityAction: Action {
+object ShowEncryptionSetupAction: Action {
 
     override fun perform(context: Context) {
-        SetupFragment().show(
+        EncryptionSetupFragment().show(
             (context as AppCompatActivity).supportFragmentManager,
-            SetupFragment::class.simpleName
+            EncryptionSetupFragment::class.simpleName
         )
     }
 }

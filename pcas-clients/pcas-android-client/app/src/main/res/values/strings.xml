@@ -10,7 +10,7 @@
     <string name="serviceKeypad">Keypad</string>
     <string name="serviceHealth">Health</string>
 
-    <string name="actionSetupSecurity">Setup security</string>
+    <string name="actionSetupEncryption">Setup Encryption</string>
 
     <string name="generalNotificationName">General Alerts</string>
     <string name="generalNotificationDesc">General alerts about the system.</string>
@@ -18,15 +18,16 @@
     <string name="notificationRunningMsg">Running…</string>
     <string name="notificationErrorMsg">An error occurred while running. Please restart app.</string>
 
-    <string name="setupTitle">Network setup</string>
-    <string name="setupInstruction">Scan this QR code on another device to get <![CDATA[<b>%s</b>]]> network key.</string>
-    <string name="setupOr">or</string>
-    <string name="setupQrCodeContentDesc">Qr Code</string>
-    <string name="setupActionScanCode">Scan QR Code</string>
-    <string name="setupScanCodePrompt">Scan network QR Code</string>
-    <string name="setupActionScanCodeCaption">You can only have one network key at a time.</string>
+    <string name="setupEncryptSecurityTitle">Encryption setup</string>
+    <string name="setupEncryptShareInstruction">Scan this QR code on another device to get <![CDATA[<b>%s</b>]]> network key. Only devices using the same key can communicate.</string>
+    <string name="setupEncryptInitialInstruction">To enable <![CDATA[<b>E2E</b>]]> encryption, create a key on one device and scan it on another.</string>
+    <string name="setupEncryptQrCodeContentDesc">Qr Code</string>
+    <string name="setupEncryptActionCreateKey">Create key</string>
+    <string name="setupEncryptActionScanKey">Scan QR code</string>
+    <string name="setupEncryptActionDisable">Disable encryption</string>
+    <string name="setupEncryptScanCodePrompt">Scan QR Code</string>
+    <string name="setupEncryptInvalidKey">Network key is invalid</string>
     <string name="setupQrCodeError">An error occurred loading the QR code.</string>
-    <string name="setupInvalidQrCodeError">The scanned QR code is invalid</string>
 
     <string name="serviceUnsupportedError">Service not yet supported</string>
     <string name="selectAudioPeripheralTitle">Select audio device</string>

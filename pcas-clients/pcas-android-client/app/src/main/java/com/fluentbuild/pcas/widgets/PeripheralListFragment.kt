@@ -29,11 +29,10 @@ class PeripheralListFragment: BottomSheetDialogFragment(), Widget<PeripheralList
 
         doneButtonView.text = model.doneButtonText
         doneButtonView.isEnabled = model.isCancellable
+        doneButtonView.setOnClickListener { dismiss() }
         isCancelable = model.isCancellable
 
-        peripheralListView.update(model.peripherals) {
-            model.selectAction(it).perform(requireContext())
-        }
+        peripheralListView.update(model.peripherals) { model.onSelected(it) }
     }
 
     override fun onCreateView(
@@ -41,8 +40,12 @@ class PeripheralListFragment: BottomSheetDialogFragment(), Widget<PeripheralList
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        init(requireContext(), viewLifecycleOwner.lifecycle)
         return inflater.inflate(R.layout.peripheral_list_fragment, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        init(requireContext(), viewLifecycleOwner.lifecycle)
     }
 
     companion object {

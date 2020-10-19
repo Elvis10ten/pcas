@@ -4,9 +4,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/actionSetupSecurity"
-        android:icon="@drawable/ic_security"
-        android:title="@string/actionSetupSecurity"
+        android:id="@+id/actionEncryptionSetup"
+        android:icon="@drawable/ic_enhanced_encryption"
+        android:title="@string/actionSetupEncryption"
         app:showAsAction="always"
         />
 </menu>

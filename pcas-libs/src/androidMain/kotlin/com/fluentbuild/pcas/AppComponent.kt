@@ -21,7 +21,6 @@ class AppComponent(
 	val engineStateObservable = EngineStateObservable()
 
 	val hostConfigStore = HostConfigStore(
-		engineStateObservable = engineStateObservable,
 		protoBuf = protoBuf,
 		atomicFile = AtomicFileJvm(File(appContext.filesDir, HostConfigStore.FILE_NAME)),
 		nameProvider = { appContext.bluetoothAdapter.name },

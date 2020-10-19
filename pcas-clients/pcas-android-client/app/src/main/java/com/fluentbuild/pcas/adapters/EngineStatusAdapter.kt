@@ -21,7 +21,7 @@ class EngineStatusAdapter(private val context: Context): Adapter<EngineStatusMod
                     icon = context.getDrawableCompat(R.drawable.ic_stop_white),
                     backgroundTint = context.createColorStateList(R.color.colorDanger),
                     shouldAnimate = true,
-                    clickAction = StopEngineHardAction
+                    onClicked = { StopEngineHardAction.perform(context) }
                 )
             }
             Engine.Status.IDLE -> {
@@ -29,7 +29,7 @@ class EngineStatusAdapter(private val context: Context): Adapter<EngineStatusMod
                     icon = context.getDrawableCompat(R.drawable.ic_play_arrow_white),
                     backgroundTint = context.createColorStateList(R.color.colorSecondary),
                     shouldAnimate = false,
-                    clickAction = StartEngineHardAction
+                    onClicked = { StartEngineHardAction.perform(context) }
                 )
             }
         }

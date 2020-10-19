@@ -44,7 +44,7 @@ class PeripheralListAdapter(
             peripherals = peripherals,
             isCancellable = state.hostConfig.hasAnyPeripheral,
             doneButtonText = state.doneButtonText,
-            selectAction = { SelectPeripheralAction(serviceClass, it.peripheral) },
+            onSelected = { SelectPeripheralAction(serviceClass, it.peripheral).perform(context) },
         )
     }
 

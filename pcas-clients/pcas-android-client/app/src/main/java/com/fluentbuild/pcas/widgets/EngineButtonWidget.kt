@@ -27,7 +27,7 @@ class EngineButtonWidget @JvmOverloads constructor(
     override fun update(model: EngineStatusModel) {
         setImageDrawable(model.icon)
         backgroundTintList = model.backgroundTint
-        setOnClickListener { model.clickAction.perform(context) }
+        setOnClickListener { model.onClicked() }
 
         if(model.shouldAnimate) {
             startAnimation(buttonAnimation)

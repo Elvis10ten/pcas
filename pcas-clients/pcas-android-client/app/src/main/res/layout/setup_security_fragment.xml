@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/size5"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/setupTitleTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:textAppearance="@style/TextAppearance.AppCompat.Title"
+        />
+
+    <ImageView
+        android:id="@+id/setupQrCodeView"
+        android:layout_width="@dimen/qrCodeSize"
+        android:layout_height="@dimen/qrCodeSize"
+        android:contentDescription="@string/setupEncryptQrCodeContentDesc"
+        />
+
+    <TextView
+        android:id="@+id/setupInstructionTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:visibility="gone"
+        android:padding="@dimen/size2"
+        />
+
+    <Button
+        android:id="@+id/setupCreateKeyButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="56dp"
+        android:layout_marginTop="@dimen/size5"
+        android:text="@string/setupEncryptActionCreateKey"
+        android:visibility="gone"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        />
+
+    <Button
+        android:id="@+id/setupScanKeyButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="56dp"
+        android:layout_marginTop="@dimen/size5"
+        android:text="@string/setupEncryptActionScanKey"
+        style="@style/Widget.MaterialComponents.Button"
+        />
+
+    <Button
+        android:id="@+id/setupDisableButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="56dp"
+        android:layout_marginTop="@dimen/size5"
+        android:text="@string/setupEncryptActionDisable"
+        android:visibility="gone"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        />
+</LinearLayout>

@@ -9,7 +9,6 @@ import kotlinx.serialization.encodeToByteArray
 import kotlinx.serialization.protobuf.ProtoBuf
 
 class HostConfigStore(
-	private val engineStateObservable: EngineStateObservable,
 	private val protoBuf: ProtoBuf,
 	private val atomicFile: AtomicFile,
 	nameProvider: () -> String,
@@ -17,6 +16,9 @@ class HostConfigStore(
 ) {
 
 	private var cachedConfig: HostConfig? = null
+
+	// todo
+	internal var engineStateObservable: EngineStateObservable? = null
 
 	init {
 		if(!atomicFile.exists()) {
@@ -26,7 +28,7 @@ class HostConfigStore(
 		engineStateObservable.update(get())
 	}
 
-	fun setNetworkKey(newNetworkKey: ByteArray) {
+	fun setNetworkKey(newNetworkKey: ByteArray?) {
 		get().apply {
 			networkKey = newNetworkKey
 			update(this)

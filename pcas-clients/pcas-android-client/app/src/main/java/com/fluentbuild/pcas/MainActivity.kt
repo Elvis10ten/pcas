@@ -6,7 +6,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.fluentbuild.pcas.actions.StartEngineSoftAction
 import com.fluentbuild.pcas.actions.ShowPeripheralListAction
-import com.fluentbuild.pcas.actions.SetupSecurityAction
+import com.fluentbuild.pcas.actions.ShowEncryptionSetupAction
 import com.fluentbuild.pcas.actions.StopEngineSoftAction
 import com.fluentbuild.pcas.services.ServiceClass
 import kotlinx.android.synthetic.main.activity_main.*
@@ -47,7 +47,7 @@ class MainActivity: AppCompatActivity() {
 
     private fun onActionClicked(itemId: Int) {
         when(itemId) {
-            R.id.actionSetupSecurity -> SetupSecurityAction.perform(this)
+            R.id.actionEncryptionSetup -> ShowEncryptionSetupAction.perform(this)
         }
     }
 
