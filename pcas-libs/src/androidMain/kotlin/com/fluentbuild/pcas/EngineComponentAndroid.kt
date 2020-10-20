@@ -94,6 +94,7 @@ internal class EngineComponentAndroid(
 	override val contentionsResolver = contentionModule.contentionsResolver
 
 	override fun release() {
+		audioServiceModule.release()
 		contentionsResolver.release()
 		asyncModule.release()
 	}

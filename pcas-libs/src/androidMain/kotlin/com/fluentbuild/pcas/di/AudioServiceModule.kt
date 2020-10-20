@@ -47,7 +47,7 @@ internal class AudioServiceModule(
 	private val noOpsSilencer = MediaConnectSilencer(appContext, mainHandler)
 
 	private val profileCommanders = mapOf(
-		PeripheralProfile.A2DP to BluetoothPeripheralCommander(appContext, audioProfileHolder, BluetoothProfile.A2DP, mediaConnectSilencer),
+		PeripheralProfile.A2DP to BluetoothPeripheralCommander(appContext, audioProfileHolder, BluetoothProfile.A2DP, noOpsSilencer),
 		PeripheralProfile.HEADSET to BluetoothPeripheralCommander(appContext, audioProfileHolder, BluetoothProfile.HEADSET, noOpsSilencer)
 	)
 
@@ -84,6 +84,11 @@ internal class AudioServiceModule(
 		blocksBuilderProvider = audioBlocksBuilderProvider,
 		commandRetrier = commandRetrier
     )
+
+	fun release() {
+		noOpsSilencer.release()
+		mediaConnectSilencer.release()
+	}
 
 	companion object {
 
