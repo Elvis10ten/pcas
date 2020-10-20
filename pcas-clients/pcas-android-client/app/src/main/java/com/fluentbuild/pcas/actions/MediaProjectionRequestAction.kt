@@ -4,7 +4,7 @@ import android.app.Activity
 import android.content.Context
 import com.fluentbuild.pcas.mediaProjectionManager
 
-object RequestMediaProjectionAction: Action {
+object MediaProjectionRequestAction: Action {
 
     const val REQUEST_CODE = 1
 

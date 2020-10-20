@@ -3,8 +3,8 @@ package com.fluentbuild.pcas.adapters
 import android.content.Context
 import com.fluentbuild.pcas.EngineState
 import com.fluentbuild.pcas.R
-import com.fluentbuild.pcas.actions.ShowPeripheralListAction
-import com.fluentbuild.pcas.actions.ShowToastAction
+import com.fluentbuild.pcas.actions.PeripheralShowListAction
+import com.fluentbuild.pcas.actions.ToastShowAction
 import com.fluentbuild.pcas.ledger.Block
 import com.fluentbuild.pcas.ledger.Ledger
 import com.fluentbuild.pcas.models.ServiceClassModel
@@ -28,9 +28,9 @@ class ServiceClassAdapter(
 
     private val onServiceClicked = {
         if(isServiceEnabled) {
-            ShowPeripheralListAction(serviceClass).perform(context)
+            PeripheralShowListAction(serviceClass).perform(context)
         } else {
-            ShowToastAction(context.getString(R.string.serviceUnsupportedError)).perform(context)
+            ToastShowAction(context.getString(R.string.serviceUnsupportedError)).perform(context)
         }
     }
 

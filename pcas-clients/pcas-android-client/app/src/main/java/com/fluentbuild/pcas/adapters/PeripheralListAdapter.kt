@@ -3,7 +3,7 @@ package com.fluentbuild.pcas.adapters
 import android.content.Context
 import com.fluentbuild.pcas.EngineState
 import com.fluentbuild.pcas.R
-import com.fluentbuild.pcas.actions.SelectPeripheralAction
+import com.fluentbuild.pcas.actions.PeripheralSetAction
 import com.fluentbuild.pcas.appComponent
 import com.fluentbuild.pcas.models.PeripheralListModel
 import com.fluentbuild.pcas.models.PeripheralModel
@@ -43,7 +43,7 @@ class PeripheralListAdapter(
             description = getDescription(peripherals),
             peripherals = peripherals,
             isCancellable = state.hostConfig.hasAnyPeripheral,
-            onSelected = { SelectPeripheralAction(serviceClass, it.peripheral).perform(context) },
+            onSelected = { PeripheralSetAction(serviceClass, it.peripheral).perform(context) },
         )
     }
 

@@ -5,9 +5,9 @@
     <string name="serviceAudio">Audio</string>
     <string name="serviceMouse">Mouse</string>
     <string name="serviceKeypad">Keypad</string>
-    <string name="serviceHealth">Health</string>
 
     <string name="actionSetupEncryption">Setup Encryption</string>
+    <string name="actionChangeBatteryOptimization">Change battery optimization</string>
 
     <string name="generalNotificationName">General Alerts</string>
     <string name="generalNotificationDesc">General system alerts.</string>
@@ -24,7 +24,6 @@
     <string name="setupEncryptActionDisable">Disable encryption</string>
     <string name="setupEncryptScanCodePrompt">Scan QR Code</string>
     <string name="setupEncryptInvalidKey">Network key is invalid</string>
-    <string name="setupQrCodeError">An error occurred loading the QR code.</string>
 
     <string name="serviceUnsupportedError">Service not yet supported</string>
     <string name="selectAudioPeripheralTitle">Select audio device</string>

@@ -4,10 +4,10 @@ import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import com.fluentbuild.pcas.widgets.EncryptionSetupFragment
 
-object ShowEncryptionSetupAction: Action {
+object EncryptionShowSetupAction: Action {
 
     override fun perform(context: Context) {
-        EncryptionSetupFragment().show(
+        EncryptionSetupFragment.newInstance().show(
             (context as AppCompatActivity).supportFragmentManager,
             EncryptionSetupFragment::class.simpleName
         )

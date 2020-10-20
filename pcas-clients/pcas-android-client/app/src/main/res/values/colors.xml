@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#6200ee</color>
-    <color name="colorPrimaryVariant">#3700b3</color>
-    <color name="colorSecondary">@color/colorPrimary</color>
-    <color name="colorSecondaryVariant">@color/colorPrimaryVariant</color>
+    <color name="colorPrimary">#2196F3</color>
+    <color name="colorPrimaryVariant">@color/colorPrimary</color>
+    <color name="colorSecondary">#448AFF</color>
+    <color name="colorSecondaryVariant">@color/colorSecondary</color>
 
 
     <!-- "On" colors define how text, icons and strokes are colored in relation to the surface on which they appear. -->
@@ -12,7 +12,6 @@
     <color name="colorDivider">#1F000000</color>
 
     <color name="colorSuccessStatus">#5FE1A5</color>
-    <color name="colorNeutralStatus">#FFA458</color>
     <color name="colorAlertStatus">#FF5F87</color>
     <color name="colorDanger">@color/colorAlertStatus</color>
 </resources>

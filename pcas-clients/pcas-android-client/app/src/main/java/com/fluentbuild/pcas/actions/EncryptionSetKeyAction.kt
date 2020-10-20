@@ -7,6 +7,6 @@ class EncryptionSetKeyAction(private val networkKey: ByteArray?): Action {
 
     override fun perform(context: Context) {
         context.appComponent.hostConfigStore.setNetworkKey(networkKey)
-        RestartEngineAction.perform(context)
+        EngineRestartAction.perform(context)
     }
 }

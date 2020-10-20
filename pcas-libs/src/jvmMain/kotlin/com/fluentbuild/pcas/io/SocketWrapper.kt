@@ -56,7 +56,7 @@ internal class SocketWrapper<SocketT: DatagramSocket>(
 				socket!!.receive(packet)
 
 				parceler.unparcel(packet.data, packet.length) { message, messageSize ->
-					bufferPool.recycle(packet.data)
+					// todo: bufferPool.recycle(packet.data)
 					runner.runOnMain {
 						receiver.onReceived(message, messageSize)
 						bufferPool.recycle(message)
@@ -82,7 +82,7 @@ internal class SocketWrapper<SocketT: DatagramSocket>(
 		try {
 			getSendPacket(message, messageSize, address, port).let {
 				socket!!.send(it)
-				bufferPool.recycle(it.data)
+				// todo: bufferPool.recycle(it.data)
 			}
 		} catch (e: Exception) {
 			runner.runOnMain { log.error(e) { "Error sending parcel" } }

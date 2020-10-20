@@ -23,6 +23,7 @@ class EncryptionSetupFragment: BottomSheetDialogFragment(), Widget<EncryptionSet
     override val adapter by lazy { EncryptionSetupAdapter(this, requireContext()) }
 
     override fun update(model: EncryptionSetupModel) {
+        currentModel = model
         setupTitleTextView.text = model.title
         setupInstructionTextView.text = model.instruction.parseAsHtml()
         setupInstructionTextView.setVisible(true)
@@ -57,6 +58,13 @@ class EncryptionSetupFragment: BottomSheetDialogFragment(), Widget<EncryptionSet
             if(currentModel.onQrCodeScanned(data)) {
                 dismiss()
             }
+        }
+    }
+
+    companion object {
+
+        fun newInstance(): EncryptionSetupFragment {
+            return EncryptionSetupFragment()
         }
     }
 }

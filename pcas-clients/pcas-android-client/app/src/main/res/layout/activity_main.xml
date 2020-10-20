@@ -13,17 +13,14 @@
         android:orientation="vertical"
         android:paddingTop="@dimen/size5"
         android:paddingBottom="@dimen/aboveBottomAppBar"
-        android:paddingStart="@dimen/size3"
-        android:paddingEnd="@dimen/size3"
-        android:gravity="center_horizontal"
-        android:clipChildren="false"
-        android:clipToPadding="false">
+        android:gravity="center_horizontal">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/titleServices"
-            android:paddingBottom="@dimen/size1"
+            android:gravity="center_horizontal"
+            android:paddingBottom="@dimen/size2"
             android:textAppearance="@style/TextAppearance.AppCompat.Title"
             />
 
@@ -31,8 +28,6 @@
             android:id="@+id/servicesContainerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="horizontal"
-            android:layout_gravity="center_horizontal"
             />
 
     </LinearLayout>

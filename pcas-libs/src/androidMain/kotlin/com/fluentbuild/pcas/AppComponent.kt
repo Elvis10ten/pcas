@@ -19,6 +19,7 @@ class AppComponent(
 
 	private val protoBuf = ProtoBuf
 
+	context.appComponent.hostConfigStore.setAudioCaptureEnabled(true)
 	var mediaProjection: MediaProjection? = null
 
 	val hostConfigStore = HostConfigStore(

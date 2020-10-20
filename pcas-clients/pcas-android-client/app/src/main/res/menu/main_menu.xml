@@ -7,6 +7,12 @@
         android:id="@+id/actionEncryptionSetup"
         android:icon="@drawable/ic_enhanced_encryption"
         android:title="@string/actionSetupEncryption"
-        app:showAsAction="always"
+        app:showAsAction="ifRoom"
+        />
+
+    <item
+        android:id="@+id/actionChangeBatteryOptimization"
+        android:title="@string/actionChangeBatteryOptimization"
+        app:showAsAction="never"
         />
 </menu>

@@ -20,8 +20,8 @@ class MainActivity: AppCompatActivity() {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if(requestCode == RequestMediaProjectionAction.REQUEST_CODE) {
-            SetMediaProjectionAction(resultCode, data).perform(this)
+        if(requestCode == MediaProjectionRequestAction.REQUEST_CODE) {
+            MediaProjectionSetAction(resultCode, data).perform(this)
         } else {
             super.onActivityResult(requestCode, resultCode, data)
         }
@@ -29,13 +29,13 @@ class MainActivity: AppCompatActivity() {
 
     private fun onActionClicked(itemId: Int) {
         when(itemId) {
-            R.id.actionEncryptionSetup -> ShowEncryptionSetupAction.perform(this)
+            R.id.actionEncryptionSetup -> {
+                EncryptionShowSetupAction.perform(this)
+            }
+            R.id.actionChangeBatteryOptimization -> {
+                BatteryOptimizationOpenAction.perform(this)
+            }
         }
-    }
-
-    override fun onDestroy() {
-        StopEngineSoftAction.perform(this)
-        super.onDestroy()
     }
 
     companion object {

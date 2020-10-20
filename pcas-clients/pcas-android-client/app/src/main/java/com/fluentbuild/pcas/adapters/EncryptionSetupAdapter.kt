@@ -8,7 +8,7 @@ import androidx.fragment.app.Fragment
 import com.fluentbuild.pcas.EngineState
 import com.fluentbuild.pcas.R
 import com.fluentbuild.pcas.actions.EncryptionSetKeyAction
-import com.fluentbuild.pcas.actions.ScanNetworkKeyAction
+import com.fluentbuild.pcas.actions.EncryptionScanKeyAction
 import com.fluentbuild.pcas.io.KeyTool
 import com.fluentbuild.pcas.models.EncryptionSetupModel
 import com.google.zxing.BarcodeFormat
@@ -32,7 +32,7 @@ class EncryptionSetupAdapter(
             hasKey = hasNetworkKey,
             onDisableClicked = { EncryptionSetKeyAction(null).perform(context) },
             onCreateKeyClicked = { EncryptionSetKeyAction(KeyTool.generate().encoded).perform(context) },
-            onScanCodeClicked = { ScanNetworkKeyAction(fragment).perform(context) },
+            onScanCodeClicked = { EncryptionScanKeyAction(fragment).perform(context) },
             onQrCodeScanned = onQrCodeScanned
         )
     }
