@@ -33,7 +33,7 @@ class PeripheralListAdapter(
         }
     }
 
-    override fun toModel(state: EngineState): PeripheralListModel {
+    override fun buildModel(state: EngineState): PeripheralListModel {
         val peripherals = peripheralRepository.getPeripherals(serviceClass)
             .map { PeripheralModel(it, state.isPeripheralSelected(it)) }
 

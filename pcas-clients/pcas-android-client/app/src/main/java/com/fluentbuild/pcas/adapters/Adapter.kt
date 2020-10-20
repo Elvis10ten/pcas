@@ -5,5 +5,5 @@ import com.fluentbuild.pcas.models.Model
 
 fun interface Adapter<ModelT: Model> {
 
-    fun toModel(state: EngineState): ModelT
+    fun buildModel(state: EngineState): ModelT
 }

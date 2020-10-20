@@ -18,13 +18,13 @@ private fun <ModelT: Model, WidgetT: Widget<ModelT>> WidgetT.getOnChangeFunction
 fun <ModelT: Model, WidgetT> WidgetT.init() where WidgetT: Widget<ModelT>, WidgetT: View {
     var currentModel: ModelT? by observable(getOnChangeFunction())
     ViewAwareSubscription(this, context.appComponent.engineStateObservable) { state ->
-        currentModel = adapter.toModel(state)
+        currentModel = adapter.buildModel(state)
     }
 }
 
 fun <ModelT: Model, WidgetT: Widget<ModelT>> WidgetT.init(context: Context, lifecycle: Lifecycle) {
     var currentModel: ModelT? by observable(getOnChangeFunction())
     LifecycleAwareSubscription(lifecycle, context.appComponent.engineStateObservable) { state ->
-        currentModel = adapter.toModel(state)
+        currentModel = adapter.buildModel(state)
     }
 }

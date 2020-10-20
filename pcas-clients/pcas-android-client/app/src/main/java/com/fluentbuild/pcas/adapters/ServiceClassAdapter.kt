@@ -34,7 +34,7 @@ class ServiceClassAdapter(
         }
     }
 
-    override fun toModel(state: EngineState): ServiceClassModel {
+    override fun buildModel(state: EngineState): ServiceClassModel {
         val connectedBlocks = state.ledger?.connectedBlocks ?: emptyList()
         val description = state.ledger?.serviceDescription
         return createModel(connectedBlocks.size, description)

@@ -12,9 +12,9 @@ import com.fluentbuild.pcas.widgets.views.getDrawableCompat
 
 class EngineStatusAdapter(private val context: Context): Adapter<EngineStatusModel> {
 
-    override fun toModel(state: EngineState) = state.engineStatus.toModel()
+    override fun buildModel(state: EngineState) = state.engineStatus.buildModel()
 
-    private fun Engine.Status.toModel(): EngineStatusModel {
+    private fun Engine.Status.buildModel(): EngineStatusModel {
         return when(this) {
             Engine.Status.RUNNING -> {
                 EngineStatusModel(

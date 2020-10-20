@@ -23,12 +23,12 @@ class EncryptionSetupAdapter(
     private val barcodeEncoder = BarcodeEncoder()
     private val qrCodeSize = context.resources.getDimensionPixelSize(R.dimen.qrCodeSize)
 
-    override fun toModel(state: EngineState): EncryptionSetupModel {
+    override fun buildModel(state: EngineState): EncryptionSetupModel {
         val hasNetworkKey = state.hostConfig.networkKey != null
         return EncryptionSetupModel(
             title = context.getString(R.string.setupEncryptSecurityTitle),
-            instruction = state.getDescription(hasNetworkKey),
-            qrCode = state.hostConfig.networkKey?.toQrCode,
+            instruction = state.getInstruction(hasNetworkKey),
+            qrCode = state.hostConfig.networkKey?.createQrCode,
             hasKey = hasNetworkKey,
             onDisableClicked = { EncryptionSetKeyAction(null).perform(context) },
             onCreateKeyClicked = { EncryptionSetKeyAction(KeyTool.generate().encoded).perform(context) },
@@ -50,7 +50,7 @@ class EncryptionSetupAdapter(
         }
     }
     
-    private fun EngineState.getDescription(hasNetworkKey: Boolean): String {
+    private fun EngineState.getInstruction(hasNetworkKey: Boolean): String {
         return if(hasNetworkKey) {
             context.getString(R.string.setupEncryptShareInstruction, hostConfig.name)
         } else {
@@ -58,7 +58,7 @@ class EncryptionSetupAdapter(
         }
     }
 
-    private inline val ByteArray.toQrCode: Bitmap get() {
+    private inline val ByteArray.createQrCode: Bitmap get() {
         return barcodeEncoder.encodeBitmap(
             KeyTool.toString(this),
             BarcodeFormat.QR_CODE,

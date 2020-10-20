@@ -42,6 +42,7 @@ class MainService: Service() {
     }
     
     private fun shutdown() {
+        appComponent.mediaProjection = null
         appComponent.engine.stop()
         stopForeground(true)
         stopSelf()
