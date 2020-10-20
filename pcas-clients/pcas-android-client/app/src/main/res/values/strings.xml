@@ -14,6 +14,7 @@
     <string name="notificationIdleMsg">Idle</string>
     <string name="notificationRunningMsg">Running…</string>
     <string name="notificationErrorMsg">An error occurred while running. Please restart app.</string>
+    <string name="bluetoothDisabledError">Please enable bluetooth first.</string>
 
     <string name="setupEncryptSecurityTitle">Encryption setup</string>
     <string name="setupEncryptShareInstruction">Scan this QR code on another device to get <![CDATA[<b>%s</b>]]>\'s key. Only devices using the same key can communicate.</string>
