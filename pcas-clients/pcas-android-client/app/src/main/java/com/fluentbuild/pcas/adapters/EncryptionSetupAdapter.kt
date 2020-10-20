@@ -28,7 +28,7 @@ class EncryptionSetupAdapter(
         return EncryptionSetupModel(
             title = context.getString(R.string.setupEncryptSecurityTitle),
             instruction = state.getDescription(hasNetworkKey),
-            qrCode = state.hostConfig.networkKey?.qrCode,
+            qrCode = state.hostConfig.networkKey?.toQrCode,
             hasKey = hasNetworkKey,
             onDisableClicked = { EncryptionSetKeyAction(null).perform(context) },
             onCreateKeyClicked = { EncryptionSetKeyAction(KeyTool.generate().encoded).perform(context) },
@@ -58,7 +58,7 @@ class EncryptionSetupAdapter(
         }
     }
 
-    private inline val ByteArray.qrCode: Bitmap get() {
+    private inline val ByteArray.toQrCode: Bitmap get() {
         return barcodeEncoder.encodeBitmap(
             KeyTool.toString(this),
             BarcodeFormat.QR_CODE,

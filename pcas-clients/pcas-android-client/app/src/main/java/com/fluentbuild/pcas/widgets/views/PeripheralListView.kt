@@ -58,7 +58,7 @@ class PeripheralListView @JvmOverloads constructor(
         }
     }
 
-    inner class PeripheralDiffCallback(
+    class PeripheralDiffCallback(
         private val oldList: List<PeripheralModel>,
         private val newList: List<PeripheralModel>
     ) : DiffUtil.Callback() {

@@ -1,10 +1,7 @@
 <resources>
     <string name="appName">Pcas</string>
-    <string name="titleServices">Services</string>
-    <string name="captionBonded">Bonded</string>
-    <string name="captionUnbonded">Unbonded</string>
-    <string name="captionBonding">Bonding…</string>
 
+    <string name="titleServices">Services</string>
     <string name="serviceAudio">Audio</string>
     <string name="serviceMouse">Mouse</string>
     <string name="serviceKeypad">Keypad</string>
@@ -13,7 +10,7 @@
     <string name="actionSetupEncryption">Setup Encryption</string>
 
     <string name="generalNotificationName">General Alerts</string>
-    <string name="generalNotificationDesc">General alerts about the system.</string>
+    <string name="generalNotificationDesc">General system alerts.</string>
     <string name="notificationIdleMsg">Idle</string>
     <string name="notificationRunningMsg">Running…</string>
     <string name="notificationErrorMsg">An error occurred while running. Please restart app.</string>

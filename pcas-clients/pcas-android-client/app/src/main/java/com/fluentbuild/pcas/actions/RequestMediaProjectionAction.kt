@@ -6,7 +6,7 @@ import com.fluentbuild.pcas.mediaProjectionManager
 
 object RequestMediaProjectionAction: Action {
 
-    const val REQUEST_CODE = 919
+    const val REQUEST_CODE = 1
 
     override fun perform(context: Context) {
         (context as Activity).startActivityForResult(

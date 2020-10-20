@@ -32,6 +32,10 @@ class EngineStateObservable(hostConfigStore: HostConfigStore): Observable<Engine
 		currentState = currentState.copy(hostConfig = newHostConfig)
 	}
 
+	internal fun setAlert(alert: String?) {
+		currentState = currentState.copy(alert = alert)
+	}
+
 	private fun notifyObservers() {
 		observers.forEach { it(currentState) }
 	}

@@ -18,7 +18,6 @@ class MainService: Service() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         val power = intent?.getSerializableExtra(EXTRA_POWER) as Power?
         if(power != Power.SOFT) {
-            stopEngine()
             startEngine()
         }
 
@@ -26,24 +25,26 @@ class MainService: Service() {
     }
 
     override fun onDestroy() {
-        stopEngine()
-        stopForeground(true)
+        shutdown()
         super.onDestroy()
     }
 
     private fun startEngine() {
         try {
-            notifications.notify(R.string.notificationRunningMsg)
+            appComponent.engine.stop()
+            notifications.update(getString(R.string.notificationRunningMsg))
             appComponent.engine.run()
         } catch (t: Throwable) {
-            notifications.notify(R.string.notificationErrorMsg)
-            stopEngine()
-            stopSelf()
+            t.printStackTrace()
+            notifications.update(getString(R.string.notificationErrorMsg))
+            shutdown()
         }
     }
     
-    private fun stopEngine() {
+    private fun shutdown() {
         appComponent.engine.stop()
+        stopForeground(true)
+        stopSelf()
     }
 
     override fun onBind(intent: Intent): IBinder? = null

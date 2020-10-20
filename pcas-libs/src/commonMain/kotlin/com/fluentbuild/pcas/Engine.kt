@@ -35,6 +35,7 @@ class Engine internal constructor(
 
 	fun stop() {
 		currentCancellable?.cancel()
+		currentCancellable = null
 	}
 
 	private fun EngineComponent.run(): Cancellables {

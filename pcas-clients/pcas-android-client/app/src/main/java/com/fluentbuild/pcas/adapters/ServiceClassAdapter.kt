@@ -26,11 +26,11 @@ class ServiceClassAdapter(
         }
     }
 
-    private val serviceClickAction = {
+    private val onServiceClicked = {
         if(isServiceEnabled) {
             ShowPeripheralListAction(serviceClass).perform(context)
         } else {
-            ShowToastAction(R.string.serviceUnsupportedError).perform(context)
+            ShowToastAction(context.getString(R.string.serviceUnsupportedError)).perform(context)
         }
     }
 
@@ -52,7 +52,7 @@ class ServiceClassAdapter(
                     iconTintColor = "#F9B538".asColorStateList,
                     connectionCount = connectionCount,
                     description = description,
-                    onClicked = serviceClickAction
+                    onClicked = onServiceClicked
                 )
             }
             ServiceClass.KEYPAD -> {
@@ -65,7 +65,7 @@ class ServiceClassAdapter(
                     iconTintColor = "#1C8E3C".asColorStateList,
                     connectionCount = connectionCount,
                     description = description,
-                    onClicked = serviceClickAction
+                    onClicked = onServiceClicked
                 )
             }
             ServiceClass.MOUSE -> {
@@ -78,7 +78,7 @@ class ServiceClassAdapter(
                     iconTintColor = "#1170E8".asColorStateList,
                     connectionCount = connectionCount,
                     description = description,
-                    onClicked = serviceClickAction
+                    onClicked = onServiceClicked
                 )
             }
         }

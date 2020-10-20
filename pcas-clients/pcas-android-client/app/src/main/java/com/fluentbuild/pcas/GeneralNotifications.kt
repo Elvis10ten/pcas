@@ -41,8 +41,8 @@ class GeneralNotifications(private val context: Context) {
                 ))
     }
 
-    fun notify(@StringRes stringId: Int, vararg formatArgs: String?) {
-        val notification = builder.setContentText(context.getString(stringId, *formatArgs)).build()
+    fun update(message: String) {
+        val notification = builder.setContentText(message).build()
         context.notificationManager.notify(ID, notification)
     }
 
