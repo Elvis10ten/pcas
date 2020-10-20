@@ -56,6 +56,7 @@ internal class EngineComponentAndroid(
 
 	private val audioServiceModule = AudioServiceModule(
 		appContext = appContext,
+		mainHandler = mainHandler,
 		hostConfig = hostConfig,
 		hostObservable = hostModule.hostObservable,
 		timeProvider = utilsModule.timeProvider,

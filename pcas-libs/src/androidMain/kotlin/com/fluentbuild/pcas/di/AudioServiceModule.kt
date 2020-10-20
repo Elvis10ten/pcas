@@ -4,12 +4,14 @@ import android.bluetooth.BluetoothA2dp
 import android.bluetooth.BluetoothHeadset
 import android.bluetooth.BluetoothProfile
 import android.content.Context
+import android.os.Handler
 import com.fluentbuild.pcas.host.HostConfig
 import com.fluentbuild.pcas.bluetooth.BluetoothProfileHolder
 import com.fluentbuild.pcas.host.HostInfoObservable
 import com.fluentbuild.pcas.async.Debouncer
 import com.fluentbuild.pcas.bluetooth.BluetoothPeripheralCommander
 import com.fluentbuild.pcas.peripheral.CommandRetrier
+import com.fluentbuild.pcas.peripheral.MediaConnectSilencer
 import com.fluentbuild.pcas.peripheral.PeripheralProfile
 import com.fluentbuild.pcas.services.audio.*
 import com.fluentbuild.pcas.utils.TimeProviderJvm
@@ -19,6 +21,7 @@ import com.fluentbuild.pcas.watchers.CallStateWatcher
 
 internal class AudioServiceModule(
 	appContext: Context,
+	mainHandler: Handler,
 	hostConfig: HostConfig,
 	hostObservable: HostInfoObservable,
 	timeProvider: TimeProviderJvm,
@@ -39,9 +42,13 @@ internal class AudioServiceModule(
 		PeripheralProfile.HEADSET to profileStateWatcherProvider(BluetoothHeadset.ACTION_CONNECTION_STATE_CHANGED),
 	)
 
+	private val mediaConnectSilencer = MediaConnectSilencer(appContext, mainHandler)
+
+	private val noOpsSilencer = MediaConnectSilencer(appContext, mainHandler)
+
 	private val profileCommanders = mapOf(
-		PeripheralProfile.A2DP to BluetoothPeripheralCommander(appContext, audioProfileHolder, BluetoothProfile.A2DP),
-		PeripheralProfile.HEADSET to BluetoothPeripheralCommander(appContext, audioProfileHolder, BluetoothProfile.HEADSET)
+		PeripheralProfile.A2DP to BluetoothPeripheralCommander(appContext, audioProfileHolder, BluetoothProfile.A2DP, mediaConnectSilencer),
+		PeripheralProfile.HEADSET to BluetoothPeripheralCommander(appContext, audioProfileHolder, BluetoothProfile.HEADSET, noOpsSilencer)
 	)
 
     private val bondsObservable = AudioBondsObservableAndroid(
@@ -68,7 +75,7 @@ internal class AudioServiceModule(
         audioStreamer = audioStreamer
     )
 
-	private val commandRetrier = CommandRetrier(profileCommanders)
+	private val commandRetrier = CommandRetrier(profileCommanders, mediaConnectSilencer)
 
     val audioBlocksProducer = AudioBlocksObservable(
         propObservable = propertyObservable,

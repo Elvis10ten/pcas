@@ -2,11 +2,11 @@ package com.fluentbuild.pcas.services.audio
 
 import com.fluentbuild.pcas.async.Cancellable
 import com.fluentbuild.pcas.async.Cancellables
-import com.fluentbuild.pcas.values.Observable
-import com.fluentbuild.pcas.ledger.Block
-import com.fluentbuild.pcas.peripheral.PeripheralBond
 import com.fluentbuild.pcas.async.Debouncer
+import com.fluentbuild.pcas.ledger.Block
 import com.fluentbuild.pcas.peripheral.CommandRetrier
+import com.fluentbuild.pcas.peripheral.PeripheralBond
+import com.fluentbuild.pcas.values.Observable
 
 internal class AudioBlocksObservable(
 	private val propObservable: Observable<AudioProperty>,
