@@ -12,15 +12,36 @@ data class Contention(
 
         abstract val selfBlock: Block
 
-        data class Connect(override val selfBlock: Block): Resolution()
+        abstract val rank: Double
 
-        data class Disconnect(override val selfBlock: Block): Resolution()
+        data class Connect(
+            override val selfBlock: Block,
+            override val rank: Double
+        ): Resolution()
 
-        data class Ambiguous(override val selfBlock: Block): Resolution()
+        data class Disconnect(
+            override val selfBlock: Block,
+            override val rank: Double
+        ): Resolution()
+
+        data class Ambiguous(
+            override val selfBlock: Block,
+            override val rank: Double
+        ): Resolution()
 
         data class Stream(
             override val selfBlock: Block,
+            override val rank: Double,
             val destination: HostInfo
         ): Resolution()
+
+        fun clone(selfBlock: Block = this.selfBlock, rank: Double = this.rank): Resolution {
+            return when(this) {
+                is Connect -> Connect(selfBlock, rank)
+                is Disconnect -> Disconnect(selfBlock, rank)
+                is Ambiguous -> Ambiguous(selfBlock, rank)
+                is Stream -> Stream(selfBlock, rank, destination)
+            }
+        }
     }
 }

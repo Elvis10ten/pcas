@@ -1,8 +1,6 @@
 package com.fluentbuild.pcas.ledger.messages
 
-import com.fluentbuild.pcas.io.MarshalledMessage
-import com.fluentbuild.pcas.io.MarshalledMessageSize
-import com.fluentbuild.pcas.io.MessageReceiver
+import com.fluentbuild.pcas.io.transport.MessageReceiver
 import com.fluentbuild.pcas.ledger.LedgerDb
 import com.fluentbuild.pcas.ledger.LedgerWatchdog
 import com.fluentbuild.pcas.ledger.getBlocksMaxTimestamp
@@ -20,8 +18,8 @@ internal class MessageReceiver(
     private val log = getLog()
     private val ledger get() = ledgerDb.getLedger()
 
-    override fun onReceived(message: MarshalledMessage, size: MarshalledMessageSize) {
-        onReceived(protoBuf.decode(message, size))
+    override fun onReceived(parcel: ByteArray, size: Int) {
+        onReceived(protoBuf.decode(parcel, size))
     }
 
     private fun onReceived(message: LedgerMessage) {

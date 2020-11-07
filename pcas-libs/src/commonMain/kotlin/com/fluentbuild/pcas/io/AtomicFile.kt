@@ -2,9 +2,9 @@ package com.fluentbuild.pcas.io
 
 interface AtomicFile {
 
-	fun exists(): Boolean
+	val isExist: Boolean
 
-	fun readData(): ByteArray
+	fun read(): ByteArray
 
 	fun write(data: ByteArray)
 }

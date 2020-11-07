@@ -1,4 +1,4 @@
-package com.fluentbuild.pcas.io
+package com.fluentbuild.pcas.io.transport
 
 internal enum class IpTos(val value: Int) {
 	LOW_COST(0x02),

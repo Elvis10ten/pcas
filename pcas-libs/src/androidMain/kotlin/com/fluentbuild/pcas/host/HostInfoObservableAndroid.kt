@@ -6,7 +6,7 @@ import com.fluentbuild.pcas.services.audio.AudioConfig
 import com.fluentbuild.pcas.watchers.NetworkAddressWatcher
 import com.fluentbuild.pcas.watchers.InteractivityWatcher
 import com.fluentbuild.pcas.io.Address
-import com.fluentbuild.pcas.io.UnicastChannel
+import com.fluentbuild.pcas.io.transport.UnicastChannel
 import com.fluentbuild.pcas.logs.getLog
 import com.fluentbuild.pcas.utils.powerManager
 import com.fluentbuild.pcas.values.Provider

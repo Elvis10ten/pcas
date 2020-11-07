@@ -2,7 +2,7 @@ package com.fluentbuild.pcas.ledger.messages
 
 import com.fluentbuild.pcas.async.ThreadRunner
 import com.fluentbuild.pcas.host.Uuid
-import com.fluentbuild.pcas.io.MulticastChannel
+import com.fluentbuild.pcas.io.transport.MulticastChannel
 import com.fluentbuild.pcas.ledger.LedgerDb
 import com.fluentbuild.pcas.logs.getLog
 import kotlinx.serialization.encodeToByteArray

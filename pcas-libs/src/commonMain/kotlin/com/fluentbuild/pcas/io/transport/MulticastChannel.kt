@@ -1,4 +1,4 @@
-package com.fluentbuild.pcas.io
+package com.fluentbuild.pcas.io.transport
 
 internal interface MulticastChannel {
 
@@ -6,7 +6,7 @@ internal interface MulticastChannel {
     fun init(receiver: MessageReceiver)
 
     @Throws(Exception::class)
-    fun send(message: MarshalledMessage, messageSize: MarshalledMessageSize)
+    fun send(parcel: ByteArray, size: Int)
 
     fun close()
 }

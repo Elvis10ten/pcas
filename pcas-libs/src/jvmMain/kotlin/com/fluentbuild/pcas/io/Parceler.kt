@@ -4,6 +4,7 @@ import java.security.SecureRandom
 import javax.crypto.Cipher
 import javax.crypto.spec.GCMParameterSpec
 import javax.crypto.spec.SecretKeySpec
+import com.fluentbuild.pcas.io.transport.TransportConfig.OFFSET_ZERO
 
 internal class Parceler(
 	private val networkKey: ByteArray?,

@@ -20,7 +20,7 @@ class HostConfigStore(
 	internal var engineStateObservable: EngineStateObservable? = null
 
 	init {
-		if(!atomicFile.exists()) {
+		if(!atomicFile.isExist) {
 			update(HostConfig(randomUuidGenerator(), nameProvider()))
 		}
 
@@ -58,7 +58,7 @@ class HostConfigStore(
 		val cachedConfig = cachedConfig
 		if(cachedConfig != null) return cachedConfig
 
-		val hostConfig = protoBuf.decodeFromByteArray<HostConfig>(atomicFile.readData())
+		val hostConfig = protoBuf.decodeFromByteArray<HostConfig>(atomicFile.read())
 		this.cachedConfig = hostConfig
 		return hostConfig
 	}

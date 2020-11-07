@@ -13,7 +13,7 @@ internal fun Address.Ipv4.getPrimaryInterfaceWithAddress(): NetworkInterface {
 
 private fun NetworkInterface.hasAddress(address: Address.Ipv4): Boolean {
 	return inetAddresses.asSequence().any {
-		!it.isLoopbackAddress && it is Inet4Address && it.hostAddress == address.quadDottedDecimal
+		!it.isLoopbackAddress && it is Inet4Address && it.hostAddress == address.quadDottedDecimalValue
 	}
 }
 

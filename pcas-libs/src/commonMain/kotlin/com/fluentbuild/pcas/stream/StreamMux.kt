@@ -1,7 +1,7 @@
 package com.fluentbuild.pcas.stream
 
 import com.fluentbuild.pcas.host.HostInfo
-import com.fluentbuild.pcas.io.UnicastChannel
+import com.fluentbuild.pcas.io.transport.UnicastChannel
 import kotlinx.serialization.encodeToByteArray
 import kotlinx.serialization.protobuf.ProtoBuf
 

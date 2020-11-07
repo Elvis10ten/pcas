@@ -127,11 +127,11 @@ class AtomicFileJvm(private val baseFile: File): AtomicFile {
 		return FileInputStream(baseFile)
 	}
 
-	override fun readData(): ByteArray {
+	override fun read(): ByteArray {
 		return openRead().use { it.readBytes() }
 	}
 
-	override fun exists() = baseFile.exists()
+	override val isExist get() = baseFile.exists()
 
 	private fun sync(stream: FileOutputStream): Boolean {
 		return try {

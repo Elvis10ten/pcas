@@ -6,7 +6,7 @@ import android.media.AudioFocusRequest
 import android.media.AudioManager
 import android.media.AudioTrack
 import android.os.Handler
-import com.fluentbuild.pcas.io.OFFSET_ZERO
+import com.fluentbuild.pcas.io.transport.TransportConfig.OFFSET_ZERO
 import com.fluentbuild.pcas.logs.getLog
 import com.fluentbuild.pcas.services.audio.AudioConfig
 import com.fluentbuild.pcas.utils.audioManager

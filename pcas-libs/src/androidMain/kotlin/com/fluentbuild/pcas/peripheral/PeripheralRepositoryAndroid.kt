@@ -15,11 +15,11 @@ class PeripheralRepositoryAndroid(private val context: Context): PeripheralRepos
 	override fun getPeripherals(serviceClass: ServiceClass): Set<Peripheral> {
 		return pairedDevices
 			.filter { serviceClass.isPeripheralSupported(it.deviceUuids) }
-			.mapSet { it.toPeripheral(serviceClass) }
+			.mapSet { it.toPeripheral() }
 	}
 
-	private fun BluetoothDevice.toPeripheral(serviceClass: ServiceClass) =
-		Peripheral(name, Address.Mac(address), serviceClass.defaultMaxConcurrentConnections)
+	private fun BluetoothDevice.toPeripheral() =
+		Peripheral(name, Address.Mac(address), StaticConfig.isConcurrencySupported(name))
 
 	private val BluetoothDevice.deviceUuids get() = uuids?.mapSet { it.uuid.toUuid() } ?: emptySet()
 }

@@ -1,7 +1,7 @@
 package com.fluentbuild.pcas.stream
 
 import com.fluentbuild.pcas.async.Cancellable
-import com.fluentbuild.pcas.io.UnicastChannel
+import com.fluentbuild.pcas.io.transport.UnicastChannel
 import com.fluentbuild.pcas.logs.getLog
 import com.fluentbuild.pcas.services.ServiceClass
 import com.fluentbuild.pcas.utils.decode

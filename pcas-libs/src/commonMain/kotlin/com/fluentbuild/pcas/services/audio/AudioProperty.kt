@@ -12,9 +12,9 @@ data class AudioProperty(val usages: Set<Usage>) {
         // Unknown media playback. It could be music, movie soundtracks, etc.
         MEDIA_UNKNOWN(2, PeripheralProfile.A2DP),
         // Music playback, eg: Music streaming, local audio playback, etc.
-        MUSIC(3, PeripheralProfile.A2DP),
+        MUSIC(2, PeripheralProfile.A2DP),
         // Speech playback, eg: Podcasts, Audiobooks, etc
-        SPEECH(3, PeripheralProfile.A2DP),
+        SPEECH(2, PeripheralProfile.A2DP),
         // Soundtrack, typically accompanying a movie or TV program.
         MOVIE(4, PeripheralProfile.A2DP),
         // Game audio playback

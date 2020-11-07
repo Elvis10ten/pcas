@@ -6,8 +6,8 @@ import kotlinx.serialization.protobuf.ProtoNumber
 sealed class Address {
 
     @Serializable
-    data class Mac(@ProtoNumber(1) val colonHex: String): Address()
+    data class Mac(@ProtoNumber(1) val colonHexValue: String): Address()
 
     @Serializable
-    data class Ipv4(@ProtoNumber(1) val quadDottedDecimal: String): Address()
+    data class Ipv4(@ProtoNumber(1) val quadDottedDecimalValue: String): Address()
 }

@@ -8,7 +8,7 @@ import com.fluentbuild.pcas.peripheral.Peripheral
 import com.fluentbuild.pcas.peripheral.PeripheralProfile
 
 internal fun BluetoothAdapter.toBluetoothDevice(peripheral: Peripheral): BluetoothDevice =
-    getRemoteDevice(peripheral.address.colonHex)
+    getRemoteDevice(peripheral.address.colonHexValue)
 
 @SuppressLint("InlinedApi")
 internal fun PeripheralProfile.getAndroidProfileId(): Int {

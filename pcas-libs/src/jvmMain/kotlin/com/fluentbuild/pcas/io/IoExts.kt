@@ -7,7 +7,7 @@ import java.net.DatagramSocket
 import java.net.InetAddress
 import java.net.SocketException
 
-internal inline val Address.Ipv4.inetAddress: InetAddress get() = InetAddress.getByName(quadDottedDecimal)
+internal inline val Address.Ipv4.inetAddress: InetAddress get() = InetAddress.getByName(quadDottedDecimalValue)
 
 internal fun Closeable.closeQuietly(log: Log) {
     try {

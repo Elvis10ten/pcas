@@ -1,6 +1,10 @@
 package com.fluentbuild.pcas.io
 
 import com.fluentbuild.pcas.logs.getLog
+import com.fluentbuild.pcas.io.transport.*
+import com.fluentbuild.pcas.io.transport.TransportConfig.MULTICAST_ADDRESS
+import com.fluentbuild.pcas.io.transport.TransportConfig.MULTICAST_PORT
+import com.fluentbuild.pcas.io.transport.TransportConfig.MULTICAST_TTL
 import com.fluentbuild.pcas.values.Provider
 import java.io.IOException
 import java.net.InetSocketAddress
@@ -35,8 +39,8 @@ internal open class MulticastChannelJvm(
     }
 
     @Throws(IOException::class)
-    override fun send(message: ByteArray, messageSize: Int) {
-        socketWrapper.send(message, messageSize, MULTICAST_ADDRESS, MULTICAST_PORT)
+    override fun send(parcel: ByteArray, messageSize: Int) {
+        socketWrapper.send(parcel, messageSize, MULTICAST_ADDRESS, MULTICAST_PORT)
     }
 
     override fun close() {

@@ -1,6 +1,9 @@
 package com.fluentbuild.pcas.io
 
 import com.fluentbuild.pcas.host.HostInfo
+import com.fluentbuild.pcas.io.transport.IpTos
+import com.fluentbuild.pcas.io.transport.MessageReceiver
+import com.fluentbuild.pcas.io.transport.UnicastChannel
 import java.io.IOException
 import java.net.DatagramSocket
 
@@ -17,8 +20,8 @@ internal open class UnicastChannelJvm(
     }
 
     @Throws(IOException::class)
-    override fun send(recipient: HostInfo, message: ByteArray, messageSize: Int) {
-        socketWrapper.send(message, messageSize, recipient.address, recipient.port)
+    override fun send(recipient: HostInfo, parcel: ByteArray, messageSize: Int) {
+        socketWrapper.send(parcel, messageSize, recipient.address, recipient.port)
     }
 
     @Throws(IOException::class)

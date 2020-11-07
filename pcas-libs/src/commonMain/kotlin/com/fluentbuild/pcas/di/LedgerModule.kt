@@ -2,7 +2,7 @@ package com.fluentbuild.pcas.di
 
 import com.fluentbuild.pcas.async.ThreadRunner
 import com.fluentbuild.pcas.host.HostInfoObservable
-import com.fluentbuild.pcas.io.MulticastChannel
+import com.fluentbuild.pcas.io.transport.MulticastChannel
 import com.fluentbuild.pcas.ledger.*
 import com.fluentbuild.pcas.ledger.messages.MessageReceiver
 import com.fluentbuild.pcas.ledger.messages.SimpleMessageSender
@@ -12,13 +12,13 @@ import kotlinx.serialization.protobuf.ProtoBuf
 import kotlin.random.Random
 
 internal class LedgerModule(
-    random: Random,
-    timeProvider: TimeProvider,
-    threadRunnerProvider: () -> ThreadRunner,
-    protoBuf: ProtoBuf,
-    hostObservable: HostInfoObservable,
-    multicastChannel: MulticastChannel,
-    audioBlocksObservable: Observable<Set<Block>>
+	random: Random,
+	timeProvider: TimeProvider,
+	threadRunnerProvider: () -> ThreadRunner,
+	protoBuf: ProtoBuf,
+	hostObservable: HostInfoObservable,
+	multicastChannel: MulticastChannel,
+	audioBlocksObservable: Observable<Set<Block>>
 ) {
 
     private val ledgerDb = LedgerDb()
