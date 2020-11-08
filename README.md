@@ -20,7 +20,7 @@ A core tenet of the Apple camp is that their complete ecosystem makes every prod
 
 **PCAS (Peripheral Connection Augmentation System)** artificially augments a Bluetooth peripheral maximum number of concurrent connections. Based on user-initiated events and hardware configurations PCAS automatically connects/disconnects a profile on a peripheral. PCAS can also multiplex to a single sink: For example, on Android, this brings the theoretical maximum audio connections to 30 ([the maximum allowed AudioTrack instances](https://groups.google.com/g/android-platform/c/_tmA8DRg8q4)).
 
-Basically, a single user with multiple hosts no longer have to manually connect/disconnect each peripheral. PCAS does this automatically. This works even on cheap peripherals that don't support multiple concurrent connections natively. Example scenarios:
+Basically, a single user with multiple hosts no longer has to manually connect/disconnect each peripheral. PCAS does this automatically. This works even on cheap peripherals that don't support multiple concurrent connections natively. Example scenarios:
 
 1. When a call comes in on your phone while watching a movie on your tablet. The movie is automatically paused and your phone is connected.
 2. When playing music from multiple devices, the output could be muxed to the same audio sink in realtime.
@@ -32,7 +32,7 @@ Basically, a single user with multiple hosts no longer have to manually connect/
 ### Design Goals
 
 1. **Multi-platform** (Windows, Mac, iOS, Android).
-2. Supports **most** bluetooth peripheral (including and especially low-end peripherals).
+2. Supports **most** Bluetooth peripheral (including and especially low-end peripherals).
 3. Average switching latency should be **< 1s**.
 4. Can support at least **10 devices** without any service degradation.
 5. **Secure zero-config offline P2P** communication.
@@ -46,7 +46,7 @@ PCAS is designed to be simple and "just work". The only initial setup required i
 
 All hosts **must** be on the same LAN. E2E encryption is provided but optional (disabled by default). To enable E2E encryption, a key needs to be created and shared with the relevant hosts.
 
-![Encyrption setup and code share screenshots](assets/screen_encryption_setup_and_code_share.png)
+![Encyrption setup and codeshare screenshots](assets/screen_encryption_setup_and_code_share.png)
 
 #### Assumptions
 
@@ -63,7 +63,7 @@ Building PCAS for all platforms is hard, but the underlying concept is quite sim
 1. Each host independently observes local state changes.
 2. When a local change occurs, a host broadcasts it to a closed network of peers.
 3. Each host independently listens for broadcasts from peers.
-4. Each host write all state information to a local ledger.
+4. Each host writes all state information to a local ledger.
 5. Each host independently makes a decision to connect/disconnect/stream based on the content of the local ledger.
 
 Project architecture at a high-level:
@@ -73,9 +73,9 @@ Project architecture at a high-level:
 
 This base layer provides a framework for fast, best-effort, [zero-configuration](https://en.wikipedia.org/wiki/Zero-configuration_networking), & E2E encrypted communication among devices within proximity.
 
-Basically, this allows a host to be able to efficiently & securely send and receive messages from other nearby devices without any upfront configuration.
+This allows a host to be able to efficiently & securely send and receive messages from other nearby devices without any upfront configuration.
 
-The "unreliable" prefix is actually misleading, just like when people say UDP is unreliable. This layer is just as reliable as the network stack below it; No additional reliability gurantees are provided.
+The "unreliable" prefix is misleading, just like when people say UDP is unreliable. This layer is just as reliable as the network stack below it; No additional reliability guarantees are provided.
 
 The transport data unit is a `parcel`. Parcels are just opaque byte buffers.
 
@@ -143,7 +143,7 @@ internal interface UnicastChannel {
 
 This component adds E2E encryption to the two channels above. Encryption is optional and is only activated when an encryption key is generated or shared.
 
-Data is encrypted with AES in GCM mode with no padding. A random initialization vector is used once per message and prepended to the head of a parcel. I won't go into much details here as there are lots of good material on AES encryption on the internet: [like this one](https://levelup.gitconnected.com/doing-aes-gcm-in-android-adventures-in-the-field-72617401269d).
+Data is encrypted with AES in GCM mode with no padding. A random initialization vector is used once per message and prepended to the head of a parcel. I won't go into details here as there are lots of good material on AES encryption on the internet: [like this one](https://levelup.gitconnected.com/doing-aes-gcm-in-android-adventures-in-the-field-72617401269d).
 
 ![Transport data flow](assets/transport_data_flow.svg)
 
@@ -183,13 +183,13 @@ data class Block(
 
 #### ii. Network Protocol
 ![Host Network](assets/network.jpeg)
-A resilient multicast protocol is built on top the transport layer. There are three types of messages:
+A resilient multicast protocol is built on top of the transport layer. There are three types of messages:
 
 1. **Genesis**: The first message a host sends, requesting other hosts to send their current blocks.
 2. **Update**: This is sent each time the blocks on a host changes. This message contains all self blocks (the blocks from the current host).
 3. **Heartbeat**: This is periodically sent. After multiple missed heartbeats, a host is deemed dead by its peers and all its block could be independently deleted on each ledger.
 
-Each host maintains its own local ledger. The network protocol guarantees that eventually, all ledgers will be consistent.
+Each host maintains its local ledger. The network protocol guarantees that eventually, all ledgers will be consistent.
 
 ##### Multicast Reliability
 
@@ -225,29 +225,29 @@ Let's consider a simple model. If the probability of successfully delivering a m
 > 
 ><img src="https://render.githubusercontent.com/render/math?math=Pr(1 \leq z \leq 5) = \displaystyle\sum_{i=1}^n \tbinom{n}{i} Pr(b = 1)^i Pr(b = 0)^{n - i}">
 
-In practice, delivery probabilites aren't fixed and attempts are not independent. Despite the shortcoming of this approach, it has the following benefits:
+In practice, delivery probabilities aren't fixed and attempts are not independent. Despite the shortcoming of this approach, it has the following benefits:
 
-1. It isn't dependent of the size of the network. Whether their are 2 or 10,000 peers, a host will only send it's message at a rate of `m` per second.
-2. Peers that are just entrying the network could benefit from these redundant messages.
+1. It isn't dependent on the size of the network. Whether there are 2 or 10,000 peers, a host will only send its messages at a rate of `r/second`.
+2. Peers that are just entering the network could benefit from these redundant messages.
 
 ###### b. Using ACKs
-Essential messages have a monotonically increasing sequence number. The initial sequence number is `0`. All host are expected to send an `Ack` message with the sequence number of the essential message. Retries are done with a truncated exponential backoff with jitter.
+Essential messages have a monotonically increasing sequence number. The initial sequence number is `0`. All hosts are expected to send an `Ack` message with the sequence number of the essential message. Retries are done with a truncated exponential backoff with jitter.
 
 This strategy only sends fewer messages (more efficient) than the redundant strategy when the number of peers in a network is less than `x`. Some of the issues with this strategy are:
 
 1. Using `ACKs` like TCP isn't scalable and runs the risk of [ACKs implosion](https://courses.cs.washington.edu/courses/cse561/01sp/lectures/568.multicast2.pdf).
-2. The number of messages sent is dependent of the size of the network. A single rogue host can cause the network to be spammed with ACKs and messages.
+2. The number of messages sent is dependent on the size of the network. A single rogue host can cause the network to be spammed with ACKs and messages.
 3. Figuring out which peer to expect ACKs from is complex.
 
-I initially went with ACKs but currently refactoring to the simple redundant strategy.
+I initially went with ACKs but will be using the simple redundant strategy instead.
 
-The layer data unit is a `Message`. Messages are marshalled to the Protobuf format and passed to the transport layer. The inverse action is performed when a message is received.
+The layer data unit is a `Message`. Messages are marshaled to the Protobuf format and passed to the transport layer. The inverse action is performed when a message is received.
 
 ### Resource Allocation
 
-When two or more host use a 3-tuple(service, profile, peripheral), a contention occurs. Even if a host doesn't actively require a profile, it can still contend with another host for that profile.
+When two or more hosts use a 3-tuple(service, profile, peripheral), a contention occurs. Even if a host doesn't actively require a profile, it can still contend with another host for that profile.
 
-This is the meat or vegetable (for my vegeterian friends) of the system. First, what are profiles?
+This is the meat or vegetable (for my vegetarian friends) of the system. First, what are profiles?
 
 #### Bluetooth Profiles
 
@@ -259,9 +259,9 @@ This is the meat or vegetable (for my vegeterian friends) of the system. First, 
 [![A2DP profile](assets/hfp_profile.jpg)](https://www.slideshare.net/Thenmurugeshwari/bluetooth-profile)
 3. **HID (Human Interface Device Profile)**: Provides support for devices such as mice, keyboards, etc. PlayStation 3 controllers and Wii remotes also use Bluetooth HID.
 
-> Recap: With A2DP you can only listen with a higher audio quality. With headset profiles, you can talk and listen, but at a lower quality. Next time you are playing song while a call comes in, observe how the audio quality drops.
+> Recap: With A2DP you can only listen but with higher audio quality. With headset profiles, you can talk and listen, but at a lower quality. Next time you are playing a song while a call comes in, observe how the audio quality drops.
 
-Each time a change is made to the ledger, a resolver looks at all the current contentions and makes a resolution.
+Each time a change is made to the ledger, a resolver looks at all the current contentions and resolves.
 
 #### Type of resolutions
 
@@ -301,7 +301,7 @@ The rank is an estimate of the current importance of a block. Based on ranks, a 
 ```kotlin
 data class Contention(
     val selfBlock: Block,
-    // This is another block with same service, peripheral, and profile but a different owner that is deemed the apex based on its rank
+    // This is another block with the same service, peripheral, and profile but a different owner that is deemed the apex based on its rank
     val peersApexBlock: Block?
 )
 ```
@@ -345,7 +345,7 @@ fun getResolution(contention: Contention): Resolution {
 
 ### User Services
 
-Currently only audio services are supported. Provision has been made to easily add other types of services.
+Currently, only audio services are supported. Provision has been made to easily add other types of services.
 
 #### Audio
 
@@ -440,12 +440,12 @@ I explored 2 other possible technologies:
 
 This is easy using a service like [FCM](https://firebase.google.com/docs/cloud-messaging) (it would be similar to Google [Nearby Messaging API](https://developers.google.com/nearby/messages/overview) without the proximity part).
 
-FCM and other push messaging services work using long lived TCP sockets. A TCP socket on the device waits in accept mode on a Google server.
+FCM and other push messaging services work using long-lived TCP sockets. A TCP socket on the device waits in accept mode on a Google server.
 
 ##### Pros:
 
 1. Simple.
-2. Efficient: We only delivers to the relevant hosts.
+2. Efficient: Delivery is only made to specific hosts.
 3. Works well on Android in the background.
 
 ##### Cons:
@@ -453,7 +453,7 @@ FCM and other push messaging services work using long lived TCP sockets. A TCP s
 1. Not P2P: Depends on a central server.
 2. Not offline: Requires the internet.
 3. Higher latency.
-4. Increased attack surface: A local only solution limits who can initiate an attack.
+4. Increased attack surface: A local-only solution limits who can initiate an attack.
 
 ### 2. BLE (Bluetooth Low Energy) Advertisement
 
@@ -478,7 +478,7 @@ The data rate is `1 Mbps` (supporting 2Mbps on Bluetooth 5.0).
 
 BLE is robust, using [frequency hopping](https://en.wikipedia.org/wiki/Frequency-hopping_spread_spectrum) to work around interference.
 
-BLE uses 3 dedicated channels for advertising: 37, 38, 39 (channels are zero-indexed). As can be seen in the image below, these channels are spread across the 2.4GHz band so as to minimize interference problems.
+BLE uses 3 dedicated channels for advertising: 37, 38, 39 (channels are zero-indexed). As can be seen in the image below, these channels are spread across the 2.4GHz band to minimize interference problems.
 
 [![assets/ble-advertising-channels-spectrum.png](assets/ble-advertising-channels-spectrum.png)](https://www.argenox.com/library/bluetooth-low-energy/ble-advertising-primer/)
 
@@ -498,13 +498,13 @@ A scanning device listens on the advertisement channels for a duration called th
 
 **Discovery latency**
 
-We can use the three parameters: advertising interval, scan interval and scan window to build a probabilistic model for discovery latency. Any such model will be practical flawed without considering the environment where devices will likely be used in.
+We can use the three parameters: advertising interval, scan interval, and scan window to build a probabilistic model for discovery latency. Any such model will be practically flawed without considering the environment where devices will likely be used in.
 
 Obviously, shorter intervals and a higher scan window lead to faster discovery times while consuming more power.
 
 **Power consumption**
 
-Ignore the general belief that advertisement must be power hungry. BLE advertisement is power efficient.
+Ignore the general belief that advertisements are power-hungry. BLE advertisement is power efficient.
 
 Have a look at this [Android power consumption test](https://developer.radiusnetworks.com/2015/12/09/battery-friendly-beacon-transmission.html).
 
@@ -515,10 +515,10 @@ A study by beacon software company Aislelabs reported that peripherals such as p
 ### Pros
 
 1. Local & standalone: No LAN requirements.
-2. Fast, reliable and power efficient.
+2. Fast, reliable and power-efficient.
 
 ### Cons
 
-1. Shorter distance: WiFi usually have 10x more range.
+1. Shorter distance: WiFi usually has 10x more range.
 2. Unidirectional flow.
 3. Scanning is expensive.
