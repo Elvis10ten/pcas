@@ -2,10 +2,7 @@
 
 The inspiration for this project came from this tweet.
 
-<blockquote class="twitter-tweet" style="width: 100%" width="100%" height="100%">
-<p lang="en" dir="ltr">AirPods will now automatically switch between devices by recognizing if you put down your phone and pick up your iPad. Or if you’re on your iPad and you get a phone call, it’ll switch back to the phone. That’s the type of experience only a complete ecosystem can create.</p>&mdash; Marques Brownlee (@MKBHD) <a href="https://twitter.com/MKBHD/status/1275122690618261511?ref_src=twsrc%5Etfw">June 22, 2020</a>
-</blockquote>
-<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+![Encyrption setup and code share screenshots](assets/inspiration_tweet.png)
 
 
 Obviously, this is
@@ -46,15 +43,8 @@ All hosts **must** be on the same local connection. E2E encryption is provided b
 > The target user has at most one peripheral per service. This simplifies the UX and technical design.
 
 ### Demo
-<!-- blank line -->
-<div style="position:relative;padding-bottom:56.25%;">
- <iframe style="width:100%;height:100%;position:absolute;left:0px;top:0px;"
- frameborder="0" width="100%" height="100%" 
- allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
- src="https://www.youtube.com/embed/WMmtQLNYF-g">
-</iframe>
-</div>
-<!-- blank line -->
+
+[![Watch demo](assets/demo_preview.jpg)](https://www.youtube.com/watch?v=WMmtQLNYF-g/)
 
 ## Design Goals
 
