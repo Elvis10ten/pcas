@@ -24,6 +24,7 @@ internal class AudioResolutionHandler(
                 resolution.selfBlock.profile.disconnect()
             }
             is Contention.Resolution.Stream -> {
+                resolution.selfBlock.profile.disconnect()
                 audioStreamer.start(resolution.destination)
             }
             is Contention.Resolution.Ambiguous -> {}
