@@ -209,12 +209,18 @@ Let's consider a simple model. If the probability of successfully delivering a m
 > **Napkin math**
 > 
 > Let b = 1 on success; 0 on failure
+> 
 > Pr(b = 1) = 0.50
+> 
 > Pr(b = 0) = 1 - Pr(b = 1) = 0.50
+> 
 > (b is a benoulli random variable)
 >
+>
 > n = 5
+> 
 > z = n tries of b
+> 
 > (z is a binomial random variable)
 > 
 ><img src="https://render.githubusercontent.com/render/math?math=Pr(1 \leq z \leq 5) = \displaystyle\sum_{i=1}^n \tbinom{n}{i} Pr(b = 1)^i Pr(b = 0)^{n - i}">
