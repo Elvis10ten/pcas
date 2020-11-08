@@ -191,7 +191,7 @@ A resilient multicast protocol is built on top the transport layer. There are th
 
 Each host maintains it's own local ledger. The network protocol gurantees that eventually all ledgers will be consistent.
 
-##### Reliability
+##### Multicast Reliability
 
 Currently, only **Update** messages are classified as essential.
 
@@ -199,51 +199,70 @@ Currently, only **Update** messages are classified as essential.
 
 While heartbeats are effective, the interval is too long to be relied on primarily for a highly interactive system like PCAS.
 
-A simple solution: Blindly resend essential messages `x` times with a delay of `y + random jitter` for each attempt.
+Reliable multicasting is an interesting problem. We explore two strategies:
 
-Let's consider a simple model. If the probability of successfully delivering a message is 50% and we send the message 5 times. Assuming each attempt is independent, there is a 0.97 probability that at least one message is delivered.
+###### a. Using redundancy
+Blindly resend essential messages `x` times with a delay of `y + random jitter` for each attempt.
 
-<img src="https://render.githubusercontent.com/render/math?math=e^{i \pi} = -1">
-```
-X is a Bernoulli random variable; Equal to 1 if message was sent, 0 otherwise
-\\
-Pr(X = 1) = 0.50
-\\
-Pr(X = 0) = 1 - Pr(X = 1) = 0.50
-\\
-Z is a Binomial variable; n tries of X; n = 5
-Pr()
-```
+Let's consider a simple model. If the probability of successfully delivering a message is fixed at 0.50. Assuming each attempt is independent, there is a 0.97 probability that at least one message gets delivered in 5 attempts.
 
-Currently, only `Update` messages are classified as essential. Essential messages have a monotonically increasing sequence number. The initial sequence number is `0`. All host are expected to send an `Ack` message with the sequence number of the essential message.
+> **Napkin math**
+> 
+> Let b = 1 on success; 0 on failure
+> Pr(b = 1) = 0.50
+> Pr(b = 0) = 1 - Pr(b = 1) = 0.50
+> (b is a benoulli random variable)
+>
+> n = 5
+> z = n tries of b
+> (z is a binomial random variable)
+> 
+><img src="https://render.githubusercontent.com/render/math?math=Pr(1 \leq z \leq 5) = \displaystyle\sum_{i=1}^n \tbinom{n}{i} Pr(b = 1)^i Pr(b = 0)^{n - i}">
 
-Reliable multicasting is an interesting problem. Using `ACKs` like TCP isn't scalable and runs the risk of [ACKs implosion](https://courses.cs.washington.edu/courses/cse561/01sp/lectures/568.multicast2.pdf). Although, heartbeat messages are used as a form of `NACK`, the interval is too long that they are not practically useful during high interactivity.
+In practice, delivery probabilites aren't fixed and attempts are not independent. Despite the shortcoming of this approach, it has the following benefits:
 
-Because most users will have at most 5 hosts, `ACK implosion` while possible, won't have a significant consequence. So `ACKs` with retries were added. Retries are done with a truncated exponential backoff with jitter. The worst case is that 5 devices are each sending (4 + 1) messages of < 200 bytes every x seconds.
+1. It isn't dependent of the size of the network. Whether their are 2 or 10,000 peers, a host will only send it's message at a rate of `m` per second.
+2. Peers that are just entrying the network could benefit from these redundant messages.
+
+###### b. Using ACKs
+Essential messages have a monotonically increasing sequence number. The initial sequence number is `0`. All host are expected to send an `Ack` message with the sequence number of the essential message. Retries are done with a truncated exponential backoff with jitter.
+
+This strategy only send fewer messages (more efficient) than the redundant strategy when the number of peers in a network is less than `x`. Some of the issues with this strategy are:
+
+1. Using `ACKs` like TCP isn't scalable and runs the risk of [ACKs implosion](https://courses.cs.washington.edu/courses/cse561/01sp/lectures/568.multicast2.pdf).
+2. The number of messages sent is dependent of the size of the network. A single rogue host can cause the network to be spammed with ACKs and messages.
+3. Figuring out which peer to expect ACKs from is complex.
+
+I initially went with ACKs but currently refactoring to the simple redundant strategy.
 
 The layer data unit is a `Message`. Messages are marshalled to the Protobuf format and passed to the transport layer. The inverse action is performed when a message is received.
 
 ### Resource Allocation
 
-When two or more host use a service profile, a contention occurs. This means that even if a host doesn't actively require a profile, it can still contend with another host for that profile.
+When two or more host use a 3-tuple(service, profile, peripheral), a contention occurs. Even if a host doesn't actively require a profile, it can still contend with another host for that profile.
 
 This is the meat or vegetable (for my vegeterian friends) of the system. First, what are profiles?
 
 #### Bluetooth Profiles
 
 >A Bluetooth profile is a specification regarding an aspect of Bluetooth-based wireless communication between devices. It resides on top of the Bluetooth Core Specification and (optionally) additional protocols - [source](https://en.wikipedia.org/wiki/List_of_Bluetooth_profiles)
-1. **A2DP (Advanced Audio Distribution Profile)**: This is uni-directional audio profile and provides better audio quality than the headset profiles.
-2. Headset (Headset Profile/Hands-Free Profile): This is bi-directional audio profile usually use for calls.
-3. HID (Human Interface Device Profile): Provides support for devices such as mice, joysticks, keyboards, and simple buttons and indicators on other types of devices. It is designed to provide a low latency link, with low power requirements. PlayStation 3 controllers and Wii remotes also use Bluetooth HID.
 
-Each time a change is made to the local ledger, a resolver looks at all the current contentions and makes a resolution.
+1. **A2DP (Advanced Audio Distribution Profile)**: This is a uni-directional audio profile and provides better audio quality than the headset profiles.
+[![A2DP profile](assets/a2dp_profile.jpg)](https://www.slideshare.net/Thenmurugeshwari/bluetooth-profile)
+2. **Headset (Headset Profile/Hands-Free Profile)**: These are bi-directional audio profiles usually used for phone calls.
+[![A2DP profile](assets/hfp_profile.jpg)](https://www.slideshare.net/Thenmurugeshwari/bluetooth-profile)
+3. **HID (Human Interface Device Profile)**: Provides support for devices such as mice, keyboards, etc. PlayStation 3 controllers and Wii remotes also use Bluetooth HID.
+
+> Recap: With A2DP you can only listen with a higher audio quality. With headset profiles, you can talk and listen, but at a lower quality. Next time you are playing song while a call comes in, observe how the audio quality drops.
+
+Each time a change is made to the ledger, a resolver looks at all the current contentions and makes a resolution.
 
 #### Type of resolutions
 
-1. Connect: The current host should connect to the profile on the peripheral if disconnected.
-2. Disconnect: The current host should disconnect from the profile on the peripheral if connected.
-3. Stream: The current host should start sending all it's data to the remote host.
-4. Ambiguous: No resolution was arrived at. The system should be kept as is.
+1. **Connect**: The host should connect to the profile on the peripheral if disconnected.
+2. **Disconnect**: The host should disconnect from the profile on the peripheral if connected.
+3. **Stream**: The host should start sending all it's data to the specified remote host.
+4. **Ambiguous**: No resolution was arrived at. The system should be kept as-is.
 
 Resolutions are derived using a rank associated with each block.
 
@@ -255,7 +274,6 @@ Resolutions are derived using a rank associated with each block.
     val hasPriority = priority != NO_PRIORITY
 
     val maxPossibleConnectionAndInteractiveScore = 4 + 2
-
     // Any device with a higher priority should always rank higher.
     val priorityScore = (maxPossibleConnectionAndInteractiveScore + 1.0).pow(priority)
 
@@ -282,7 +300,7 @@ data class Contention(
 )
 ```
 
-This object is then used to derive a resolution.
+The contention object is then used to derive a resolution.
 
 ```kotlin
 fun getResolution(contention: Contention): Resolution {
@@ -325,9 +343,11 @@ Currently only audio services are supported. Provision has been made to easily a
 
 #### Audio
 
-All services can easily be split into two:
+All services have two key integrants:
 
-i. **Blocks Emission**
+##### i. Blocks Emission
+
+Blocks are built from host state information. The relevant audio states are the current audio usages and the current peripheral bond steady state.
 
 ```kotlin
 data class AudioProperty(val usages: Set<Usage>) {
@@ -379,61 +399,60 @@ data class PeripheralBond(
 }
 ```
 
+Each time a host state changes, a new block is created. The ledger layer listens to these changes and automatically updates the local ledger and sends the blocks to remote peers.
+
 ![Audio blocks sequence](assets/PCASBlocksEmitter.svg)
 
 ii. **Resolution Handler**
 
-This is where the connection/disconnection/streaming kicks off.
+Each service gets to handle all resolutions from the resource allocation layer. For audio this is actually where we connect or disconnect the audio profiles on a peripheral. A service can also choose to support streaming, in which case it will also handle that resolution here.
 
-## FAQ
+## State of the union
 
-### State of the union
-
-- [x] Create robust architecture
 - [x] Build Android Client
-- [ ] Complete streaming support
-- [ ] Finish switch smoothener
+- [x] Create documentation
+- [ ] Support data streaming
+- [ ] Create smoother switch transitions
 - [ ] Build iOS client
 - [ ] Build MAC client
 - [ ] Build Windows client
 - [ ] Battle testing
 
+## FAQ
+
 ### Why use IP Multicast?
 
-Multicast has issues: It requires all devices to be on the same network, it is blocked by some routers. PCAS was designed to be used in a "home network" where these issues don't usually exist.
+Multicast has issues: It requires all devices to be on the same network and it is blocked by some routers. PCAS was designed to be used in a "home network" where these issues don't usually exist.
 
 I explored 2 other possible technologies:
 
 > [Wi-Fi Aware](https://www.wi-fi.org/discover-wi-fi/wi-fi-aware) and [Wi-Fi Direct](https://www.wi-fi.org/discover-wi-fi/wi-fi-direct) were not considered due to power consumption concerns. Google Nearby service was considered, but quickly eliminated due to some unacceptable limitations.
 
-### 1. Push Messaging
+#### 1. Push Messaging
 
 ![assets/image1.gif](assets/image1.gif)
 
 This is easy using a service like [FCM](https://firebase.google.com/docs/cloud-messaging) (it would be similar to Google [Nearby Messaging API](https://developers.google.com/nearby/messages/overview) without the proximity part).
 
-FCM and other push messaging services wor using long lived TCP sockets. A TCP socket on the device waits in accept mode on a Google server.
+FCM and other push messaging services work using long lived TCP sockets. A TCP socket on the device waits in accept mode on a Google server.
 
-### Pros:
+##### Pros:
 
 1. Simple.
 2. Efficient: We only delivers to the relevant hosts.
 3. Works well on Android in the background.
 
-### Cons:
+##### Cons:
 
-1. Not P2P: Depends on a central device
-2. Requires the internet.
+1. Not P2P: Depends on a central server.
+2. Not offline: Requires the internet.
 3. Higher latency.
 4. Increased attack surface: A local only solution limits who can initiate an attack.
 
 ### 2. BLE (Bluetooth Low Energy) Advertisement
 
-BLE devices can broadcast advertisement packets unidirectionally.
+BLE devices can broadcast advertisement packets unidirectionally. I will do a quick overview of BLE advertisement. You can read the [Bluetooth Core Specification v4.0](https://www.bluetooth.org/docman/handlers/downloaddoc.ashx?doc_id=229737) for more, or scroll to the pros & cons section to understand why it wasn't picked.
 
-### How it works:
-
-BLE is fascinating, I would suggest reviewing the [Bluetooth Core Specification v4.0](https://www.bluetooth.org/docman/handlers/downloaddoc.ashx?doc_id=229737). Comprehensively covering how BLE advertisement works will require multiple long articles. I would do a quick summary, conveying key concepts (you can follow the links for more details)
 
 **Physical Layer**
 
@@ -451,13 +470,11 @@ The data rate is `1 Mbps` (supporting 2Mbps on Bluetooth 5.0).
 
 **Advertising & Interference**
 
-BLE connections are fucking robust, using [frequency hopping](https://en.wikipedia.org/wiki/Frequency-hopping_spread_spectrum) to work around interference.
+BLE is robust, using [frequency hopping](https://en.wikipedia.org/wiki/Frequency-hopping_spread_spectrum) to work around interference.
 
-BLE uses 3 dedicated channels for advertisement: 37, 38, 39 (channels are zero indexed). These channels are spread across the 2.4GHz band so as to minimize interference problems (as can be seen in the image below).
+BLE uses 3 dedicated channels for advertisement: 37, 38, 39 (channels are zero indexed). As can be seen in the image below, these channels are spread across the 2.4GHz band so as to minimize interference problems.
 
-![assets/ble-advertising-channels-spectrum.png](assets/ble-advertising-channels-spectrum.png)
-
-[Image source](https://www.argenox.com/library/bluetooth-low-energy/ble-advertising-primer/)
+[![assets/ble-advertising-channels-spectrum.png](assets/ble-advertising-channels-spectrum.png)](https://www.argenox.com/library/bluetooth-low-energy/ble-advertising-primer/)
 
 A relevant study: [Coexistence and Interference Tests on a Bluetooth Low Energy Front-End](https://www.researchgate.net/publication/265602069_Coexistence_and_Interference_Tests_on_a_Bluetooth_Low_Energy_Front-End).
 
@@ -481,7 +498,7 @@ Obviously, shorter intervals and a higher scan window leads to faster discovery 
 
 **Power consumption**
 
-Ignore the knee jerk reaction that advertisement must be power hungry. BLE advertisement is power efficient.
+Ignore the general belief that advertisement must be power hungry. BLE advertisement is power efficient.
 
 Have a look at this [Android power consumption test](https://developer.radiusnetworks.com/2015/12/09/battery-friendly-beacon-transmission.html).
 
