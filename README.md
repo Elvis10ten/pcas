@@ -203,7 +203,8 @@ A simple solution: Blindly resend essential messages `x` times with a delay of `
 
 Let's consider a simple model. If the probability of successfully delivering a message is 50% and we send the message 5 times. Assuming each attempt is independent, there is a 0.97 probability that at least one message is delivered.
 
-```math
+<img src="https://render.githubusercontent.com/render/math?math=e^{i \pi} = -1">
+```
 X is a Bernoulli random variable; Equal to 1 if message was sent, 0 otherwise
 \\
 Pr(X = 1) = 0.50
