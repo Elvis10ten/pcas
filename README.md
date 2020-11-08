@@ -4,7 +4,7 @@ The inspiration for this project came from this tweet.
 
 [![Inspiration tweet](assets/inspiration_tweet.png)](https://twitter.com/MKBHD/status/1275122690618261511)
 
-A core tenet of the Apple camp is that their complete ecosystem makes every product "just work". This is truism as Apple isn't plagued with fragmentation issues like other platforms. But replicating these functionalities on other platforms isn't rocket science.
+A core tenet of the Apple camp is that their complete ecosystem makes every product "just work". This is a truism: Apple isn't plagued with fragmentation issues like other platforms. But replicating these functionalities on other platforms isn't rocket science.
 
 > Fun fact: There are 1,300 brands with over 24,000 distinct Android devices ([source](https://www.android.com/everyone/)).
 > ![Android device fragmentation](assets/android_device_fragmentation.png)
@@ -18,7 +18,7 @@ A core tenet of the Apple camp is that their complete ecosystem makes every prod
 
 ## Overview
 
-**PCAS (Peripheral Connection Augmentation System)** artificially augments a Bluetooth peripheral maximum number of concurrent connections. Based on user initiated events and hardware configurations PCAS automatically connects/disconnects a profile on a peripheral. PCAS can also multiplex to a single sink: For example, on Android, this brings the theoretical maximum audio connections to 30 ([the maximum allowed AudioTrack instances](https://groups.google.com/g/android-platform/c/_tmA8DRg8q4)).
+**PCAS (Peripheral Connection Augmentation System)** artificially augments a Bluetooth peripheral maximum number of concurrent connections. Based on user-initiated events and hardware configurations PCAS automatically connects/disconnects a profile on a peripheral. PCAS can also multiplex to a single sink: For example, on Android, this brings the theoretical maximum audio connections to 30 ([the maximum allowed AudioTrack instances](https://groups.google.com/g/android-platform/c/_tmA8DRg8q4)).
 
 Basically, a single user with multiple hosts no longer have to manually connect/disconnect each peripheral. PCAS does this automatically. This works even on cheap peripherals that don't support multiple concurrent connections natively. Example scenarios:
 
@@ -179,7 +179,7 @@ data class Block(
 )
 ```
 
-"immutable" isn't techically correct. Blocks can be overwritten ONLY by their **owner**. Any host can prune their ledgers to remove blocks from inactive hosts.
+"immutable" isn't technically correct. Blocks can be overwritten ONLY by their **owner**. Any host can prune their ledgers to remove blocks from inactive hosts.
 
 #### ii. Network Protocol
 ![Host Network](assets/network.jpeg)
@@ -187,9 +187,9 @@ A resilient multicast protocol is built on top the transport layer. There are th
 
 1. **Genesis**: The first message a host sends, requesting other hosts to send their current blocks.
 2. **Update**: This is sent each time the blocks on a host changes. This message contains all self blocks (the blocks from the current host).
-3. **Heartbeat**: This is periodically sent. After multiple missed heartbeats, a host is deemed dead by it's peers and all it's block could be independently deleted on each ledger.
+3. **Heartbeat**: This is periodically sent. After multiple missed heartbeats, a host is deemed dead by its peers and all its block could be independently deleted on each ledger.
 
-Each host maintains it's own local ledger. The network protocol gurantees that eventually all ledgers will be consistent.
+Each host maintains its own local ledger. The network protocol guarantees that eventually, all ledgers will be consistent.
 
 ##### Multicast Reliability
 
@@ -233,7 +233,7 @@ In practice, delivery probabilites aren't fixed and attempts are not independent
 ###### b. Using ACKs
 Essential messages have a monotonically increasing sequence number. The initial sequence number is `0`. All host are expected to send an `Ack` message with the sequence number of the essential message. Retries are done with a truncated exponential backoff with jitter.
 
-This strategy only send fewer messages (more efficient) than the redundant strategy when the number of peers in a network is less than `x`. Some of the issues with this strategy are:
+This strategy only sends fewer messages (more efficient) than the redundant strategy when the number of peers in a network is less than `x`. Some of the issues with this strategy are:
 
 1. Using `ACKs` like TCP isn't scalable and runs the risk of [ACKs implosion](https://courses.cs.washington.edu/courses/cse561/01sp/lectures/568.multicast2.pdf).
 2. The number of messages sent is dependent of the size of the network. A single rogue host can cause the network to be spammed with ACKs and messages.
@@ -345,7 +345,7 @@ fun getResolution(contention: Contention): Resolution {
 
 ### User Services
 
-Currently only audio services are supported. Provision has been made to easily add other type of services like: mouse, keypad, health, etc.
+Currently only audio services are supported. Provision has been made to easily add other types of services.
 
 #### Audio
 
@@ -411,7 +411,7 @@ Each time a host state changes, a new block is created. The ledger layer listens
 
 ii. **Resolution Handler**
 
-Each service gets to handle all resolutions from the resource allocation layer. For audio this is actually where we connect or disconnect the audio profiles on a peripheral. A service can also choose to support streaming, in which case it will also handle that resolution here.
+Each service gets to handle all resolutions from the resource allocation layer. For audio, this is actually where we connect or disconnect the audio profiles on a peripheral. A service can also choose to support streaming, in which case it will also handle that resolution here.
 
 ## State of the union
 
@@ -432,7 +432,7 @@ Multicast has issues: It requires all devices to be on the same network and it i
 
 I explored 2 other possible technologies:
 
-> [Wi-Fi Aware](https://www.wi-fi.org/discover-wi-fi/wi-fi-aware) and [Wi-Fi Direct](https://www.wi-fi.org/discover-wi-fi/wi-fi-direct) were not considered due to power consumption concerns. Google Nearby service was considered, but quickly eliminated due to some unacceptable limitations.
+> [Wi-Fi Aware](https://www.wi-fi.org/discover-wi-fi/wi-fi-aware) and [Wi-Fi Direct](https://www.wi-fi.org/discover-wi-fi/wi-fi-direct) were not considered due to power consumption concerns. Google Nearby service was considered but quickly eliminated due to some unacceptable limitations.
 
 #### 1. Push Messaging
 
@@ -464,7 +464,7 @@ BLE devices can broadcast advertisement packets unidirectionally. I will do a qu
 
 BLE uses the same [2.4Ghz ISM band](https://en.wikipedia.org/wiki/ISM_band) as classic Bluetooth and WiFi.
 
-It operates in the same spectrum range (`2.400–2.4835 GHz`) as Classic Bluetooth, but has `40 2-Mhz channels` as opposed to the classic `79 1-Mhz channels`.
+It operates in the same spectrum range (`2.400–2.4835 GHz`) as Classic Bluetooth but has `40 2-Mhz channels` as opposed to the classic `79 1-Mhz channels`.
 
 Data is transmitted within a channel using [Frequency Shift Keying](https://en.wikipedia.org/wiki/Frequency-shift_keying#Gaussian_frequency-shift_keying).
 
@@ -478,7 +478,7 @@ The data rate is `1 Mbps` (supporting 2Mbps on Bluetooth 5.0).
 
 BLE is robust, using [frequency hopping](https://en.wikipedia.org/wiki/Frequency-hopping_spread_spectrum) to work around interference.
 
-BLE uses 3 dedicated channels for advertisement: 37, 38, 39 (channels are zero indexed). As can be seen in the image below, these channels are spread across the 2.4GHz band so as to minimize interference problems.
+BLE uses 3 dedicated channels for advertising: 37, 38, 39 (channels are zero-indexed). As can be seen in the image below, these channels are spread across the 2.4GHz band so as to minimize interference problems.
 
 [![assets/ble-advertising-channels-spectrum.png](assets/ble-advertising-channels-spectrum.png)](https://www.argenox.com/library/bluetooth-low-energy/ble-advertising-primer/)
 
@@ -500,7 +500,7 @@ A scanning device listens on the advertisement channels for a duration called th
 
 We can use the three parameters: advertising interval, scan interval and scan window to build a probabilistic model for discovery latency. Any such model will be practical flawed without considering the environment where devices will likely be used in.
 
-Obviously, shorter intervals and a higher scan window leads to faster discovery times while consuming more power.
+Obviously, shorter intervals and a higher scan window lead to faster discovery times while consuming more power.
 
 **Power consumption**
 
