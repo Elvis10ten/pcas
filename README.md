@@ -486,7 +486,7 @@ A scanning central device listens on these channels to detect advertisement pack
 
 Page 2223 of the [Bluetooth Core Specification v4.0](https://www.bluetooth.org/docman/handlers/downloaddoc.ashx?doc_id=229737) explains advertisement intervals perfectly.
 
-![assets/Untitled%201.png](assets/Untitled%201.png)
+![Bluetooth Core Specs Page 2223](assets/bluetooth_core_specs_page _2223.png)
 
 A scanning device listens on the advertisement channels for a duration called the `scan window`, which is repeated every `scan interval`.
 
