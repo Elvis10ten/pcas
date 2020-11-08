@@ -2,189 +2,217 @@
 
 The inspiration for this project came from this tweet.
 
-![Encyrption setup and code share screenshots](assets/inspiration_tweet.png)
+[![Inspiration tweet](assets/inspiration_tweet.png)](https://twitter.com/MKBHD/status/1275122690618261511)
 
-
-Obviously, this is
-
-![Wrong!!!](assets/1479206864-donald-trump-wrong.gif)
-
-A core tenet of the iOS community is that Apple's products "just work" and that other platforms don't have a "complete ecosystem". Even with the fragmentation issues encompassing other platforms, the previous statement is downright falsehood.
+A core tenet of the Apple camp is that their complete ecosystem makes every product "just work". This is truism as Apple isn't plagued with fragmentation issues like other platforms. But replicating these functionalities on other platforms isn't rocket science.
 
 > Fun fact: There are 1,300 brands with over 24,000 distinct Android devices ([source](https://www.android.com/everyone/)).
+> ![Android device fragmentation](assets/android_device_fragmentation.png)
 
 ## Terminology
 
-1. **Peripheral**: Refers to Bluetooth audio devices (headphones, headsets, earbuds, etc), keyboards, mice, etc.
-2. **Host**: A machine capable of connecting to a peripheral. Eg: phones, tablets, laptops, etc.
+1. **Peripheral**: Refers to Bluetooth audio devices, keyboards, mice. Eg: headphones, headsets, earbuds, etc.
+2. **Host**: Refers to a machine capable of connecting to a peripheral. Eg: phones, tablets, laptops, etc.
 
-# Overview
+![Hosts & Peripherals](assets/hosts_and_periherals.svg)
 
-**PCAS (Peripheral Connection Augmentation System)** artificially augments the number of simultaneous connections a Bluetooth peripheral can handle. Based on user initiated events and hardware configurations PCAS automatically connects/disconnects a profile on a peripheral (headphone, keypad, mouse, etc). PCAS can also multiplex to a single sink: For example, on Android, this brings the theoretical maximum audio connections to 30 ([the maximum allowed AudioTrack instances](https://groups.google.com/g/android-platform/c/_tmA8DRg8q4)).
+## Overview
 
-Basically, a single user with multiple devices (phones, tablets, & laptops) no longer have to manually connect/disconnect each device. PCAS does this automatically. Example scenarios:
+**PCAS (Peripheral Connection Augmentation System)** artificially augments a Bluetooth peripheral maximum number of concurrent connections. Based on user initiated events and hardware configurations PCAS automatically connects/disconnects a profile on a peripheral. PCAS can also multiplex to a single sink: For example, on Android, this brings the theoretical maximum audio connections to 30 ([the maximum allowed AudioTrack instances](https://groups.google.com/g/android-platform/c/_tmA8DRg8q4)).
 
-1. When a call comes in on your phone while watching a movie on your tablet. The movie is automatically paused and your phone is connected. (This works even on cheap audio devices that don't support multiple concurrent connections natively).
+Basically, a single user with multiple hosts no longer have to manually connect/disconnect each peripheral. PCAS does this automatically. This works even on cheap peripherals that don't support multiple concurrent connections natively. Example scenarios:
+
+1. When a call comes in on your phone while watching a movie on your tablet. The movie is automatically paused and your phone is connected.
 2. When playing music from multiple devices, the output could be muxed to the same audio sink in realtime.
 3. Putting your laptop to sleep while powering on your desktop will connect your keyboard/mouse to your desktop.
-
 ...
 
-## Product
+![Multiplatform modules](assets/multiplatform_modules.svg)
 
-PCAS is designed to be simple and "just work". The only setup required is selecting a peripheral for each service of interest.
+### Design Goals
+
+1. **Multi-platform** (Windows, Mac, iOS, Android).
+2. Supports **most** bluetooth peripheral (including and especially low-end peripherals).
+3. Average switching latency should be **< 1s**.
+4. Can support at least **10 devices** without any service degradation.
+5. **Secure zero-config offline P2P** communication.
+6. Negligible **power consumption**.
+
+### Product
+
+PCAS is designed to be simple and "just work". The only initial setup required is selecting a peripheral for each service of interest.
 
 ![Home and select peripheral screenshots](assets/screen_home_and_select_peripheral.png)
 
-All hosts **must** be on the same local connection. E2E encryption is provided but optional (disabled by default). To enable E2E encryption, a key needs to be created and shared with the relevant devices.
+All hosts **must** be on the same LAN. E2E encryption is provided but optional (disabled by default). To enable E2E encryption, a key needs to be created and shared with the relevant hosts.
 
 ![Encyrption setup and code share screenshots](assets/screen_encryption_setup_and_code_share.png)
 
-> The target user has at most one peripheral per service. This simplifies the UX and technical design.
+#### Assumptions
 
-### Demo
+1. Users have at most one peripheral per service. This assumption simplifies the UX and technical design.
 
-[![Watch demo](assets/demo_preview.jpg)](https://www.youtube.com/watch?v=WMmtQLNYF-g/)
+#### Demo
 
-## Design Goals
+[![Watch demo](assets/demo_preview_with_play.png)](https://www.youtube.com/watch?v=WMmtQLNYF-g/)
 
-1. **Multi-platform** (Windows, Mac, iOS, Android).
-2. Supports **any** bluetooth peripheral (including and especially low-end peripherals).
-3. Average switching latency should be **< 1s**. Low-end peripherals or hosts are expected to have a right skewed distribution.
-4. Can support at least **10 devices** without any service degradation.
-5. **Secured zero-config offline P2P** communication.
-6. Negligible **power consumption**.
+## Architecture
 
-# Architecture
+Building PCAS for all platforms is hard, but the underlying concept is quite simple:
 
-While building PCAS is hard, the concept it is based on is quite simple:
+1. Each host independently observes local state changes.
+2. When a local change occurs, a host broadcasts it to a closed network of peers.
+3. Each host independently listens for broadcasts from peers.
+4. Each host write all state information to a local ledger.
+5. Each host independently makes a decision to connect/disconnect/stream based on the content of the local ledger.
 
-1. Observe the relevant host states.
-2. Share the state with all hosts in a network.
-3. Listen for state changes from other hosts.
-4. Write all state info to a ledger.
-5. Make a decision to connect/disconnect/stream based on the ledger.
-
-This is the project architecture at a high-level:
+Project architecture at a high-level:
 ![High level architecture](assets/architecture_highlevel.svg)
 
-## Unreliable Zero-Config Transport
+### Unreliable Zero-Config Transport
 
 This base layer provides a framework for fast, best-effort, [zero-configuration](https://en.wikipedia.org/wiki/Zero-configuration_networking), & E2E encrypted communication among devices within proximity.
 
-Basically, this allows a host to be able to efficiently send and receive messages from other nearby devices without any upfront configuration.
+Basically, this allows a host to be able to efficiently & securely send and receive messages from other nearby devices without any upfront configuration.
 
 The "unreliable" prefix is actually misleading, just like when people say UDP is unreliable. This layer is just as reliable as the network stack below it; No additional reliability gurantees are provided.
 
-The layer data unit is called a `parcel`. Parcels are opaque: Besides destination information, nothing can easily be extracted from them.
+The transport data unit is a `parcel`. Parcels are just opaque byte buffers.
 
 This layer is made of three core components:
 
-i. **MulticastChannel**
+#### i. MulticastChannel
 
-This uses [IP multicast](https://en.wikipedia.org/wiki/IP_multicast) to efficiently deliver messages to multiple devices.
+This channel uses [IP multicast](https://en.wikipedia.org/wiki/IP_multicast) to efficiently deliver parcels to multiple devices.
 
-![assets/PCAS1.svg](assets/PCAS1.svg)
-
-An interface is created in the common module which is implemented natively on each platform:
+![assets/PCAS1.svg](assets/multicast.svg)
 
 ```kotlin
 internal interface MulticastChannel {
 
-	@Throws(Exception::class)
-	fun init(receiver: MessageReceiver)
+    @Throws(Exception::class)
+    fun init(receiver: MessageReceiver)
 
-	@Throws(Exception::class)
-	fun send(parcel: ByteArray, size: Int)
+    @Throws(Exception::class)
+    fun send(parcel: ByteArray, size: Int)
 
-	fun close()
+    fun close()
 }
 ```
 
-All hosts can send message to the PCAS group and can join the group to receive messages. This way individual host don't need to care about the actual IP address of each host on the LAN. The multicast configs can be found in the `TransportConfig` class:
+All hosts can send a parcel to the PCAS multicast group and can join the group to receive parcels. Hosts don't need to care about the actual IP address of each discrete host on the LAN. The multicast configs can be found in the `TransportConfig` class:
 
 ```kotlin
 internal object TransportConfig {
 
-	// Max value: Messages could potentially leak to the internet.
-	const val MULTICAST_TTL = 255
-	const val MULTICAST_PORT = 49137
-	val MULTICAST_ADDRESS = Address.Ipv4("225.139.089.176")
+    // Max possible TTL value: Parcels could potentially leak to the internet.
+    const val MULTICAST_TTL = 255
+    const val MULTICAST_PORT = 49137
+    val MULTICAST_ADDRESS = Address.Ipv4("225.139.089.176")
 
-	const val OFFSET_ZERO = 0
+    const val OFFSET_ZERO = 0
 
-	const val MAX_PARCEL_SIZE_BYTES = 24 * 1024 // 24KB
-	const val PARCEL_POOL_CAPACITY = 24
+    const val MAX_PARCEL_SIZE_BYTES = 24 * 1024 // 24KB
+    const val PARCEL_POOL_CAPACITY = 24
 }
 ```
 
-ii. **UnicastChannel**
+#### ii. UnicastChannel
 
-This uses [IP unicast](https://en.wikipedia.org/wiki/Unicast) to offer a high-bandwidth bi-directional channel for point-to-point communication. This is used for one-to-one communication and where high speed low-delay data transfer is needed (multicast messages are transmitted at a lower rate).
+This channel uses [IP unicast](https://en.wikipedia.org/wiki/Unicast) to offer a high-bandwidth point-to-point communication. This is used for data streaming as multicast has a lower data transfer rate.
+
+![assets/PCAS1.svg](assets/unicast.svg)
 
 ```kotlin
 internal interface UnicastChannel {
 
-	@Throws(Exception::class)
-	fun init(receiver: MessageReceiver)
+    @Throws(Exception::class)
+    fun init(receiver: MessageReceiver)
 
-	@Throws(Exception::class)
-	fun send(recipient: HostInfo, parcel: ByteArray, size: Int)
+    @Throws(Exception::class)
+    fun send(recipient: HostInfo, parcel: ByteArray, size: Int)
 
-	@Throws(Exception::class)
-	fun getPort(): Port
+    @Throws(Exception::class)
+    fun getPort(): Port
 
-	fun close()
+    fun close()
 }
 ```
 
-iii. **Parceler**
+#### iii. Parceler
 
-This component adds E2E encryption to the two channels. Encryption is optional and is only activated when an encryption key is generated or shared.
+This component adds E2E encryption to the two channels above. Encryption is optional and is only activated when an encryption key is generated or shared.
 
-Data is encrypted with AES in GCM mode with no padding. A random initialization vector is used per message and prepended to the head of the parcel. I won't go into much details here as there are lots of good material on AES encryption on the internet: [like this one](https://levelup.gitconnected.com/doing-aes-gcm-in-android-adventures-in-the-field-72617401269d).
+Data is encrypted with AES in GCM mode with no padding. A random initialization vector is used once per message and prepended to the head of a parcel. I won't go into much details here as there are lots of good material on AES encryption on the internet: [like this one](https://levelup.gitconnected.com/doing-aes-gcm-in-android-adventures-in-the-field-72617401269d).
 
 ![Transport data flow](assets/transport_data_flow.svg)
 
-## Immutable Distributed Ledger
+An interface is created for the 3 components above in the common module which is implemented natively on each platform.
 
-This layer is split into two:
+### Immutable Distributed Ledger
 
-i. **Observability & Persistence**
-A ledger is just a simple in-memory database of the current state of the active hosts in a network.
+This layer is broadly split into two:
+
+#### i. Ledger
+A ledger is just a simple in-memory local database of the current state of the active hosts in a network. A ledger is made of blocks. Each block is uniquely identified by a `4-tuple (service, profile, owner, and peripheral)`.
+
+![Example local ledger](assets/example_ledger.svg)
 
 ```kotlin
 data class Ledger(
-	val self: HostInfo,
-	val blocks: Set<Block> = emptySet()
+    val self: HostInfo,
+    val blocks: Set<Block> = emptySet()
 )
 ```
-
-A ledger is made of blocks. Each block is uniquely identified by a 4-tuple (service, profile, owner, and peripheral).
 
 ```kotlin
 data class Block(
-	val service: Service,
-	val profile: Service.Profile,
-	val peripheral: Peripheral,
-	val priority: Int,
-	val timestamp: Long,
-	val bondSteadyState: PeripheralBond.State,
-	val owner: HostInfo,
-	val canStreamData: Boolean,
-	val canHandleDataStream: Boolean
+    val service: Service,
+    val profile: Service.Profile,
+    val peripheral: Peripheral,
+    val priority: Int,
+    val timestamp: Long,
+    val bondSteadyState: PeripheralBond.State,
+    val owner: HostInfo,
+    val canStreamData: Boolean,
+    val canHandleDataStream: Boolean
 )
 ```
 
-Blocks can be overwritten only by their owner. So "immutable" isn't techically correct. Host can prune their ledgers to remove blocks from hosts that are no longer active.
+"immutable" isn't techically correct. Blocks can be overwritten ONLY by their **owner**. Any host can prune their ledgers to remove blocks from inactive hosts.
 
-ii. **Network Protocol**
-A resilient multicast protocol is built on top the prior transport layer. There are four types of messages:
+#### ii. Network Protocol
+![Host Network](assets/network.jpeg)
+A resilient multicast protocol is built on top the transport layer. There are three types of messages:
 
-1. Genesis: The first message a host sends, requesting other hosts to send their current blocks.
-2. Update: This is sent each time the blocks on a host changes. This message contains all self blocks (the blocks from the current host).
-3. Heartbeat: This is periodically sent. After multiple missed heartbeats, a host is deemed dead and all it's block are independently deleted on each local ledger. A host can also detect if it's block are outdated on the remote host based on the content on this message.
-4. Ack: This acknowledges that an essential message has been received.
+1. **Genesis**: The first message a host sends, requesting other hosts to send their current blocks.
+2. **Update**: This is sent each time the blocks on a host changes. This message contains all self blocks (the blocks from the current host).
+3. **Heartbeat**: This is periodically sent. After multiple missed heartbeats, a host is deemed dead by it's peers and all it's block could be independently deleted on each ledger.
+
+Each host maintains it's own local ledger. The network protocol gurantees that eventually all ledgers will be consistent.
+
+##### Reliability
+
+Currently, only **Update** messages are classified as essential.
+
+**Heartbeat** messages are used as a form of [NACKs](https://en.wikipedia.org/wiki/Acknowledgement_(data_networks)). A host detects synchronization issues from heartbeats and resends it's current blocks.
+
+While heartbeats are effective, the interval is too long to be relied on primarily for a highly interactive system like PCAS.
+
+A simple solution: Blindly resend essential messages `x` times with a delay of `y + random jitter` for each attempt.
+
+Let's consider a simple model. If the probability of successfully delivering a message is 50% and we send the message 5 times. Assuming each attempt is independent, there is a 0.97 probability that at least one message is delivered.
+
+```math
+X is a Bernoulli random variable; Equal to 1 if message was sent, 0 otherwise
+\\
+Pr(X = 1) = 0.50
+\\
+Pr(X = 0) = 1 - Pr(X = 1) = 0.50
+\\
+Z is a Binomial variable; n tries of X; n = 5
+Pr()
+```
 
 Currently, only `Update` messages are classified as essential. Essential messages have a monotonically increasing sequence number. The initial sequence number is `0`. All host are expected to send an `Ack` message with the sequence number of the essential message.
 
@@ -192,15 +220,15 @@ Reliable multicasting is an interesting problem. Using `ACKs` like TCP isn't sca
 
 Because most users will have at most 5 hosts, `ACK implosion` while possible, won't have a significant consequence. So `ACKs` with retries were added. Retries are done with a truncated exponential backoff with jitter. The worst case is that 5 devices are each sending (4 + 1) messages of < 200 bytes every x seconds.
 
-The layer data unit is a `Message`.
+The layer data unit is a `Message`. Messages are marshalled to the Protobuf format and passed to the transport layer. The inverse action is performed when a message is received.
 
-## Resource Allocation
+### Resource Allocation
 
 When two or more host use a service profile, a contention occurs. This means that even if a host doesn't actively require a profile, it can still contend with another host for that profile.
 
 This is the meat or vegetable (for my vegeterian friends) of the system. First, what are profiles?
 
-### Bluetooth Profiles
+#### Bluetooth Profiles
 
 >A Bluetooth profile is a specification regarding an aspect of Bluetooth-based wireless communication between devices. It resides on top of the Bluetooth Core Specification and (optionally) additional protocols - [source](https://en.wikipedia.org/wiki/List_of_Bluetooth_profiles)
 1. **A2DP (Advanced Audio Distribution Profile)**: This is uni-directional audio profile and provides better audio quality than the headset profiles.
@@ -209,7 +237,7 @@ This is the meat or vegetable (for my vegeterian friends) of the system. First, 
 
 Each time a change is made to the local ledger, a resolver looks at all the current contentions and makes a resolution.
 
-### Type of resolutions
+#### Type of resolutions
 
 1. Connect: The current host should connect to the profile on the peripheral if disconnected.
 2. Disconnect: The current host should disconnect from the profile on the peripheral if connected.
@@ -218,38 +246,38 @@ Each time a change is made to the local ledger, a resolver looks at all the curr
 
 Resolutions are derived using a rank associated with each block.
 
-### Calculating ranks
+#### Calculating ranks
 
 ```kotlin
-	val isConnected = bondSteadyState == PeripheralBond.State.CONNECTED
+    val isConnected = bondSteadyState == PeripheralBond.State.CONNECTED
 
-	val hasPriority = priority != NO_PRIORITY
+    val hasPriority = priority != NO_PRIORITY
 
-	val maxPossibleConnectionAndInteractiveScore = 4 + 2
+    val maxPossibleConnectionAndInteractiveScore = 4 + 2
 
-	// Any device with a higher priority should always rank higher.
-	val priorityScore = (maxPossibleConnectionAndInteractiveScore + 1.0).pow(priority)
+    // Any device with a higher priority should always rank higher.
+    val priorityScore = (maxPossibleConnectionAndInteractiveScore + 1.0).pow(priority)
 
-	private val connectionScore: Int get() {
-		// Connection should contribute more if we can't stream
-    val trueValue = if(canStreamData) 2 else 4
-    return if(isConnected) trueValue else 1
-	}
+    private val connectionScore: Int get() {
+        // Connection should contribute more if we can't stream
+        val trueValue = if(canStreamData) 2 else 4
+        return if(isConnected) trueValue else 1
+    }
 
-	val interactiveScore = if(owner.isInteractive) 2 else 1
+    val interactiveScore = if(owner.isInteractive) 2 else 1
 
-	val timestampScore = log10(timestamp.toDouble())
+    val timestampScore = log10(timestamp.toDouble())
 
-	val rank = priorityScore + connectionScore + interactiveScore + timestampScore
+    val rank = priorityScore + connectionScore + interactiveScore + timestampScore
 ```
 
 The rank is an estimate of the current importance of a block. Based on ranks, a contention object is created for each block a host has.
 
 ```kotlin
 data class Contention(
-	val selfBlock: Block,
-	// This is another block with same service, peripheral, and profile but a different owner that is deemed the apex based on its rank
-	val peersApexBlock: Block?
+    val selfBlock: Block,
+    // This is another block with same service, peripheral, and profile but a different owner that is deemed the apex based on its rank
+    val peersApexBlock: Block?
 )
 ```
 
@@ -257,44 +285,44 @@ This object is then used to derive a resolution.
 
 ```kotlin
 fun getResolution(contention: Contention): Resolution {
-	return when {
-		// No contenders found yet.
-		contention.peersApexBlock == null -> {
-			Resolution.Connect(contention.selfBlock, contention.selfBlock.rank)
-		}
+    return when {
+        // No contenders found yet.
+        contention.peersApexBlock == null -> {
+            Resolution.Connect(contention.selfBlock, contention.selfBlock.rank)
+        }
 
-		// I have a higher rank: So connect to profile
-		contention.selfBlock.rank > contention.peersApexBlock.rank -> {
-			Resolution.Connect(contention.selfBlock, contention.selfBlock.rank)
+        // I have a higher rank: So connect to profile
+        contention.selfBlock.rank > contention.peersApexBlock.rank -> {
+            Resolution.Connect(contention.selfBlock, contention.selfBlock.rank)
+        }
+
+        // I have a lower rank: So disconnect from profile - If connected
+        contention.selfBlock.rank < contention.peersApexBlock.rank -> {
+            val rank = contention.peersApexBlock.rank
+            // If possible stream data to the apex host
+            if(contention.shouldStreamToApex()) {
+                Resolution.Stream(contention.selfBlock, rank, contention.peersApexBlock.owner)
+            } else {
+                Resolution.Disconnect(contention.selfBlock, rank)
+            }
+        }
+
+        // Nothing decided: Keep the system as-is.
+        contention.selfBlock.rank == contention.peersApexBlock.rank -> {
+            Resolution.Ambiguous(contention.selfBlock, contention.selfBlock.rank)
+        }
+
+        else -> throw IllegalStateException("Impossible!")
     }
-
-		// I have a lower rank: So disconnect from profile - If connected
-		contention.selfBlock.rank < contention.peersApexBlock.rank -> {
-			val rank = contention.peersApexBlock.rank
-			// If possible stream data to the apex host
-			if(contention.shouldStreamToApex()) {
-				Resolution.Stream(contention.selfBlock, rank, contention.peersApexBlock.owner)
-			} else {
-				Resolution.Disconnect(contention.selfBlock, rank)
-			}
-		}
-
-		// Nothing decided: Keep the system as-is.
-		contention.selfBlock.rank == contention.peersApexBlock.rank -> {
-			Resolution.Ambiguous(contention.selfBlock, contention.selfBlock.rank)
-		}
-
-		else -> throw IllegalStateException("Impossible!")
-	}
 }
 ```
 
 
-## User Services
+### User Services
 
 Currently only audio services are supported. Provision has been made to easily add other type of services like: mouse, keypad, health, etc.
 
-### Audio
+#### Audio
 
 All services can easily be split into two:
 
