@@ -223,7 +223,9 @@ Let's consider a simple model. If the probability of successfully delivering a m
 > 
 > (z is a binomial random variable)
 > 
-><img src="https://render.githubusercontent.com/render/math?math=Pr(1 \leq z \leq 5) = \displaystyle\sum_{i=1}^n \tbinom{n}{i} Pr(b = 1)^i Pr(b = 0)^{n - i}">
+><img src="https://render.githubusercontent.com/render/math?math=Pr(1 \leq z \leq n) = \displaystyle\sum_{i=1}^n \tbinom{n}{i} Pr(b = 1)^i Pr(b = 0)^{n - i}">
+>
+> Could also be calculated as 1 - Pr(z = 0)
 
 In practice, delivery probabilities aren't fixed and attempts are not independent. Despite the shortcoming of this approach, it has the following benefits:
 
