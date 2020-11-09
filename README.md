@@ -195,7 +195,7 @@ Each host maintains its local ledger. The network protocol guarantees that event
 
 Currently, only **Update** messages are classified as essential.
 
-**Heartbeat** messages are used as a form of [NACKs](https://en.wikipedia.org/wiki/Acknowledgement_(data_networks)). A host detects synchronization issues from heartbeats and resends it's current blocks.
+**Heartbeat** messages are used as a form of [NACKs](https://en.wikipedia.org/wiki/Acknowledgement_(data_networks)). A host detects synchronization issues from heartbeats and resends its current blocks.
 
 While heartbeats are effective, the interval is too long to be relied on primarily for a highly interactive system like PCAS.
 
@@ -269,7 +269,7 @@ Each time a change is made to the ledger, a resolver looks at all the current co
 
 1. **Connect**: The host should connect to the profile on the peripheral if disconnected.
 2. **Disconnect**: The host should disconnect from the profile on the peripheral if connected.
-3. **Stream**: The host should start sending all it's data to the specified remote host.
+3. **Stream**: The host should start sending all its data to the specified remote host.
 4. **Ambiguous**: No resolution was arrived at. The system should be kept as-is.
 
 Resolutions are derived using a rank associated with each block.
