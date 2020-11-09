@@ -29,6 +29,13 @@ Basically, a single user with multiple hosts no longer has to manually connect/d
 
 ![Multiplatform modules](assets/multiplatform_modules.svg)
 
+### Building
+
+1. `pcas-libs` directory: This is a KMP Gradle project. It can be opened in IntelliJ or any supported IDE. The clients use the artifacts from this project. Run the `publish_local.sh` script to publish the library artifacts to your maven local repo.
+2. `pcas-clients/pcas-android-client` directory: This is an Android Gradle project. Open it up in Android Studio or any supported IDE.
+
+You can find prebuilt binaries in the [release section](https://github.com/Elvis10ten/pcas/releases).
+
 ### Design Goals
 
 1. **Multi-platform** (Windows, Mac, iOS, Android).
