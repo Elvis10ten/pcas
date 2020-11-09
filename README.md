@@ -1,4 +1,4 @@
-# Rebuilding Apple's Seamless Headphone Switch Feature with Kotlin MultiPlatform
+# Rebuilding Apple Seamless Headphone Switch Feature with Kotlin MultiPlatform
 
 The inspiration for this project came from this tweet.
 
