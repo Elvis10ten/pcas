@@ -25,16 +25,17 @@ Basically, a single user with multiple hosts no longer has to manually connect/d
 1. When a call comes in on your phone while watching a movie on your tablet. The movie is automatically paused and your phone is connected.
 2. When playing music from multiple devices, the output could be muxed to the same audio sink in realtime.
 3. Putting your laptop to sleep while powering on your desktop will connect your keyboard/mouse to your desktop.
+
 ...
 
 ![Multiplatform modules](assets/multiplatform_modules.svg)
 
 ### Building
 
-1. `pcas-libs` directory: This is a KMP Gradle project. It can be opened in IntelliJ or any supported IDE. The clients use the artifacts from this project. Run the `publish_local.sh` script to publish the library artifacts to your maven local repo.
-2. `pcas-clients/pcas-android-client` directory: This is an Android Gradle project. Open it up in Android Studio or any supported IDE.
+1. `pcas-libs`: This is a KMP Gradle project. The clients use the artifacts generated from this project. Run the `publish_local.sh` script to publish the library artifacts to your maven local repository.
+2. `pcas-clients/pcas-android-client`: This is an Android Gradle project.
 
-You can find prebuilt binaries in the [release section](https://github.com/Elvis10ten/pcas/releases).
+You can find prebuilt binaries in the [releases section](https://github.com/Elvis10ten/pcas/releases).
 
 ### Design Goals
 
