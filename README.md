@@ -68,13 +68,12 @@ All hosts **must** be on the same LAN. E2E encryption is provided but optional (
 
 Building PCAS for all platforms is hard, but the underlying concept is quite simple:
 
-1. Each host independently observes local state changes.
+1. Each host observes local state changes.
 2. When a local change occurs, a host broadcasts it to a closed network of peers.
-3. Each host independently listens for broadcasts from peers.
-4. Each host writes all state information to a local ledger.
-5. Each host independently makes a decision to connect/disconnect/stream based on the content of the local ledger.
+3. Each host listens for broadcasts from peers.
+4. Each host writes all state information to its local ledger.
+5. Each host independently makes a decision to connect/disconnect/stream based on the content of its ledger.
 
-Project architecture at a high-level:
 ![High level architecture](assets/architecture_highlevel.svg)
 
 ### Unreliable Zero-Config Transport
@@ -108,7 +107,7 @@ internal interface MulticastChannel {
 }
 ```
 
-All hosts can send a parcel to the PCAS multicast group and can join the group to receive parcels. Hosts don't need to care about the actual IP address of each discrete host on the LAN. The multicast configs can be found in the `TransportConfig` class:
+All hosts can send a parcel to the PCAS multicast group and can join the group to receive parcels. The local IP addresses of discrete hosts is not required. The multicast configs can be found in the `TransportConfig` class:
 
 ```kotlin
 internal object TransportConfig {
@@ -161,8 +160,8 @@ An interface is created for the 3 components above in the common module which is
 
 This layer is broadly split into two:
 
-#### i. Ledger
-A ledger is just a simple in-memory local database of the current state of the active hosts in a network. A ledger is made of blocks. Each block is uniquely identified by a `4-tuple (service, profile, owner, and peripheral)`.
+#### i. Storage
+A ledger is just a simple in-memory local database made up of blocks. Blocks represent the current state of the active hosts in a network. Each block is uniquely identified by a `4-tuple (service, profile, owner, peripheral)`.
 
 ![Example local ledger](assets/example_ledger.svg)
 
@@ -194,7 +193,7 @@ data class Block(
 A resilient multicast protocol is built on top of the transport layer. There are three types of messages:
 
 1. **Genesis**: The first message a host sends, requesting other hosts to send their current blocks.
-2. **Update**: This is sent each time the blocks on a host changes. This message contains all self blocks (the blocks from the current host).
+2. **Update**: This is sent each time the blocks on a host changes.
 3. **Heartbeat**: This is periodically sent. After multiple missed heartbeats, a host is deemed dead by its peers and all its block could be independently deleted on each ledger.
 
 Each host maintains its local ledger. The network protocol guarantees that eventually, all ledgers will be consistent.
@@ -203,14 +202,14 @@ Each host maintains its local ledger. The network protocol guarantees that event
 
 Currently, only **Update** messages are classified as essential.
 
-**Heartbeat** messages are used as a form of [NACKs](https://en.wikipedia.org/wiki/Acknowledgement_(data_networks)). A host detects synchronization issues from heartbeats and resends its current blocks.
+**Heartbeat** messages are used as a form of [NACK](https://en.wikipedia.org/wiki/Acknowledgement_(data_networks)). A host detects synchronization issues from heartbeats and resends its current blocks.
 
 While heartbeats are effective, the interval is too long to be relied on primarily for a highly interactive system like PCAS.
 
-Reliable multicasting is an interesting problem. We explore two strategies:
+Reliable multicasting is an interesting problem. I explored two strategies:
 
 ###### a. Using redundancy
-Blindly resend essential messages `x` times with a delay of `y + random jitter` for each attempt.
+Blindly resend essential messages `x` times with a delay of `y + random jitter` on each attempt.
 
 Let's consider a simple model. If the probability of successfully delivering a message is fixed at 0.50. Assuming each attempt is independent, there is a 0.97 probability that at least one message gets delivered in 5 attempts.
 
@@ -222,42 +221,43 @@ Let's consider a simple model. If the probability of successfully delivering a m
 > 
 > Pr(b = 0) = 1 - Pr(b = 1) = 0.50
 > 
-> (b is a benoulli random variable)
+> (b is a Bernoulli random variable)
 >
->
+> ---
+> 
 > n = 5
 > 
 > z = n tries of b
 > 
-> (z is a binomial random variable)
+> (z is a Binomial random variable)
 > 
 ><img src="https://render.githubusercontent.com/render/math?math=Pr(1 \leq z \leq n) = \displaystyle\sum_{i=1}^n \tbinom{n}{i} Pr(b = 1)^i Pr(b = 0)^{n - i}">
 >
 > Could also be calculated as 1 - Pr(z = 0)
 
-In practice, delivery probabilities aren't fixed and attempts are not independent. Despite the shortcoming of this approach, it has the following benefits:
+In practice, delivery probabilities aren't fixed and attempts are not independent. Despite the shortcoming of this strategy, it has the following benefits:
 
-1. It isn't dependent on the size of the network. Whether there are 2 or 10,000 peers, a host will only send its messages at a rate of `r/second`.
+1. It isn't dependent on the size of the network. Whether there are 2 or 10,000 peers, a host will only send its messages at a rate of `c / second`.
 2. Peers that are just entering the network could benefit from these redundant messages.
 
 ###### b. Using ACKs
 Essential messages have a monotonically increasing sequence number. The initial sequence number is `0`. All hosts are expected to send an `Ack` message with the sequence number of the essential message. Retries are done with a truncated exponential backoff with jitter.
 
-This strategy only sends fewer messages (more efficient) than the redundant strategy when the number of peers in a network is less than `x`. Some of the issues with this strategy are:
+This strategy only sends fewer messages (more efficient) than the redundant strategy when the number of peers in a network is less than `x`. Some issues with this strategy:
 
 1. Using `ACKs` like TCP isn't scalable and runs the risk of [ACKs implosion](https://courses.cs.washington.edu/courses/cse561/01sp/lectures/568.multicast2.pdf).
-2. The number of messages sent is dependent on the size of the network. A single rogue host can cause the network to be spammed with ACKs and messages.
+2. The number of messages sent is dependent on the size of the network. A single rogue peer can cause the network to be spammed with ACKs and messages.
 3. Figuring out which peer to expect ACKs from is complex.
 
 I initially went with ACKs but will be using the simple redundant strategy instead.
 
-The layer data unit is a `Message`. Messages are marshaled to the Protobuf format and passed to the transport layer. The inverse action is performed when a message is received.
+The network protocol data unit is a `Message`. Messages are marshaled to the `Protobuf` format and passed to the transport layer. The inverse happens when a message is received.
 
 ### Resource Allocation
 
-When two or more hosts use a 3-tuple(service, profile, peripheral), a contention occurs. Even if a host doesn't actively require a profile, it can still contend with another host for that profile.
+When two or more hosts use the same `3-tuple(service, profile, peripheral)`, a contention occurs. Even if a host doesn't actively require a profile, it can still contend with another host for that profile.
 
-This is the meat or vegetable (for my vegetarian friends) of the system. First, what are profiles?
+This is the meat or vegetable (for my vegetarian friends) of the system.
 
 #### Bluetooth Profiles
 
@@ -271,7 +271,7 @@ This is the meat or vegetable (for my vegetarian friends) of the system. First, 
 
 > Recap: With A2DP you can only listen but with higher audio quality. With headset profiles, you can talk and listen, but at a lower quality. Next time you are playing a song while a call comes in, observe how the audio quality drops.
 
-Each time a change is made to the ledger, a resolver looks at all the current contentions and resolves.
+Each time a change is made to the ledger, a resolver looks at all the current contentions and resolves them.
 
 #### Type of resolutions
 
@@ -363,7 +363,7 @@ All services have two key integrants:
 
 ##### i. Blocks Emission
 
-Blocks are built from host state information. The relevant audio states are the current audio usages and the current peripheral bond steady state.
+Blocks are built from host state information. The relevant audio states are the current audio usages and the current peripheral bond state.
 
 ```kotlin
 data class AudioProperty(val usages: Set<Usage>) {
@@ -415,7 +415,7 @@ data class PeripheralBond(
 }
 ```
 
-Each time a host state changes, a new block is created. The ledger layer listens to these changes and automatically updates the local ledger and sends the blocks to remote peers.
+Each time a host state changes, a new block is created. The ledger layer listens for these changes and automatically updates the local ledger and sends the blocks to remote peers.
 
 ![Audio blocks sequence](assets/PCASBlocksEmitter.svg)
 
@@ -438,7 +438,7 @@ Each service gets to handle all resolutions from the resource allocation layer. 
 
 ### Why use IP Multicast?
 
-Multicast has issues: It requires all devices to be on the same network and it is blocked by some routers. PCAS was designed to be used in a "home network" where these issues don't usually exist.
+Multicast has issues: It requires all devices to be on the same network and it's blocked by some routers. PCAS was designed to be used in a "home network" where these issues are usually nonexistent.
 
 I explored 2 other possible technologies:
 
