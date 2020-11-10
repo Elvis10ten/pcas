@@ -20,7 +20,7 @@ A core tenet of the Apple camp is that their complete ecosystem makes every prod
 
 **PCAS (Peripheral Connection Augmentation System)** artificially augments a Bluetooth peripheral maximum number of concurrent connections. Based on user-initiated events and hardware configurations PCAS automatically connects/disconnects a profile on a peripheral. PCAS can also multiplex to a single sink: For example, on Android, this brings the theoretical maximum audio connections to 30 ([the maximum allowed AudioTrack instances](https://groups.google.com/g/android-platform/c/_tmA8DRg8q4)).
 
-Basically, a single user with multiple hosts no longer has to manually connect/disconnect each peripheral. PCAS does this automatically. This works even on cheap peripherals that don't support multiple concurrent connections natively. Example scenarios:
+A single user with multiple hosts no longer has to manually connect/disconnect each peripheral. PCAS does this automatically. This works even on cheap peripherals that don't support multiple concurrent connections natively. Example scenarios:
 
 1. When a call comes in on your phone while watching a movie on your tablet. The movie is automatically paused and your phone is connected.
 2. When playing music from multiple devices, the output could be muxed to the same audio sink in realtime.
@@ -107,7 +107,7 @@ internal interface MulticastChannel {
 }
 ```
 
-All hosts can send a parcel to the PCAS multicast group and can join the group to receive parcels. The local IP addresses of discrete hosts is not required. The multicast configs can be found in the `TransportConfig` class:
+All hosts can send a parcel to the PCAS multicast group and can join the group to receive parcels. The local IP addresses of discrete hosts are not required. The multicast configs can be found in the `TransportConfig` class:
 
 ```kotlin
 internal object TransportConfig {
@@ -510,7 +510,7 @@ A scanning device listens on the advertisement channels for a duration called th
 
 We can use the three parameters: advertising interval, scan interval, and scan window to build a probabilistic model for discovery latency. Any such model will be practically flawed without considering the environment where devices will likely be used in.
 
-Obviously, shorter intervals and a higher scan window lead to faster discovery times while consuming more power.
+Shorter intervals and a higher scan window lead to faster discovery times while consuming more power.
 
 **Power consumption**
 
